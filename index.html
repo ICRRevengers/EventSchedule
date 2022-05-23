@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
-    <title>Ristorante Con Fusion</title>
+    
+    <title>FESC - FPT Event Schedule</title>
+    <link rel="icon" type="image/x-icon" href="/img/logo.png">
     <!-- Required meta tags always come first -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,23 +23,16 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <a class="navbar-brand mr-auto" href="#"><img src="img/logo.png" height="30" width="41">Ristorante Con
-                Fusion</a>
-            <div class="collapse navbar-collapse" id="Navbar">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active"><a class="nav-link" href="./index.html">
-                            <span class="fa fa-home fa-lg"></span> Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./aboutus.html">
-                            <span class="fa fa-info fa-lg"></span> About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">
-                            <span class="fa fa-list fa-lg"></span> Menu</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./contactus.html">
-                            <span class="fa fa-address-card fa-lg"></span> Contact</a></li>
+            <a class="navbar-brand mr-auto col-3" href="index.html"><img src="img/logo.png" height="40" width="40"> FPT Event Schedule</a>
+            <div class="collapse navbar-collapse offset-md-4 " id="Navbar">
+                <ul class="navbar-nav mr-auto nav-more">
+                    <li class="nav-item active"><a class="nav-link" href="./index.html"> Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./userprofile.html"> User profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contactus.html"> Contact</a></li>
+                    <li ><span class="navbar-text btn btn-round">
+                        <a data-toggle="modal" data-target="#loginModal">Login</a></span></li>
                 </ul>
-                <span class="navbar-text">
-                    <a data-toggle="modal" data-target="#loginModal">
-                    <span class="fa fa-sign-in"></span> Login</a>
-                </span>
+                
             </div>
         </div>
     </nav>
@@ -45,307 +40,171 @@
         <div class="modal-dialog modal-lg" role="content">
             <!-- Modal content-->
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Login </h4>
+                <div class="modal-header bg-orange">
+                    <img src="img/logo.png" height="40" width="40">
+                    <h3 class="modal-title text-white">FPT Event Schedule </h3>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body bg-light-orange">
+                    <div>
+                        <h4>Sign in</h4>
+                        <p>Sign in on the internal platform</p>
+                    </div>
+                    <div class="offset-4 justify-content-center col-8">
+                        <button type="button" class="bg-orange text-white btn btn-lg">Sign in with google</button>
+                        <p>or login with admin account</p>
+                    </div>
                     <form>
                         <div class="form-row">
-                            <div class="form-group col-sm-4">
-                                <label class="sr-only" for="exampleInputEmail3">Email address</label>
-                                <input type="email" class="form-control form-control-sm mr-1" id="exampleInputEmail3"
-                                    placeholder="Enter email">
+                            <div class="form-group col-sm-12">
+                                <label class="sr-only" for="inputEmail">Admin account</label>
+                                <input type="email" class="form-control form-control-md mr-1" id="inputAccount"
+                                    placeholder="Admin account">
                             </div>
-                            <div class="form-group col-sm-4">
-                                <label class="sr-only" for="exampleInputPassword3">Password</label>
-                                <input type="password" class="form-control form-control-sm mr-1" id="exampleInputPassword3"
+                            <div class="form-group col-sm-12">
+                                <label class="sr-only" for="inputPassword">Password</label>
+                                <input type="password" class="form-control form-control-md mr-1" id="inputPassword"
                                     placeholder="Password">
-                            </div>
-                            <div class="col-sm-auto">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label"> Remember me
-                                    </label>
-                                </div>
                             </div>
                         </div>
                         <div class="form-row">
-                            <button type="button" class="btn btn-secondary btn-sm ml-auto"
-                                data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary btn-sm ml-1">Sign in</button>
+                            <button type="submit" class="btn btn-primary col-12 btn-light btn-round ">Sign in</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div id="reserveModal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg" role="content">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Reserve a Table </h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form class="card-body" >
-                        <div class="row form-group">
-                            <label class="col-md-2 col-form-label">Number of Guests</label>
-                            <div class="col-md col-sm-12">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineNumberGuest"
-                                        id="inlineNumberGuest1" value="option1">
-                                    <label class="form-check-label" for="inlineNumberGuest1">1</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineNumberGuest"
-                                        id="inlineNumberGuest2" value="option2">
-                                    <label class="form-check-label" for="inlineNumberGuest2">2</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineNumberGuest"
-                                        id="inlineNumberGuest3" value="option3">
-                                    <label class="form-check-label" for="inlineNumberGuest3">3</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineNumberGuest"
-                                        id="inlineNumberGuest4" value="option4">
-                                    <label class="form-check-label" for="inlineNumberGuest4">4</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineNumberGuest"
-                                        id="inlineNumberGuest5" value="option5">
-                                    <label class="form-check-label" for="inlineNumberGuest5">5</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineNumberGuest"
-                                        id="inlineNumberGuest6" value="option6">
-                                    <label class="form-check-label" for="inlineNumberGuest6">6</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <label for="section" class="col-md-2 col-form-label">Section</label>
-                            <div class="btn-group btn-group-toggle col-md-4" data-toggle="buttons">                                
-                                <label class="btn btn-success active">
-                                <input type="radio" name="nonsmoking" id="nonsmoking" checked> Non-Smoking
-                                </label>
-                                <label class="btn btn-danger">
-                                <input type="radio" name="smoking" id="smoking"> Smoking
-                                </label>
-                            </div>                            
-                        </div>
-                        <div class="row form-group">
-                            <label for="datetime" class="col-md-2 col-form-label">Date and Time</label>
-                            <div class="col-md-4 col-sm-12">
-                                <input type="text" class="form-control" placeholder="Date">
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <input type="text" class="form-control" placeholder="Time">
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="offset-md-2 col-md-10">
-                                <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Reserve</button>
-                            </div>                            
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <header class="jumbotron ">
         <div class="container">
             <div class="row row-header">
-                <div class="col-12 col-sm-6">
-                    <h1>Ristorante con Fusion</h1>
-                    <p>We take inspiration from the World's best cuisines, and create a unique fusion experience. Our
-                        lipsmacking creations will tickle your culinary senses!</p>
+                <div class="row col-12 col-sm">
+                        <img src="img/bts.png" class="img-fluid">
                 </div>
-                <div class="row col-12 col-sm align-self-center">
-                    <div class="col-12 col-md-6">
-                        <img src="img/logo.png" class="img-fluid">
-                    </div>
-                    <div class="col-12 col-md-6 align-self-center">
-                        <a role="button" class="btn btn-block nav-link btn-warning"
-                        data-toggle="modal" data-target="#reserveModal">Reserve Table</a>
-                    </div>
-                </div>
+                <div class="col-12 col-sm-6 align-self-center">
+                    <h1>BTS coming to FPTU and Free for all Students</h1>
+                    <p>Look no further! BTS coming to FPTU are the simplest way for you to experience a live Kpop recording.</p>
+                    <button type="button" class="btn btn-round offset-2 btn-danger btn-md">Join now</button>
+                    <button type="submit" class="btn btn-round text-white">More information</button>
+                </div>                
             </div>
         </div>
     </header>
 
+    <div class="search-box row col-8 offset-2 bg-orange text-white">
+        <div class="col-4">
+            <label class="col-12">Search Event</label>
+            <input type="text" class="col-12 btn bg-search-text text-white" value="Military Semester">
+        </div>
+        <div class="col-4">
+            <label class="col-12">Place</label>
+            <input type="text" class="col-12 btn bg-search-text text-white" value="7th Military Region">
+        </div>
+        <div class="col-4">
+            <label class="col-12">Time</label>
+            <input type="date" class="col-12 btn bg-search-text text-white" value="Military Semester">
+        </div>
+    </div>
+
     <div class="container">
         <div class="row row-content">
-            <div class="col">
-                <div id="mycarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active">
-                            <img class="d-block img-fluid" src="img/uthappizza.png" alt="Uthappizza">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h2>Uthappizza
-                                    <span class="badge badge-danger">HOT</span>
-                                    <span class="badge badge-pill badge-default">$4.99</span>
-                                </h2>
-                                <p class="d-none d-sm-block">A unique combination of Indian Uthappam (pancake) and
-                                    Italian pizza, topped with Cerignola olives, ripe vine
-                                    cherry tomatoes, Vidalia onion, Guntur chillies and
-                                    Buffalo Paneer.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block img-fluid" src="img/buffet.png" alt="Weekend Grand Buffet">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h2>Weekend Grand Buffet
-                                    <span class="badge badge-danger">NEW</span>
-                                </h2>
-                                <p class="d-none d-sm-block">Featuring mouthwatering combinations with a choice of five
-                                    different salads, six enticing appetizers,
-                                    six main entrees and five choicest desserts. Free flowing bubbly and soft drinks. All for
-                                    just $19.99 per person </p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block img-fluid" src="img/alberto.png" alt="Alberto Somayya">
-                            <div class="carousel-caption d-none d-md-block">
-                            <h2 class="mt-0">Alberto Somayya</h2>
-                            <h4>Executive Chef</h4>
-                            <p class="d-none d-sm-block">Award winning three-star Michelin chef with wide
-                                International experience having worked closely with
-                                whos-who in the culinary world, he specializes in
-                                creating mouthwatering Indo-Italian fusion experiences.
-                            </p>
-                            </div>
-                        </div>
-                    </div>
-                    <ol class="carousel-indicators">
-                        <li data-target="#mycarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#mycarousel" data-slide-to="1"></li>
-                        <li data-target="#mycarousel" data-slide-to="2"></li>
-                    </ol>
-                    <a class="carousel-control-prev" href="#mycarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </a>
-                    <a class="carousel-control-next" href="#mycarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </a>                    
-                </div>
+            <div class="col-6">
+                <h2>All events</h2>
+            </div>
+            <div class="col-6 row">
+                <select class="custom-select col-4 custom-select-type" id="inputtype">
+                    <option selected value="now">Up Coming Events</option>
+                    <option value="past">Past Events</option>                    
+                </select>
+                <select class="custom-select col-4 custom-select-type" id="inputtype">
+                    <option selected>Event Theme</option>
+                    <option value="music">Music</option>
+                    <option value="academic">Academic</option>   
+                    <option value="chess">Chess</option>               
+                    <option value="dance">Dance</option>  
+                    <option value="language">Language</option>  
+                </select>
+                <select class="custom-select col-4 custom-select-type" id="inputtype">
+                    <option selected value="offline">Offline</option>
+                    <option value="online">Online</option>
+                </select>
             </div>
         </div>
-        <div class="row row-content align-items-center">
-            <div class="col-12 col-sm-4 order-sm-last col-md-3">
-                <h3>Our Lipsmacking Culinary Creations</h3>
-            </div>
-            <div class="col col-sm order-sm-first col-md">
-                <div class="media">
-                    <img class="d-flex mr-3 img-thumbnail align-self-center" src="img/uthappizza.png" alt="Uthappizza">
-                    <div class="media-body">
-                        <h2 class="mt-0">
-                            Uthappizza
-                            <span class="badge badge-danger">HOT</span>
-                            <span class="badge badge-pill badge-secondary">$4.99</span>
-                        </h2>
-                        <p class="d-none d-sm-block">A unique combination of Indian Uthappam (pancake) and
-                            Italian pizza, topped with Cerignola olives, ripe vine
-                            cherry tomatoes, Vidalia onion, Guntur chillies and
-                            Buffalo Paneer.</p>
-                    </div>
+        <div class="row row-content justify-content-center">
+            <div class="col-4 row">
+                <div class="col-12 col-md-12">
+                    <img src="img/jobfair.jpg" class="img-event">
                 </div>
+                <div class="row-event row">
+                    <div class="col-3">
+                        <h6>MAY</h6>
+                        <h3>12</h2>
+                    </div>
+                    <div class="col-9">
+                        <h6>Job Fair! Place to connect FU students with companies</h6>
+                        <p>Join for free to know more about your future job.</p>
+                    </div>
+                </div>                
+            </div>
+            <div class="col-4 row">
+                <div class="col-12 col-md-12">
+                    <img src="img/japan.jpg" class="img-event">
+                </div>
+                <div class="row-event row">
+                    <div class="col-3">
+                        <h6>APRIL</h6>
+                        <h3>14</h2>
+                    </div>
+                    <div class="col-9">
+                        <h6>Japanese Festival</h6>
+                        <p>Free for all students to join in this special festival.</p>
+                    </div>
+                </div>                
+            </div>
+            <div class="col-4 row">
+                <div class="col-12 col-md-12">
+                    <img src="img/tedfpt.jpg" class="img-event">
+                </div>
+                <div class="row-event row">
+                    <div class="col-3">
+                        <h6>JUNE</h6>
+                        <h3>20</h2>
+                    </div>
+                    <div class="col-9">
+                        <h6>TEDxFPTU! Biggest Event in FPTU history</h6>
+                        <p>Join us now if you want to get on TV.</p>
+                    </div>
+                </div>                
             </div>
         </div>
+    </div>
 
-
-        <div class="row row-content align-items-center">
-            <div class="col-12 col-sm-4 order-sm-first col-md-3">
-                <h3>This Month's Promotions</h3>
+    <footer class="footer align-self-center">
+        <div class="row text-white">
+            <div class="col-12 col-md-5 offset-1">
+                <h4>FESC</h4>
+                <p>FESC - FPT Event Schedule is a website that helps you to find out what event is coming, then you can easily review the event is organized in past.</p>
             </div>
-            <div class="col col-sm order-sm-last col-md">
-                <div class="media">
-                    <div class="media-body">
-                        <h2 class="mt-0">
-                            Weekend Grand Buffet
-                            <span class="badge badge-danger">NEW</span>
-                        </h2>
-                        <p class="d-none d-sm-block">Featuring mouthwatering combinations with a choice of five
-                            different salads, six enticing appetizers,
-                            six main entrees and five choicest desserts. Free flowing bubbly and soft drinks. All for
-                            just $19.99 per person </p>
-                    </div>
-                    <img class="d-flex mr-3 img-thumbnail align-self-center" src="img/buffet.png"
-                        alt="Weekend Grand Buffet">
-                </div>
+            <div class="col-12 col-md-3">
+                <h4>About us</h4>
+                <address class="text-white">
+                    E2A-7, Đường D1, Khu Công Nghệ Cao, </br>
+                    P.Long Thạnh Mỹ, TP. Thủ Đức Thành phố Hồ Chí Minh</br>
+                    <i class="fa fa-envelope fa-lg"></i> : 
+                    <a class="text-white" href="mailto:daihoc.hcm@fpt.edu.vn">daihoc.hcm@fpt.edu.vn</a>
+                </address></br>
+                
             </div>
-        </div>
-
-        <div class="row row-content align-items-center">
-            <div class="col-12 col-sm-4 order-sm-last col-md-3">
-                <h3>Meet our Culinary Specialists</h3>
+            <div class="col-12 col-md">
+                <h4>Links</h4>
+                <ul class="list-unstyled">
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./contactus.html">Contact</a></li>
+                    <a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/fptaround">
+                        <i class="fa fa-facebook"></i></a>
+                </ul>          
             </div>
-            <div class="col col-sm order-sm-first col-md">
-                <div class="media">
-                    <img class="d-flex mr-3 img-thumbnail align-self-center" src="img/alberto.png"
-                        alt="Alberto Somayya">
-                    <div class="media-body">
-                        <h2 class="mt-0">Alberto Somayya</h2>
-                        <h4>Executive Chef</h4>
-                        <p class="d-none d-sm-block">Award winning three-star Michelin chef with wide
-                            International experience having worked closely with
-                            whos-who in the culinary world, he specializes in
-                            creating mouthwatering Indo-Italian fusion experiences.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row ">
-                <div class="col-4 offset-1 col-sm-2 ">
-                    <h5>Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="./index.html">Home</a></li>
-                        <li><a href="./aboutus.html">About</a></li>
-                        <li><a href="#">Menu</a></li>
-                        <li><a href="./contactus.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-7 col-sm-5">
-                    <h5>Our Address</h5>
-                    <address>
-                        121, Clear Water Bay Road<br>
-                        Clear Water Bay, Kowloon<br>
-                        HONG KONG<br>
-                        <i class="fa fa-phone fa-lg"></i>: +852 1234 5678<br>
-                        <i class="fa fa-fax fa-lg"></i>: +852 8765 4321<br>
-                        <i class="fa fa-envelope fa-lg"></i>: <a href="mailto:confusion@food.net">confusion@food.net</a>
-                    </address>
-                </div>
-                <div class="col-12 col-sm-4 align-self-center">
-                    <div class="text-center">
-                        <a class="btn btn-social-icon btn-google" href="http://google.com/+"><i
-                                class="fa fa-google-plus"></i></a>
-                        <a class="btn btn-social-icon btn-facebook" href="http://www.facebook.com/profile.php?id="><i
-                                class="fa fa-facebook"></i></a>
-                        <a class="btn btn-social-icon btn-linkedin" href="http://www.linkedin.com/in/"><i
-                                class="fa fa-linkedin"></i></a>
-                        <a class="btn btn-social-icon btn-twitter" href="http://twitter.com/"><i
-                                class="fa fa-twitter"></i></a>
-                        <a class="btn btn-social-icon btn-google" href="http://youtube.com/"><i
-                                class="fa fa-youtube"></i></a>
-                        <a class="btn btn-social-icon" href="mailto:"><i class="fa fa-envelope-o"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <p>© Copyright 2018 Ristorante Con Fusion</p>
-                </div>
             </div>
         </div>
     </footer>
