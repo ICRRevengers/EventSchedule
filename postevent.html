@@ -36,66 +36,66 @@
         </div>
     </nav>
 
-    <header class="jumbotron ">
-        <div class="container">
-            <div class="row row-header">
-                <div class="row col-12 col-sm">
-                        <img src="img/bts.png" class="img-fluid">
-                </div>
-                <div class="col-12 col-sm-6 align-self-center">
-                    <h1>BTS coming to FPTU and Free for all Students</h1>
-                    <p>Look no further! BTS coming to FPTU are the simplest way for you to experience a live Kpop recording.</p>
-                    <button type="button" class="btn btn-round offset-2 btn-danger btn-md">Join now</button>
-                    <button type="submit" class="btn btn-round text-white">More information</button>
-                </div>                
-            </div>
-        </div>
-    </header>
-
     <div class="container">
         <div class="row row-content">
             <div class="col-12 mb-5">
-                <h2>Your Profile</h2>
+                <h2>New Event</h2>
             </div>   
             <div class="col-12 col-md-12 row">
                 <form class="col-6">
                     <div class="form-group row form-header">
                         <div class="offset-md-8 mb-1">
                             <button type="button" class="btn border-organge" data-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-danger">Save</button>
+                            <button type="submit" class="btn btn-danger">Post</button>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="img" class="col-md-12 col-form-label">Choose your profile picture</label>
+                        <label for="img" class="col-md-12 col-form-label">Choose cover image for event</label>
                         <div class="col-md-12">
-                            <input type="file" id="avatar" name="avatar" accept="image/*">
+                            <input type="file" id="coverimg" name="coverimg" accept="image/*">
                         </div>
                     </div>
                     <div class="form-group row">
-                            <label for="name" class="col-md-12 col-form-label">Your Name</label>
+                            <label for="name" class="col-md-12 col-form-label">Event title</label>
                             <div class="col-md-12">
                                 <input type="text" class="form-control border-organge" id="name" name="name"
-                                    placeholder="Your full name">
+                                    placeholder="Event title">
                             </div>
                     </div>
                     <div class="form-group row">
-                            <label for="phone" class="col-md-12 col-form-label">Your Phone</label>
-                            <div class="col-md-12">
-                                <input type="tel" class="form-control border-organge" id="phone" name="phone"
-                                    placeholder="Your phone">
+                            <label for="phone" class="col-md-12 col-form-label">Timeline</label>
+                            <div class="col-md-6">
+                                <input type="time" class="form-control border-organge" id="time" name="time">
                             </div>
-                    </div>                    
+                            <div class="col-md-6">
+                                <input type="date" class="form-control border-organge" id="time" name="time">
+                            </div>
+                    </div>    
                     <div class="form-group row">
-                        <label for="studentid" class="col-12 col-md-12 col-form-label">Your student ID</label>
+                        <label for="status location" class="col-md-12 col-form-label">Status and location</label>
+                        <div class="col-md-6">
+                            <select class="form-control border-organge">
+                                <option>Online</option>
+                                <option>Offline</option>
+                            </select>
+                        </div>                        
+                        <div class="col-md-6">
+                            <input type="text" class="form-control border-organge" id="location" name="location"
+                            placeholder="Location">
+                        </div>
+                    </div>                
+                    <div class="form-group row">
+                        <label for="payment" class="col-12 col-md-12 col-form-label">Payment url (MOMO)</label>
                         <div class="col-12">
-                            <input type="text" class="form-control border-organge" id="studentid" name="studentid"
-                                placeholder="Student ID">
+                            <input type="url" class="form-control border-organge" id="payment" name="payment"
+                                placeholder="me/momo/...">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="emailid" class="col-md-12 col-form-label">Your Email</label>
+                        <label for="content" class="col-md-12 col-form-label">Content</label>
                         <div class="col-md-12">
-                            <input type="email" class="form-control border-organge" id="emailid" name="emailid" placeholder="Your Email">
+                            <textarea class="form-control border-organge"  id="content" name="content" rows="12"
+                            placeholder="Event content here..."></textarea>
                         </div>
                     </div>                                        
                 </form>
