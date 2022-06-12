@@ -21,9 +21,9 @@ class Login extends Component {
                             </div>
                         </div>
                     </form>
-                    <div className="col-12 col-md-6">
+                    <div className="col-12 col-md-6 text-center">
                         <p className="col-12 pl-0">If you are <strong>student</strong>, login with fpt.edu.vn</p>
-                        <GoogleButton className="googleButton"
+                        <GoogleButton className="googleButton offset-2 offset-md-3"
                             onClick={() => { console.log('Google button clicked') }}
                         />
                     </div>

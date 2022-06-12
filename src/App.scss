@@ -14,13 +14,15 @@ $orange-light: #FFE5DD;
     }
 }
 
+.container {
+    min-height: 100%;
+}
 
 .footer {
     background-color: $orange-dark;
     text-align: center;
     padding: 10px 0;
     position: absolute;
-    bottom: 0;
     width: 100%;
     ul, li, address, a, i {
         color: white;
