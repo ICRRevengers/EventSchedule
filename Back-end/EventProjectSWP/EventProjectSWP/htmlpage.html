@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    @model Login
+
+    <h1 class="bg-info text-white">Login</h1>
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <form asp-action="Login" method="post">
+        <a class="btn btn-info" asp-action="GoogleLogin">Log In With Google</a>
+    </form>
+
+</body>
+</html>
