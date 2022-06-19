@@ -16,12 +16,14 @@ namespace EventProjectSWP.Controllers
     {
         [HttpGet]
         [Route("google-login")]
+
         public IActionResult GoogleLogin()
         {
             var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };
 
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
+        [HttpGet]
         [Route("google-response")]
         public async Task<JsonResult> GoogleResponse()
         {
