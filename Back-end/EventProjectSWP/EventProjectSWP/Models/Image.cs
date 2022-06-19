@@ -6,7 +6,7 @@ namespace EventProjectSWP.Models
     public class Image
     {
         public string ImageId { get; set; }
-        public IFormFile ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
         public string EventId { get; set; }
 
     }
