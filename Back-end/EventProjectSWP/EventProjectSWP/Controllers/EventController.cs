@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -161,6 +162,32 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.Parameters.AddWithValue("@event_name", name);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+        [HttpGet("get-event-by-timne")]
+        public JsonResult GetEventByTime(string start_time, string end_time)
+        {
+            string query = @"select event_name from tblEvent 
+                           where event_timeline between 
+                            @d1 AND @d2";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
+                    myCommand.Parameters.AddWithValue("@d1", start_time);
+                    myCommand.Parameters.AddWithValue("@d2", end_time);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
