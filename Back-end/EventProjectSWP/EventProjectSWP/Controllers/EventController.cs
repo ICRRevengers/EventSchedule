@@ -198,5 +198,31 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult(table);
         }
 
+
+        [HttpGet("get-event-by-timne-specific")]
+        public JsonResult GetEventByTimeSpecific(string event_time)
+        {
+            string query = @"select event_name from tblEvent 
+                           where event_timeline = @event_timeline";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
+                    myCommand.Parameters.AddWithValue("@event_timeline", event_time);                    
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+
     }
 }
