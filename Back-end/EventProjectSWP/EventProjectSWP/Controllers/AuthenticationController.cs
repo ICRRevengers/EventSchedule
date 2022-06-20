@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EventProjectSWP.Models;
-/*
+
 namespace EventProjectSWP.Controllers
 {
     [Route("api/[controller]")]
@@ -22,6 +22,7 @@ namespace EventProjectSWP.Controllers
 
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
+        [HttpGet]
         [Route("google-response")]
         public async Task<JsonResult> GoogleResponse()
         {
@@ -39,4 +40,4 @@ namespace EventProjectSWP.Controllers
         }
 
     }
-}*/
+}
