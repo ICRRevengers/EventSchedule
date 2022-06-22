@@ -114,6 +114,30 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
+        [HttpGet("login-club")]
+        public JsonResult loginClub(string clubName, string clubPassword)
+        {
+            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name =@club_name and club_password = @club_password";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@club_name", clubName);
+                    myCommand.Parameters.AddWithValue("@club_password", clubPassword);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+
+        }
 
 
     }
