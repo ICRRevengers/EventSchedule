@@ -9,6 +9,7 @@ import Contactus from './ContactComponent';
 import PageTitle from './PageTitle';
 import Aboutus from './AboutusComponent';
 import Login from './LoginComponent';
+import EventSlider from './EventSlider';
 
 class Main extends Component {
   constructor(props) {
@@ -79,6 +80,7 @@ class Main extends Component {
     return (
       <div>
         <Header />
+        <EventSlider/>
         <Switch>
           <Route path='/home' component={HomePage} />
           <Route path='/aboutus' component={AboutusPage} />
