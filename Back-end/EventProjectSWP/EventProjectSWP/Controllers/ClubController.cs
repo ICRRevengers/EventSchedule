@@ -93,7 +93,7 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-club-by-name")]
         public JsonResult GetClubByName(string name)
         {
-            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name like concat (@club_name, '%')";
+            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name = @club_name";
 
 
             DataTable table = new DataTable();
