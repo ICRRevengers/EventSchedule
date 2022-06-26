@@ -93,7 +93,7 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-club-by-name")]
         public JsonResult GetClubByName(string name)
         {
-            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name like concat (@club_name, '%')";
+            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name = @club_name";
 
 
             DataTable table = new DataTable();
@@ -139,6 +139,51 @@ namespace EventProjectSWP.Controllers
 
         }
 
+        /*[HttpPut("Check attend")]
+        public JsonResult CheckAttend(UserInfo user, int id)
+        {
+            string query = @"update dbo.tblUser set user_status = @user_status where users_id =@users_id";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@users_id", id);
+                    myCommand.Parameters.AddWithValue("@user_status", user.user_status);                   
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult("Check attend success");
+        }*/
+
+        [HttpPut("Check attend")]
+        public JsonResult CheckAttend(bool status, int id)
+        {
+            string query = @"update tblEventParticipated set users_status = @users_status where users_id = @users_id";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@users_id", id);
+                    myCommand.Parameters.AddWithValue("@users_status", status);
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult("Check attend success");
+        }
 
     }
 }

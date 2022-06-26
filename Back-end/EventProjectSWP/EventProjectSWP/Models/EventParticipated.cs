@@ -8,6 +8,7 @@ namespace EventProjectSWP.Models
         public string UserID { get; set; }
         public DateTime DateParticipated { get; set; }
         public bool PaymentStatus { get; set; }
+        public bool users_status { get; set; }
 
     }
 }

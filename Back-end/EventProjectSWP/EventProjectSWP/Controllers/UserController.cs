@@ -148,7 +148,7 @@ namespace EventProjectSWP.Controllers
         public JsonResult GetUserByName(string name)
         {
             string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
-             where users_name like concat (@users_name, '%')";
+             where users_name = @users_name";
 
 
             DataTable table = new DataTable();
