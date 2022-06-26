@@ -115,7 +115,7 @@ namespace EventProjectSWP.Controllers
         [HttpPost("add-user-join-event")]
         public JsonResult Post(EventParticipated EventParticipated)
         {
-            string query = @"insert into tblEventParticipated values(@event_id,@users_id,@date_participated,@payment_status)";
+            string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -128,7 +128,6 @@ namespace EventProjectSWP.Controllers
                     myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
                     myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
                     myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
-                    myCommand.Parameters.AddWithValue("@payment_status", EventParticipated.PaymentStatus);
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
                     myCon.Close();
