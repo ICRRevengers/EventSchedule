@@ -16,8 +16,8 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet("Get-event-by-category")]
-        public JsonResult GetUserEvent(string id)
+        [HttpGet("Get-category-by-id")]
+        public JsonResult GetCategoryById(string id)
         {
             string query = @"select * from tblEvent where category_id = @category_id ";
             DataTable table = new DataTable();
@@ -38,5 +38,29 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
+
+        [HttpGet("Get-category")]
+        public JsonResult GetCategory()
+        {
+            string query = @"select * from tblCategory ";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
     }
 }
