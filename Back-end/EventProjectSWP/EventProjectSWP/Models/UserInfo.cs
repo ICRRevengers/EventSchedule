@@ -10,6 +10,7 @@ namespace EventProjectSWP.Models
         public int Phone { get; set; }
         public string Address { get; set; }
         public string Email { get; set; }
+       // public int user_status { get; set; }
         internal static UserInfo GetUserLoginInfo(ClaimsIdentity identity)
         {
             if (identity.Claims.Count() == 0 || identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email) == null)

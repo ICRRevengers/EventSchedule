@@ -17,6 +17,8 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
+        
+
         [HttpGet("get-list-user")]
         public JsonResult Get()
         {
@@ -95,28 +97,29 @@ namespace EventProjectSWP.Controllers
             return new JsonResult("Succeesful");
         }
 
-       /* [HttpDelete("delete-user")]
-        public JsonResult Delete(string name)
-        {
-            string query = @"delete from dbo.tblUser where users_name = @users_name";
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@users_name", name);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+        /* [HttpDelete("delete-user")]
+         public JsonResult Delete(string name)
+         {
+             string query = @"delete from dbo.tblUser where users_name = @users_name";
 
-                }
-            }
-            return new JsonResult("Succeesful");
-        }*/
+             DataTable table = new DataTable();
+             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+             SqlDataReader myReader;
+             using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+             {
+                 myCon.Open();
+                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                 {
+                     myCommand.Parameters.AddWithValue("@users_name", name);
+                     myReader = myCommand.ExecuteReader();
+                     myReader.Close();
+                     myCon.Close();
+
+                 }
+             }
+             return new JsonResult("Succeesful");
+         }*/
 
         [HttpGet("get-user-by-id")]
         public JsonResult GetUserByID(string id)
@@ -148,7 +151,7 @@ namespace EventProjectSWP.Controllers
         public JsonResult GetUserByName(string name)
         {
             string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
-             where users_name like concat (@users_name, '%')";
+             where users_name like concat  ( @users_name,'%')";
 
 
             DataTable table = new DataTable();
