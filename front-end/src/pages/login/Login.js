@@ -2,6 +2,16 @@ import GoogleButton from 'react-google-button';
 import '../../App.scss';
 
 function Login() {
+    const logingoogle = () => {
+        fetch("http://localhost:5000/api/Authentication/google-login").then(
+            response => response.json()
+        )
+        .then(
+            data => {
+                console.log(data)
+            }
+        )
+    }
     return (
         <>
             <div className="login ">
@@ -24,7 +34,7 @@ function Login() {
                 <div className="student-form">
                     <p className="">Nếu bạn là <strong>sinh viên</strong>, đăng nhập với fpt.edu.vn</p>
                     <GoogleButton className="googleButton"
-                        onClick={() => { console.log('Google button clicked') }}
+                        onClick={logingoogle}
                     />
                 </div>
             </div>
