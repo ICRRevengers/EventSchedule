@@ -20,11 +20,13 @@ namespace EventProjectSWP.Controllers
     [ApiController]
     public class ImageController : ControllerBase
     {
+
         private static string ApiKey = "AIzaSyBD1WOLrBowJynUn__LBCxB8l1vWS9JI2k";
         private static string Bucket = "testfirebase-a9644.appspot.com";
         private static string AuthEmail = "duc123456789987654321@gmail.com";
         private static string AuthPassword = "123456789987654321";
         private readonly IHostingEnvironment _env;
+
         private readonly IConfiguration _configuration;
         public ImageController(IConfiguration configuration, IHostingEnvironment env)
         {
