@@ -40,11 +40,6 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
-<<<<<<< HEAD
-=======
-
->>>>>>> backend-Tan200k
         [HttpGet("get-video")]
         public JsonResult Get()
         {
