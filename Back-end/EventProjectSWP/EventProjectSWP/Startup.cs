@@ -2,6 +2,7 @@ using EventProjectSWP.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +36,7 @@ namespace EventProjectSWP
                {
                    options.ClientId = "837003437206-060ov85d36jcbooc5dbe9mc8saaiglpg.apps.googleusercontent.com";
                    options.ClientSecret = "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";
+
                });
             //Email configuration
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
@@ -43,7 +45,7 @@ namespace EventProjectSWP
             //Enable CORS
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.WithOrigins("domain information").AllowAnyMethod().AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             });
 
@@ -70,18 +72,32 @@ namespace EventProjectSWP
         {
 
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventProjectSWP v1")
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventProjectSWP v1");
+                    c.OAuthAppName("Google");
+                    c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+                }
+                
                 
                 );
   
             }
+            
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseCookiePolicy(new CookiePolicyOptions()
+            {
+                MinimumSameSitePolicy = SameSiteMode.Lax
+            });
             app.UseCors(options =>
             {
                 options.
@@ -89,10 +105,6 @@ namespace EventProjectSWP
                 AllowAnyMethod().
                 AllowAnyHeader();
             });
-
-            app.UseRouting();
-
-            app.UseAuthentication();
 
             app.UseAuthorization();
 
