@@ -1,7 +1,12 @@
+<<<<<<< HEAD
+﻿using System;
+using System.Collections.Generic;
+=======
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+>>>>>>> backend-TranDuc
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +14,8 @@ namespace EventProjectSWP.Settings
 {
     public class RandomRD
     {
+<<<<<<< HEAD
+=======
         private readonly IConfiguration _configuration;
         public RandomRD(IConfiguration configuration)
         {
@@ -104,5 +111,6 @@ namespace EventProjectSWP.Settings
             }
             return check;
         }
+>>>>>>> backend-TranDuc
     }
 }
