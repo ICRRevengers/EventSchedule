@@ -7,15 +7,16 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace EventProjectSWP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
     public class AuthenticationController : ControllerBase
     {
-        [HttpGet]
-        [Route("google-login")]
+        [HttpGet("google-login")]
 
         public IActionResult GoogleLogin()
         {
@@ -24,7 +25,7 @@ namespace EventProjectSWP.Controllers
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
         [HttpGet]
-        [Route("google-response")]
+        [Route("~/sigin-google")]
         public async Task<JsonResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);

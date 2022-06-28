@@ -43,7 +43,7 @@ namespace EventProjectSWP
             //Enable CORS
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options => options.WithOrigins("domain information").AllowAnyMethod().AllowAnyHeader());
 
             });
 
@@ -82,6 +82,13 @@ namespace EventProjectSWP
                 );
   
             }
+            app.UseCors(options =>
+            {
+                options.
+                WithOrigins("domain information","").
+                AllowAnyMethod().
+                AllowAnyHeader();
+            });
 
             app.UseRouting();
 
