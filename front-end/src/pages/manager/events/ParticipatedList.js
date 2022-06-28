@@ -4,17 +4,16 @@ import myevents from '../data/data';
 import { Table } from 'reactstrap';
 import '../../../App.scss'
 
-const ManagerEvents = () => (
+const ParticipatedList = () => (
     <div className="flex">
         <Sidebar />
         <Table className='m-[20px] w-[900px]'>
                 <thead>
                     <tr>
-                        <th>Tên sự kiện</th>
-                        <th>Người tham gia</th>
-                        <th>Chi tiết sự kiện</th>
-                        <th>Cập nhật</th>
-                        <th>Xóa sự kiện</th>
+                        <th>Tên sinh viên</th>
+                        <th>Ngày đăng kí</th>
+                        <th>Thanh toán</th>
+                        <th>Đã tham gia</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -22,10 +21,9 @@ const ManagerEvents = () => (
                         return (
                             <tr className='hover:bg-[#f99779]'>
                                 <td>{item.Title}</td>
-                                <td><Button href='/manage/participated'>Danh sách</Button></td>
-                                <td><Button href='/management/eventdetail'>Xem</Button></td>
-                                <td><Button href='/manage/update'>Cập nhật</Button></td>
-                                <td><Button>Xóa</Button></td>
+                                <td>20/10/2021</td>
+                                <td><input type='checkbox' value='true'/></td>
+                                <td><input type='checkbox' value='true'/></td>
                             </tr>
                         )
                     })}
@@ -34,4 +32,4 @@ const ManagerEvents = () => (
     </div>
 );
 
-export default ManagerEvents;
+export default ParticipatedList;
