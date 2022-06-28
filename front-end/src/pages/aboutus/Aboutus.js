@@ -52,7 +52,7 @@ const clubs =
 
 const Aboutus = () => {
     return (
-        <Wrapper className="container p-[50px]">
+        <Wrapper className="container p-[20px]">
             <div className=" flex flex-col">
                 {clubs.map((club, index) => (
                     <div key={index} className="row">
