@@ -31,7 +31,7 @@ const Button = ({
     return (
         <Comp
             className={
-                'flex items-center justify-center bg-[#000070] text-[#fff] px-[15px] py-[10px] rounded-[5px] transition duration-200 hover:bg-[#000050] min-w-[100px] min-h-[35px] h-fit select-none ' +
+                'flex items-center justify-center bg-[#000050] text-[#fff] px-[15px] py-[10px] rounded-[5px] transition duration-200 hover:bg-[#000050] min-w-[100px] min-h-[35px] h-fit select-none ' +
                 className
             }
             {...props}

@@ -5,7 +5,6 @@ import Header from '../components/layout/defaultLayout/header/Header';
 import Aboutus from '../pages/aboutus/Aboutus';
 import Contact from '../pages/contact/Contact';
 import Login from '../pages/login/Login';
-import AdminLayout from '../pages/manager/adminlayout/adminlayout';
 
 const publicRoutes = [
     { path: '/', component: Home },
@@ -15,11 +14,6 @@ const publicRoutes = [
     {
         path: '/manage/events',
         component: ManagerEvents,
-        layout: Header
-    },
-    {
-        path: '/admin',
-        component: AdminLayout,
         layout: Header
     },
     { path: '/*', component: Error, layout: null },
