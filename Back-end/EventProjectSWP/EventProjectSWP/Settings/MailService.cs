@@ -39,6 +39,7 @@ namespace EventProjectSWP.Settings
                     }
                 }
             }
+
             builder.HtmlBody = mailRequest.Body;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();

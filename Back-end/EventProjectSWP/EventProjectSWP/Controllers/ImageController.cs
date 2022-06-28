@@ -1,4 +1,8 @@
 ﻿using EventProjectSWP.Models;
+<<<<<<< HEAD
+=======
+using EventProjectSWP.Settings;
+>>>>>>> backend
 using Firebase.Auth;
 using Firebase.Storage;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +34,10 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
             _env = env;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> backend
         /*
         [HttpPost("add-image")]
         public JsonResult Post(Image image)
@@ -79,7 +86,10 @@ namespace EventProjectSWP.Controllers
 
             return new JsonResult(table);
         }
+<<<<<<< HEAD
       
+=======
+>>>>>>> backend
         [HttpPost("Add-image")]
         public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
@@ -104,10 +114,17 @@ namespace EventProjectSWP.Controllers
                     id = rdid.Next(10000);
                     check = rD.CheckRandom_ImageId(id);
                 } while (check);
+<<<<<<< HEAD
                 
                 if (file.Length > 0)
                 {
                     
+=======
+
+                if (file.Length > 0)
+                {
+
+>>>>>>> backend
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -131,8 +148,14 @@ namespace EventProjectSWP.Controllers
                         {
                             AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
                             ThrowOnCancel = true
+<<<<<<< HEAD
                             // when you cancel the upload, exception is thrown. By default no exception is thrown
                         })
+=======
+                        // when you cancel the upload, exception is thrown. By default no exception is thrown
+                    })
+                        .Child("Images")
+>>>>>>> backend
                         .Child($"{imgname}")
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
@@ -170,6 +193,10 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> backend
     }
+   
 }
