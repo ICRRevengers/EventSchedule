@@ -36,7 +36,6 @@ namespace EventProjectSWP
                {
                    options.ClientId = "837003437206-060ov85d36jcbooc5dbe9mc8saaiglpg.apps.googleusercontent.com";
                    options.ClientSecret = "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";
-
                });
             //Email configuration
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
@@ -45,13 +44,13 @@ namespace EventProjectSWP
             //Enable CORS
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options => options.WithOrigins("domain information").AllowAnyMethod().AllowAnyHeader());
 
             });
 
             //JSON serializer
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
@@ -61,7 +60,7 @@ namespace EventProjectSWP
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EventProjectSWP", Version = "v1" });
             });
-         
+
 
 
 
@@ -72,42 +71,36 @@ namespace EventProjectSWP
         {
 
 
-        
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventProjectSWP v1");
-                    c.OAuthAppName("Google");
-                    c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
-                }
-                
-                
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventProjectSWP v1")
+
                 );
-  
+
             }
-            
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseCookiePolicy(new CookiePolicyOptions()
-            {
-                MinimumSameSitePolicy = SameSiteMode.Lax
-            });
             app.UseCors(options =>
             {
                 options.
-                AllowAnyOrigin().
+                WithOrigins("domain information", "").
                 AllowAnyMethod().
                 AllowAnyHeader();
             });
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
+            app.UseCookiePolicy(new CookiePolicyOptions()
+            {
+                MinimumSameSitePolicy = SameSiteMode.Lax
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
