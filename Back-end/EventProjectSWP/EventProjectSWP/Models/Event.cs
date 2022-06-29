@@ -14,7 +14,7 @@ namespace EventProjectSWP.Models
         public bool PaymentStatus { get; set; }
         public string CategoryID { get; set; }
         public string LocationID { get; set; }
-        public int ClubID { get; set; }
+        public int AdminID { get; set; }
 
     }
 }

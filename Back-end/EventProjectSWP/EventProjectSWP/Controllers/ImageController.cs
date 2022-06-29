@@ -1,4 +1,5 @@
 ﻿using EventProjectSWP.Models;
+using EventProjectSWP.Settings;
 using Firebase.Auth;
 using Firebase.Storage;
 using Microsoft.AspNetCore.Hosting;
@@ -79,7 +80,7 @@ namespace EventProjectSWP.Controllers
 
             return new JsonResult(table);
         }
-      
+
         [HttpPost("Add-image")]
         public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
@@ -94,7 +95,7 @@ namespace EventProjectSWP.Controllers
                 do
                 {
                     RandomRD rD = new RandomRD(_configuration);
-                    imgname = rD.Random_ImageName();
+                    imgname = rD.Random_Name();
                     check = rD.CheckRandom_ImageName(imgname);
                 } while (check);
                 do
@@ -104,10 +105,11 @@ namespace EventProjectSWP.Controllers
                     id = rdid.Next(10000);
                     check = rD.CheckRandom_ImageId(id);
                 } while (check);
-                
+                    
+
                 if (file.Length > 0)
                 {
-                    
+
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -130,9 +132,10 @@ namespace EventProjectSWP.Controllers
                         new FirebaseStorageOptions
                         {
                             AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                            ThrowOnCancel = true
-                            // when you cancel the upload, exception is thrown. By default no exception is thrown
-                        })
+                            ThrowOnCancel = true                        // when you cancel the upload, exception is thrown. By default no exception is thrown
+                        // when you cancel the upload, exception is thrown. By default no exception is thrown
+                    })
+                        .Child("Images")
                         .Child($"{imgname}")
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
@@ -170,6 +173,6 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
     }
+   
 }
