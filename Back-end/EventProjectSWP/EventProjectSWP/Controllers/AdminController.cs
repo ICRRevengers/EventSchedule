@@ -1,4 +1,5 @@
 ﻿using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ namespace EventProjectSWP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class AdminController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -16,7 +18,6 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-
         [HttpGet("get-list-admin")]
         public JsonResult Get()
         {
