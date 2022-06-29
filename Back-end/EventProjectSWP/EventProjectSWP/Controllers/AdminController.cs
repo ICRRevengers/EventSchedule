@@ -9,18 +9,18 @@ namespace EventProjectSWP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClubController : ControllerBase
+    public class AdminController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public ClubController(IConfiguration configuration)
+        public AdminController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        [HttpGet("get-list-club")]
+        [HttpGet("get-list-admin")]
         public JsonResult Get()
         {
-            string query = @"select club_id , club_name, club_phone , club_email from dbo.tblClub";
+            string query = @"select admin_id , admin_name, admin_phone , admin_email from dbo.tblAdmin";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -40,10 +40,10 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
 
-        [HttpPut("update-club")]
-        public JsonResult Put(Club club)
+        [HttpPut("update-admin")]
+        public JsonResult Put(Admin club)
         {
-            string query = @"update dbo.tblClub set club_name =@club_name , club_phone=@club_phone , club_email=@club_email where club_id =@club_id";
+            string query = @"update dbo.tblAdmin set admin_name =@admin_name , admin_phone=@admin_phone , admin_email=@admin_email where admin_id =@admin_id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -53,10 +53,10 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@club_name", club.ClubName);
-                    myCommand.Parameters.AddWithValue("@club_phone", club.ClubPhone);
-                    myCommand.Parameters.AddWithValue("@club_email", club.ClubEmail);
-                    myCommand.Parameters.AddWithValue("@club_id", club.ClubID);
+                    myCommand.Parameters.AddWithValue("@admin_name", club.AdminName);
+                    myCommand.Parameters.AddWithValue("@admin_phone", club.AdminPhone);
+                    myCommand.Parameters.AddWithValue("@admin_email", club.AdminEmail);
+                    myCommand.Parameters.AddWithValue("@admin_id", club.AdminID);
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
                     myCon.Close();
@@ -66,10 +66,10 @@ namespace EventProjectSWP.Controllers
             return new JsonResult("Succeesful");
         }
 
-        [HttpGet("get-club-by-id")]
+        [HttpGet("get-admin-by-id")]
         public JsonResult GetClubById(string id)
         {
-            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_id = @club_id";
+            string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_id = @admin_id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -79,7 +79,7 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@club_id", id);
+                    myCommand.Parameters.AddWithValue("@admin_id", id);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -90,10 +90,10 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
 
-        [HttpGet("get-club-by-name")]
+        [HttpGet("get-admin-by-name")]
         public JsonResult GetClubByName(string name)
         {
-            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name = @club_name";
+            string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name like concat (@admin_name, '%')";
 
 
             DataTable table = new DataTable();
@@ -104,7 +104,7 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@club_name", name);
+                    myCommand.Parameters.AddWithValue("@admin_name", name);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -114,10 +114,10 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-        [HttpGet("login-club")]
+        [HttpGet("login-admin")]
         public JsonResult loginClub(string clubName, string clubPassword)
         {
-            string query = @"select club_name, club_phone , club_email from dbo.tblClub where club_name =@club_name and club_password = @club_password";
+            string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name =@admin_name and admin_password = @admin_password";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
@@ -126,8 +126,8 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@club_name", clubName);
-                    myCommand.Parameters.AddWithValue("@club_password", clubPassword);
+                    myCommand.Parameters.AddWithValue("@admin_name", clubName);
+                    myCommand.Parameters.AddWithValue("@admin_password", clubPassword);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -162,6 +162,34 @@ namespace EventProjectSWP.Controllers
             return new JsonResult("Check attend success");
         }*/
 
+
+
+
+        [HttpPut("Check attend")]
+        public JsonResult CheckAttend(EventParticipated user, bool status)
+        {
+            string query = @"update tblEventParticipated set users_status = @users_status where users_id = @users_id";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@users_id", user.UserID);
+                    myCommand.Parameters.AddWithValue("@users_status", status);
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult("Check attend success");
+        }
+
+
+/*
         [HttpPut("Check attend")]
         public JsonResult CheckAttend(bool status, int id)
         {
@@ -183,7 +211,7 @@ namespace EventProjectSWP.Controllers
                 }
             }
             return new JsonResult("Check attend success");
-        }
+        }*/
 
     }
 }

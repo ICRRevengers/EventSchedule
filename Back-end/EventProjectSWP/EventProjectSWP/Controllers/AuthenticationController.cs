@@ -14,8 +14,7 @@ namespace EventProjectSWP.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        [HttpGet]
-        [Route("google-login")]
+        [HttpGet("google-login")]
 
         public IActionResult GoogleLogin()
         {
@@ -24,14 +23,13 @@ namespace EventProjectSWP.Controllers
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
         [HttpGet]
-        [Route("google-response")]
+        [Route("~/sigin-google")]
         public async Task<JsonResult> GoogleResponse()
         {
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var claims = result.Principal.Identities.FirstOrDefault()
                 .Claims.Select(claim => new
                 {
-
                     claim.Value
 
                 });
