@@ -46,7 +46,7 @@ namespace EventProjectSWP.Controllers
         }
 
 
-        [HttpGet("show upcoming event")]
+        [HttpGet("show-upcoming-event")]
         public JsonResult Show_upcoming_event()
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
@@ -74,7 +74,7 @@ namespace EventProjectSWP.Controllers
 
 
 
-        [HttpGet("show past event")]
+        [HttpGet("show-past-event")]
         public JsonResult Show_past_event()
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
