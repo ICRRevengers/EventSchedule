@@ -39,9 +39,9 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPut("update-payment")]
-        public JsonResult Put(bool status, string id)
+        public JsonResult Put(bool status, string user_id, string event_id)
         {
-            string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id";
+            string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id and event_id = @event_id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -52,7 +52,8 @@ namespace EventProjectSWP.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.Parameters.AddWithValue("@payment_status", status);
-                    myCommand.Parameters.AddWithValue("@users_id", id);
+                    myCommand.Parameters.AddWithValue("@users_id", user_id);
+                    myCommand.Parameters.AddWithValue("@event_id", event_id);
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
                     myCon.Close();

@@ -111,9 +111,5 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-      
-
-
-
     }
 }
