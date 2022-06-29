@@ -5,13 +5,10 @@ import Header from '../components/layout/defaultLayout/header/Header';
 import Aboutus from '../pages/aboutus/Aboutus';
 import Contact from '../pages/contact/Contact';
 import Login from '../pages/login/Login';
-<<<<<<< HEAD
-=======
 import Create from '../pages/manager/events/CreateEvent';
 import UpdateEvent from '../pages/manager/events/UpdateEvent';
 import ParticipatedList from '../pages/manager/events/ParticipatedList';
 import AdminProfile from '../pages/manager/profile/AdminProfile';
->>>>>>> frontend
 
 const publicRoutes = [
     { path: '/', component: Home },
@@ -23,8 +20,6 @@ const publicRoutes = [
         component: ManagerEvents,
         layout: Header
     },
-<<<<<<< HEAD
-=======
     {
         path: '/manage/postevent',
         component: Create,
@@ -45,7 +40,6 @@ const publicRoutes = [
         component: AdminProfile,
         layout: Header
     },
->>>>>>> frontend
     { path: '/*', component: Error, layout: null },
 ];
 
