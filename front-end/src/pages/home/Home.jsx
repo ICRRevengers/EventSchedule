@@ -1,4 +1,5 @@
+
 const Home = () => {
-    console.log('this is home page');
+    console.log("this is homepage")
 };
 export default Home;
