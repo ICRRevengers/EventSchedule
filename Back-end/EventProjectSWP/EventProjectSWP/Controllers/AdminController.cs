@@ -165,10 +165,36 @@ namespace EventProjectSWP.Controllers
 
 
 
+        /*  [HttpPut("Check attend")]
+          public JsonResult CheckAttend(EventParticipated user, bool status)
+          {
+              string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id, users_id = @users_id";
+              DataTable table = new DataTable();
+              string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+              SqlDataReader myReader;
+              using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+              {
+                  myCon.Open();
+                  using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                  {
+
+                      myCommand.Parameters.AddWithValue("@users_id", user.UserID);
+                      myCommand.Parameters.AddWithValue("@users_status", status);
+                      myReader = myCommand.ExecuteReader();
+                      myReader.Close();
+                      myCon.Close();
+
+                  }
+              }
+              return new JsonResult("Check attend success");
+          }*/
+
+
+
         [HttpPut("Check attend")]
-        public JsonResult CheckAttend(EventParticipated user, bool status)
+        public JsonResult CheckAttend(bool status, int user_id, int event_id)
         {
-            string query = @"update tblEventParticipated set users_status = @users_status where users_id = @users_id";
+            string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id and users_id = @users_id";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
@@ -177,7 +203,8 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@users_id", user.UserID);
+                    myCommand.Parameters.AddWithValue("@event_id", event_id);
+                    myCommand.Parameters.AddWithValue("@users_id", user_id);
                     myCommand.Parameters.AddWithValue("@users_status", status);
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
@@ -187,31 +214,6 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Check attend success");
         }
-
-
-/*
-        [HttpPut("Check attend")]
-        public JsonResult CheckAttend(bool status, int id)
-        {
-            string query = @"update tblEventParticipated set users_status = @users_status where users_id = @users_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myCommand.Parameters.AddWithValue("@users_status", status);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
-
-                }
-            }
-            return new JsonResult("Check attend success");
-        }*/
 
     }
 }
