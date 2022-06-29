@@ -2,6 +2,7 @@ using EventProjectSWP.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -49,7 +50,7 @@ namespace EventProjectSWP
 
             //JSON serializer
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
@@ -59,7 +60,7 @@ namespace EventProjectSWP
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EventProjectSWP", Version = "v1" });
             });
-         
+
 
 
 
@@ -78,24 +79,28 @@ namespace EventProjectSWP
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventProjectSWP v1")
-                
+
                 );
-  
+
             }
+
+            app.UseRouting();
+
             app.UseCors(options =>
             {
                 options.
-                WithOrigins("domain information","").
+                WithOrigins("domain information", "").
                 AllowAnyMethod().
                 AllowAnyHeader();
             });
 
-            app.UseRouting();
-
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            app.UseCookiePolicy(new CookiePolicyOptions()
+            {
+                MinimumSameSitePolicy = SameSiteMode.Lax
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

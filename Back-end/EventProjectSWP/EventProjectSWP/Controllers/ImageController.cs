@@ -95,7 +95,7 @@ namespace EventProjectSWP.Controllers
                 do
                 {
                     RandomRD rD = new RandomRD(_configuration);
-                    imgname = rD.Random_ImageName();
+                    imgname = rD.Random_Name();
                     check = rD.CheckRandom_ImageName(imgname);
                 } while (check);
                 do
