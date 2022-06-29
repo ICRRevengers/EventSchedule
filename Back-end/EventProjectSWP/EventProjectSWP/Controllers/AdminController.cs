@@ -192,7 +192,8 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPut("Check attend")]
-        public JsonResult CheckAttend(bool status, int user_id, int event_id)
+            public JsonResult CheckAttend(bool status, int user_id, int event_id)
+            //public JsonResult CheckAttend(EventParticipated ev)
         {
             string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id and users_id = @users_id";
             DataTable table = new DataTable();
@@ -206,6 +207,9 @@ namespace EventProjectSWP.Controllers
                     myCommand.Parameters.AddWithValue("@event_id", event_id);
                     myCommand.Parameters.AddWithValue("@users_id", user_id);
                     myCommand.Parameters.AddWithValue("@users_status", status);
+                    /*  myCommand.Parameters.AddWithValue("@event_id", ev.EventID);
+                      myCommand.Parameters.AddWithValue("@users_id", ev.UserID);
+                      myCommand.Parameters.AddWithValue("@users_status", ev.users_status);*/
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
                     myCon.Close();
