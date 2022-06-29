@@ -101,7 +101,7 @@ namespace EventProjectSWP
             app.UseCors(options =>
             {
                 options.
-                WithOrigins("domain information","").
+                AllowAnyOrigin().
                 AllowAnyMethod().
                 AllowAnyHeader();
             });
