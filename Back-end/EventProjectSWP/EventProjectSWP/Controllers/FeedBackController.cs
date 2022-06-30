@@ -18,6 +18,7 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
+
         [HttpGet("get-event-feedback")]
         public JsonResult GetUserParticipatedEvent(string id)
         {

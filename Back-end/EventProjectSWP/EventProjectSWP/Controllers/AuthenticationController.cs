@@ -32,7 +32,6 @@ namespace EventProjectSWP.Controllers
             var claims = result.Principal.Identities.FirstOrDefault()
                 .Claims.Select(claim => new
                 {
-
                     claim.Value
 
                 });
