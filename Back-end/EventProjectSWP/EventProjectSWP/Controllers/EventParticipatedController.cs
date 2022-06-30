@@ -40,11 +40,12 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
-        [HttpGet("get-list-event-participated")]
+        
+        [HttpGet("get-userinfo-join-event")]
+        // lấy tất cả thông tin người dùng đã tham gia event
         public JsonResult Get()
         {
-            string query = @"select users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
 from tblEventParticipated EP, tblUser U
 where Ep.users_id = U.users_id";
 
@@ -66,10 +67,13 @@ where Ep.users_id = U.users_id";
             return new JsonResult(table);
         }
 
-        [HttpGet("get-list-user-join-event-participated")]
+        [HttpGet("get-all-event-i-joined")]
+        // Lấy tất cả event mà 1 user tham gia 
         public JsonResult GetUserEvent(string id)
         {
-            string query = @"select event_id , date_participated , payment_status from tblEventParticipated where users_id = @users_id";
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id and U.users_id = @users_id";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
@@ -89,10 +93,14 @@ where Ep.users_id = U.users_id";
             return new JsonResult(table);
         }
 
-        [HttpGet("get-user-list-from-event")]
+        [HttpGet("get-user-list-from-an-event")]
+        // Lấy tất cả user từ 1 event
         public JsonResult GetUserParticipatedEvent(string id)
         {
-            string query = @"select users_id , date_participated, payment_status from tblEventParticipated where event_id = @event_id";
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id and EP.event_id = @event_id
+";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
