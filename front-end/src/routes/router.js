@@ -32,7 +32,7 @@ const publicRoutes = [
         layout: Header
     },
     {
-        path: '/manage/participated',
+        path: '/manage/participated/:id',
         component: ParticipatedList,
         layout: Header
     },

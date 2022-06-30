@@ -1,10 +1,10 @@
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
 import Button from '../../../components/button/Button';
-import myevents from '../data/data';
 import { Table } from 'reactstrap';
 import '../../../App.scss'
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 const ManagerEvents = () => {
     const [event, setEvent] = useState();
 
@@ -39,7 +39,6 @@ const ManagerEvents = () => {
           isMounted = false;
           controller.abort();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
     return(
     <div className="flex">
@@ -47,7 +46,7 @@ const ManagerEvents = () => {
         <Table className='m-[20px] w-[900px]'>
                 <thead>
                     <tr>
-                        <th>Id sự kiện</th>
+                        <th>Mã số</th>
                         <th>Tên sự kiện</th>
                         <th>Người tham gia</th>
                         <th>Chi tiết sự kiện</th>
@@ -60,7 +59,7 @@ const ManagerEvents = () => {
                         <tr className='hover:bg-[#f99779]'>
                             <td>{eve?.event_id}</td>
                             <td>{eve?.event_name}</td>
-                            <td><Button href='/manage/participated'>Danh sách</Button></td>
+                            <td><Link to={`/manage/participated/${eve.event_id}`} >Danh sách</Link></td>
                             <td><Button href='/management/eventdetail'>Xem</Button></td>
                             <td><Button href='/manage/update'>Cập nhật</Button></td>
                             <td><Button>Xóa</Button></td>

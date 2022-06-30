@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace EventProjectSWP.Controllers
 {
@@ -21,7 +22,6 @@ namespace EventProjectSWP.Controllers
         public JsonResult Put(bool status, string id)
         {
             string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id";
-
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
