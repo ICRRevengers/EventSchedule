@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace EventProjectSWP.Controllers
 {
@@ -17,10 +18,35 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
+        [HttpPut("update-payment")]
+        public JsonResult Put(bool status, string id)
+        {
+            string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@payment_status", status);
+                    myCommand.Parameters.AddWithValue("@users_id", id);
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult("Succeesful");
+        }
+
         [HttpGet("get-list-event-participated")]
         public JsonResult Get()
         {
-            string query = @"select event_id , users_id, date_participated , payment_status from tblEventParticipated";
+            string query = @"select users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -91,7 +117,7 @@ namespace EventProjectSWP.Controllers
         [HttpPost("add-user-join-event")]
         public JsonResult Post(EventParticipated EventParticipated)
         {
-            string query = @"insert into tblEventParticipated values(@event_id,@users_id,@date_participated,@payment_status)";
+            string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -104,7 +130,6 @@ namespace EventProjectSWP.Controllers
                     myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
                     myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
                     myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
-                    myCommand.Parameters.AddWithValue("@payment_status", EventParticipated.PaymentStatus);
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
                     myCon.Close();
@@ -112,7 +137,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-      
+
 
 
 
