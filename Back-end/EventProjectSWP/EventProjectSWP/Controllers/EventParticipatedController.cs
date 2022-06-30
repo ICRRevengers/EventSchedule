@@ -44,7 +44,9 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-list-event-participated")]
         public JsonResult Get()
         {
-            string query = @"select event_id , users_id, date_participated , payment_status from tblEventParticipated";
+            string query = @"select users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -135,7 +137,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-      
+
 
 
 
