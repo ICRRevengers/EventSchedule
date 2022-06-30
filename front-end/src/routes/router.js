@@ -9,6 +9,7 @@ import Create from '../pages/manager/events/CreateEvent';
 import UpdateEvent from '../pages/manager/events/UpdateEvent';
 import ParticipatedList from '../pages/manager/events/ParticipatedList';
 import AdminProfile from '../pages/manager/profile/AdminProfile';
+import UserProfile from '../pages/user/profile/userprofile';
 
 const publicRoutes = [
     { path: '/', component: Home },
@@ -40,6 +41,7 @@ const publicRoutes = [
         component: AdminProfile,
         layout: Header
     },
+    { path: '/user/profile', component: UserProfile },
     { path: '/*', component: Error, layout: null },
 ];
 

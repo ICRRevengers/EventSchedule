@@ -10,6 +10,7 @@ const ParticipatedList = () => (
         <Table className='m-[20px] w-[900px]'>
                 <thead>
                     <tr>
+                        <th>Mã số sinh viên</th>
                         <th>Tên sinh viên</th>
                         <th>Ngày đăng kí</th>
                         <th>Thanh toán</th>
@@ -20,6 +21,7 @@ const ParticipatedList = () => (
                     {myevents.map((item) => {
                         return (
                             <tr className='hover:bg-[#f99779]'>
+                                <td></td>
                                 <td>{item.Title}</td>
                                 <td>20/10/2021</td>
                                 <td><input type='checkbox' value='true'/></td>
