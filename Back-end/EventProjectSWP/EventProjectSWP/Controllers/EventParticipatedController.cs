@@ -44,7 +44,7 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-list-event-participated")]
         public JsonResult Get()
         {
-            string query = @"select users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
 from tblEventParticipated EP, tblUser U
 where Ep.users_id = U.users_id";
 
