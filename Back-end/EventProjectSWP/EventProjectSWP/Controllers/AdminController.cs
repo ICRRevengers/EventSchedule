@@ -18,6 +18,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
+
         [HttpGet("get-list-admin")]
         public JsonResult Get()
         {
