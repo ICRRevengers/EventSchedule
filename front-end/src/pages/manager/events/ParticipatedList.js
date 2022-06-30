@@ -5,6 +5,7 @@ import axios from 'axios';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
+import { Typography } from '@mui/material';
 
 function ParticipatedList() {
     const { id } = useParams();
@@ -15,7 +16,7 @@ function ParticipatedList() {
         setLoading(true);
         axios
             .get(
-                `http://localhost:5000/api/EventParticipated/get-user-list-from-event?id=${id}`,
+                `http://localhost:5000/api/EventParticipated/get-user-list-from-an-event?id=${id}`,
             )
             .then((res) => {
                 const data = res.data
@@ -37,7 +38,12 @@ function ParticipatedList() {
     ) : (
         <div className="flex">
             <Sidebar />
-            <Table className="m-[20px] w-[900px]">
+            {students.length === 0 ? <Typography>
+                <h1 className="text-[#000050] font-bold text-[50px] p-[50px] text-center">
+                    Sự kiện <br/> hiện chưa có người đăng kí
+                </h1>
+            </Typography> : (
+                <Table className="m-[20px] w-[900px]">
                 <thead>
                     <tr>
                         <th>MSSV</th>
@@ -52,7 +58,7 @@ function ParticipatedList() {
                         return (
                             <tr className="hover:bg-[#f99779]">
                                 <td>{student?.users_id}</td>
-                                <td>asjbdsj</td>
+                                <td>{student?.users_name}</td>
                                 <td>{student.date_participated}</td>
                                 <td>
                                     <input type="checkbox" value="true" />
@@ -65,6 +71,7 @@ function ParticipatedList() {
                     })}
                 </tbody>
             </Table>
+            )}
         </div>
     );
 }
