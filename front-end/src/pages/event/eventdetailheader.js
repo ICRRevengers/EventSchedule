@@ -10,7 +10,7 @@ import axios from "axios";
 
 
 
-const StudentJobDetailHeader = () => {
+const EventDetailHeader = () => {
     const [load, setLoad] = useState(false);
     // const { item } = props;
     const [open, setOpen] = useState(false);
@@ -306,5 +306,5 @@ const StudentJobDetailHeader = () => {
 };
 
 
-export default StudentJobDetailHeader;
+export default EventDetailHeader;
 
