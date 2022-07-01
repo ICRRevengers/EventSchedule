@@ -10,7 +10,7 @@ import { Typography } from '@mui/material';
 function ParticipatedList() {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
-    const [students, setStudents] = useState();
+    const [students, setStudents] = useState([]);
 
     useEffect(() => {
         setLoading(true);
@@ -32,6 +32,25 @@ function ParticipatedList() {
                 }, 500);
             });
     }, []);
+
+    const columns = [
+        { field: 'userId', headerName: 'MSSV', width: 70 },
+        { field: 'userName', headerName: 'Họ tên sinh viên', width: 130 },
+        {
+            field: 'phone',
+            headerName: 'Số điện thoại',
+            type: 'number',
+            width: 100,
+        },
+        { field: 'email', headerName: 'Email', type: 'email', width: 100 },
+        {
+            field: 'dateRegistered',
+            headerName: 'Ngày đăng kí tham gia',
+            type: 'datetime',
+            width: 100,
+        },
+        { field: 'paymentstatus', headerName: 'Thanh toán', width: 70 },
+    ];
 
     return loading ? (
         <Loading />
@@ -59,7 +78,7 @@ function ParticipatedList() {
                             <tr className="hover:bg-[#f99779]">
                                 <td>{student?.users_id}</td>
                                 <td>{student?.users_name}</td>
-                                <td>{student.date_participated}</td>
+                                <td>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(student.date_participated         )))}</td>
                                 <td>
                                     <input type="checkbox" value="true" />
                                 </td>

@@ -11,7 +11,6 @@ import ParticipatedList from '../pages/manager/events/ParticipatedList';
 import AdminProfile from '../pages/manager/profile/AdminProfile';
 import UserProfile from '../pages/user/profile/userprofile';
 import EventDetail from '../pages/event/eventdetail';
-import UserParticipatedList from '../pages/user/listparticipated/UserParticipatedList';
 
 const publicRoutes = [
     { path: '/', component: Home },
@@ -45,7 +44,7 @@ const publicRoutes = [
     },
     { path: '/user/profile', component: UserProfile },
     { path: '/event/detailpage', component: EventDetail },
-    { path: '/*', component: Error, layout: null },
+    { path: '/*', component: Error, layout: null }
 ];
 
 const privateRoutes = [];
