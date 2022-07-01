@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import axios from "axios";
 const EventDetail = () => {
@@ -48,6 +49,98 @@ const EventDetail = () => {
             </form>
        
     </div>
+=======
+import {
+    Box,
+    CircularProgress, Container, Grid
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+// import Paper from "@mui/material";
+import axios from "axios";
+import StudentJobDetailHeader from "./eventdetailheader";
+import StudentJobDetailBottom from "./eventdetailbottom";
+
+const StudentJobDetail = () => {
+    // const { id } = useParams(); // get id job
+
+    // const [job, setJob] = useState({});
+
+    // console.log("id", id);
+
+    // const [loading, setLoading] = useState(false);
+
+    // const LoadingComponent = () => (
+    //     <Box
+    //         sx={{
+    //             width: "100%",
+    //             height: "100vh",
+    //             display: "flex",
+    //             justifyContent: "center",
+    //             alignItems: "center",
+    //         }}
+    //     >
+    //         <CircularProgress color="success" size={60} />
+
+    //     </Box>
+    // );
+
+
+    // useEffect(() => {
+    //     let isMounted = true;
+    //     const getJob = async () => {
+    //         try {
+
+    //             const response = await axios.get(`/jobs/${id}`);
+
+    //             setLoading(false);
+    //             if (isMounted)
+    //                 setJob(response.data);
+
+    //         } catch (error) {
+    //             console.error(error);
+    //             setLoading(true);
+
+    //             // navigate('/login', { state: { from: location }, replace: true });
+    //         }
+    //     };
+    //     getJob()
+    //     return () => {
+    //         isMounted = false;
+    //     };
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
+    // if (loading) {
+    //     return <LoadingComponent />;
+    // }
+    // console.log("Job: ", job);
+    return (
+        <Box sx={{ m: 20 }}>
+            <Container
+                sx={
+                    { m: 1 }
+                }
+            >
+                <Grid container spacing={3}>
+                    <Grid item lg={12} md={12} xs={12}>
+                        {/* <StudentJobDetailHeader item={job} /> */}
+                        <StudentJobDetailHeader />
+
+
+
+                    </Grid>
+                    <Grid item lg={12} md={12} xs={12}>
+                        {/* <StudentJobDetailBottom item={job} /> */}
+                        <StudentJobDetailBottom />
+                    </Grid>
+
+                </Grid>
+
+
+            </Container>
+        </Box>
+>>>>>>> frontend-Phu
     )
 }
-export default EventDetail;
+
+export default StudentJobDetail
