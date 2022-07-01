@@ -1,15 +1,46 @@
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
-import Button from '../../../components/button/Button';
-import myevents from '../data/data';
 import { Table } from 'reactstrap';
-import '../../../App.scss'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import '../../../App.scss';
+import { useParams } from 'react-router-dom';
+import Loading from '../../../components/loading/loading';
 
-const ParticipatedList = () => (
-    <div className="flex">
-        <Sidebar />
-        <Table className='m-[20px] w-[900px]'>
+function ParticipatedList() {
+    const { id } = useParams();
+    const [loading, setLoading] = useState(false);
+    const [students, setStudents] = useState();
+
+    useEffect(() => {
+        setLoading(true);
+        axios
+            .get(
+                `http://localhost:5000/api/EventParticipated/get-user-list-from-event?id=${id}`,
+            )
+            .then((res) => {
+                const data = res.data
+                setStudents(data);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+            });
+    }, []);
+
+    return loading ? (
+        <Loading />
+    ) : (
+        <div className="flex">
+            <Sidebar />
+            <Table className="m-[20px] w-[900px]">
                 <thead>
                     <tr>
+                        <th>MSSV</th>
                         <th>Tên sinh viên</th>
                         <th>Ngày đăng kí</th>
                         <th>Thanh toán</th>
@@ -17,19 +48,25 @@ const ParticipatedList = () => (
                     </tr>
                 </thead>
                 <tbody>
-                    {myevents.map((item) => {
+                    {students?.map((student) => {
                         return (
-                            <tr className='hover:bg-[#f99779]'>
-                                <td>{item.Title}</td>
-                                <td>20/10/2021</td>
-                                <td><input type='checkbox' value='true'/></td>
-                                <td><input type='checkbox' value='true'/></td>
+                            <tr className="hover:bg-[#f99779]">
+                                <td>{student?.users_id}</td>
+                                <td>asjbdsj</td>
+                                <td>{student.date_participated}</td>
+                                <td>
+                                    <input type="checkbox" value="true" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" value="true" />
+                                </td>
                             </tr>
-                        )
+                        );
                     })}
                 </tbody>
             </Table>
-    </div>
-);
+        </div>
+    );
+}
 
 export default ParticipatedList;

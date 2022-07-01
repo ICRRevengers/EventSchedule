@@ -4,6 +4,11 @@
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^3.6.2",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.88",
+    "@mui/material": "^5.8.6",
     "@sefailyasoz/react-carousel": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
@@ -22,7 +27,6 @@
     "react-scripts": "^5.0.1",
     "reactstrap": "^9.1.1",
     "sass": "^1.53.0",
-    "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

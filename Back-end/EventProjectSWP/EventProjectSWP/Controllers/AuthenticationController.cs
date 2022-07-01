@@ -8,6 +8,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EventProjectSWP.Models;
 using Microsoft.AspNetCore.Cors;
+using System.Net.Http;
+using System.Net;
 
 namespace EventProjectSWP.Controllers
 {
@@ -32,7 +34,6 @@ namespace EventProjectSWP.Controllers
             var claims = result.Principal.Identities.FirstOrDefault()
                 .Claims.Select(claim => new
                 {
-
                     claim.Value
 
                 });
@@ -40,6 +41,5 @@ namespace EventProjectSWP.Controllers
             var logininfo = UserInfo.GetUserLoginInfo(claimsPrincipal);
             return new JsonResult(logininfo);
         }
-
     }
 }

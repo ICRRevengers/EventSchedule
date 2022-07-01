@@ -33,9 +33,10 @@ namespace EventProjectSWP
                    options.LogoutPath = "/account/google-logout";
                })
                .AddGoogle(options =>
-               {
+               {    
                    options.ClientId = "837003437206-060ov85d36jcbooc5dbe9mc8saaiglpg.apps.googleusercontent.com";
                    options.ClientSecret = "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";
+
                });
             //Email configuration
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
