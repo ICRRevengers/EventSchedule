@@ -8,7 +8,7 @@ import {
     Typography
 } from "@mui/material";
 
-const StudentJobDetailBottom = () => {
+const EventDetailBottom = () => {
     // const { item } = props;
     return (
         <>
@@ -163,4 +163,4 @@ const StudentJobDetailBottom = () => {
     )
 }
 
-export default StudentJobDetailBottom
+export default EventDetailBottom
