@@ -46,7 +46,7 @@ namespace EventProjectSWP.Controllers
             {
                 return Ok(new Response<DataTable>(table));
             }
-            return BadRequest(new Response<string>("khong get duoc"));
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("show-upcoming-event")]

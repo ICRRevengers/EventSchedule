@@ -80,7 +80,7 @@ namespace EventProjectSWP.Controllers
         [HttpPost("Add-image")]
         public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
-            string imgname;
+            string vidname;
             int id;
             Boolean check;
             FileStream ms;
@@ -91,15 +91,15 @@ namespace EventProjectSWP.Controllers
                 do
                 {
                     RandomRD rD = new RandomRD(_configuration);
-                    imgname = rD.Random_Name();
-                    check = rD.CheckRandom_ImageName(imgname);
+                    vidname = rD.Random_Name();
+                    check = rD.CheckRandom_VideoName(vidname);
                 } while (check);
                 do
                 {
                     Random rdid = new Random();
                     RandomRD rD = new RandomRD(_configuration);
                     id = rdid.Next(10000);
-                    check = rD.CheckRandom_ImageId(id);
+                    check = rD.CheckRandom_VideoId(id);
                 } while (check);
 
 
@@ -119,8 +119,6 @@ namespace EventProjectSWP.Controllers
                     ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
                     var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
                     var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
-
-                    // you can use CancellationTokenSource to cancel the upload midway
                     var cancellation = new CancellationTokenSource();
 
                     var task = new FirebaseStorage(
@@ -128,11 +126,10 @@ namespace EventProjectSWP.Controllers
                         new FirebaseStorageOptions
                         {
                             AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                            ThrowOnCancel = true                        // when you cancel the upload, exception is thrown. By default no exception is thrown
-                                                                        // when you cancel the upload, exception is thrown. By default no exception is thrown
+                            ThrowOnCancel = true 
                         })
                         .Child("Videos")
-                        .Child($"{imgname}")
+                        .Child($"{vidname}")
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
                     string query = @"insert into tblVideo values (@video_id,@video_url,@event_id,@video_name)";
@@ -147,7 +144,7 @@ namespace EventProjectSWP.Controllers
                         {
                             myCommand.Parameters.AddWithValue("@video_id", id);
                             myCommand.Parameters.AddWithValue("@video_url", link);
-                            myCommand.Parameters.AddWithValue("@video_name", imgname);
+                            myCommand.Parameters.AddWithValue("@video_name", vidname);
                             myCommand.Parameters.AddWithValue("@event_id", eventid);
                             myReader = myCommand.ExecuteReader();
                             myReader.Close();
@@ -167,7 +164,7 @@ namespace EventProjectSWP.Controllers
             {
                 return new JsonResult(e);
             }
-            return new JsonResult("Succeesful");
+            return new JsonResult("Video Uploaded Succeesful");
         }
     }
 }
