@@ -46,6 +46,7 @@ const publicRoutes = [
     { path: '/user/profile', component: UserProfile },
     { path: '/event/detailpage', component: EventDetail },
     { path: '/*', component: Error, layout: null },
+    { path: '/user/usereventlist', component: UserParticipatedList },
 ];
 
 const privateRoutes = [];

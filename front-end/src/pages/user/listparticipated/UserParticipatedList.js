@@ -1,4 +1,4 @@
-import Sidebar from '../../../components/layout/sidebar/Sidebar';
+
 import { Table } from 'reactstrap';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -36,7 +36,7 @@ function UserParticipatedList() {
         <Loading />
     ) : (
         <div className="flex">
-            <Sidebar />
+           
             <Table className="m-[20px] w-[900px]">
                 <thead>
                     <tr>
