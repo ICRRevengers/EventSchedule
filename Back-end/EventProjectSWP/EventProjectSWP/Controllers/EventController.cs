@@ -20,7 +20,7 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpGet("get-event-list")]
-        public JsonResult Get()
+        public IActionResult Get()
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
@@ -42,9 +42,12 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("khong get duoc"));
         }
-
 
         [HttpGet("show-upcoming-event")]
         public JsonResult Show_upcoming_event()
