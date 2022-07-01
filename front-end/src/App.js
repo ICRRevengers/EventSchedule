@@ -2,7 +2,6 @@ import { Fragment} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { publicRoutes } from './routes/router.js';
 import HeaderFooter from './components/layout/defaultLayout/header-footer/HeaderFooter';
-
 function App() {
     return (
         <>
