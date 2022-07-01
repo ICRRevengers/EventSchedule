@@ -45,6 +45,66 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
 
+
+        [HttpGet("show-upcoming-event")]
+        public JsonResult Show_upcoming_event()
+        {
+            string query = @"Select event_id, event_name, event_content, event_timeline,
+                            created_by, created_by,event_status,payment_status,category_id,location_id
+                           ,admin_id From dbo.tblEvent A
+                           where A.event_timeline >= GETDATE()";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
+
+        [HttpGet("show-past-event")]
+        public JsonResult Show_past_event()
+        {
+            string query = @"Select event_id, event_name, event_content, event_timeline,
+                            created_by, created_by,event_status,payment_status,category_id,location_id
+                           ,admin_id From dbo.tblEvent A
+                           where A.event_timeline < GETDATE()";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
+
+
+
+
         [HttpPost("add-event")]
         public JsonResult Post(Event Event)
         {
@@ -78,6 +138,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             }
             return new JsonResult("Succeesful");
         }
+
 
         [HttpPut("update-event")]
         public JsonResult Put(Event Event)

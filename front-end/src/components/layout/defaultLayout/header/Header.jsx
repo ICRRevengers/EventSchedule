@@ -55,7 +55,7 @@ const Header = ({ children }) => {
                 <div className="md:hidden right-[0] my-[auto] absolute menu cursor-pointer">
                     <HiMenu className="text-[25px]" />
                 </div>
-                <ul className="status md:static hidden  w-[300px] md:w-[100%] h-[100vh] md:h-[100%] top-[-20px] md:top-auto md:bg-transparent absolute right-[-20px] bg-[#000050] md:flex flex-col md:flex-row p-[15px] md:p-[0] md:items-center">
+                <ul className="status md:static hidden  w-[300px] md:w-[100%] h-[100vh] md:h-[100%] top-[-20px] md:top-auto md:bg-transparent absolute right-[-20px] bg-[#f24405] md:flex flex-col md:flex-row p-[15px] md:p-[0] md:items-center">
                     <div className="md:hidden close">
                         <AiOutlineClose className="text-[#fff] text-[20px] ml-[95%] cursor-pointer" />
                     </div>

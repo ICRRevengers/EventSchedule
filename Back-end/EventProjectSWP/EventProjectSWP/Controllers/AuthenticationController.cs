@@ -7,11 +7,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace EventProjectSWP.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowOrigin")]
     public class AuthenticationController : ControllerBase
     {
         [HttpGet("google-login")]
