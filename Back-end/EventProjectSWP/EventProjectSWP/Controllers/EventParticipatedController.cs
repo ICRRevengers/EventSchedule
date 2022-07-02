@@ -17,29 +17,6 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-
-        [HttpPut("update-payment")]
-        public JsonResult Put(bool status, string id)
-        {
-            string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@payment_status", status);
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
-
-                }
-            }
-            return new JsonResult("Succeesful");
-        }
         
         [HttpGet("get-userinfo-join-event")]
         // lấy tất cả thông tin người dùng đã tham gia event

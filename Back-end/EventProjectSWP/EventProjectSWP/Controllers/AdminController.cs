@@ -1,4 +1,4 @@
-﻿using EventProjectSWP.Models;
+using EventProjectSWP.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -117,9 +117,9 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
         [HttpGet("login-admin")]
-        public JsonResult loginClub(string clubName, string clubPassword)
+        public JsonResult loginAdmin(string adminMail, string adminPassword)
         {
-            string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name =@admin_name and admin_password = @admin_password";
+            string query = @"select * from tblAdmin where admin_email = @admin_email and admin_password=@admin_password";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
@@ -128,8 +128,8 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@admin_name", clubName);
-                    myCommand.Parameters.AddWithValue("@admin_password", clubPassword);
+                    myCommand.Parameters.AddWithValue("@admin_email", adminMail);
+                    myCommand.Parameters.AddWithValue("@admin_password", adminPassword);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
