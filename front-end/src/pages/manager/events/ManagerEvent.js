@@ -1,75 +1,97 @@
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
-import Button from '../../../components/button/Button';
-import { Table } from 'reactstrap';
-import '../../../App.scss'
-import { useEffect, useState } from "react";
-import axios from "axios";
+import '../../../App.scss';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+
 const ManagerEvents = () => {
-    const [event, setEvent] = useState();
+    const [events, setEvents] = useState([]);
 
     useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
-        
-        const getEvents = async () => {
-          try {
-            const response = await axios.get("http://localhost:5000/api/Event/get-event-list", {
-              signal: controller.signal,
-              
+        axios
+            .get(`http://localhost:5000/api/Event/get-event-list`)
+            .then((res) => {
+                const data = res.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
             });
-            console.log("events: ", response.data);
-            if (isMounted) {
-                setEvent(response.data);
-              
-            }
-          } catch (error) {
-            console.error(error);
-            // if (!error?.response) {
-            //   alert('No Server Response');
-    
-            // } else {
-            //   alert('Load List Failed. Please refresh page!')
-            // }
-          }
-        };
-        getEvents();
-    
-        return () => {
-          isMounted = false;
-          controller.abort();
-        };
-      }, []);
-    return(
-    <div className="flex">
-        <Sidebar />
-        <Table className='m-[20px] w-[900px]'>
-                <thead>
-                    <tr>
-                        <th>Mã số</th>
-                        <th>Tên sự kiện</th>
-                        <th>Người tham gia</th>
-                        <th>Chi tiết sự kiện</th>
-                        <th>Cập nhật</th>
-                        <th>Xóa sự kiện</th>
-                    </tr>
-                </thead>
-                <tbody>    
-                    {event?.map((eve) => (
-                        <tr className='hover:bg-[#f99779]'>
-                            <td>{eve?.event_id}</td>
-                            <td>{eve?.event_name}</td>
-                            <td><Link to={`/manage/participated/${eve.event_id}`} >Danh sách</Link></td>
-                            <td><Button href='/management/eventdetail'>Xem</Button></td>
-                            <td><Button href='/manage/update'>Cập nhật</Button></td>
-                            <td><Button>Xóa</Button></td>
-                        </tr>                     
-                    ))}
-                    
-                </tbody>
-            </Table>
-    </div>
-    )
+    }, []);
+
+    return (
+        <div className="flex">
+            <Sidebar />
+            <TableContainer component={Paper} sx={{ maxWidth: 980 }}>
+                <Table sx={{ minWidth: 650}} aria-label="event list">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Mã số</TableCell>
+                            <TableCell align="center">Tên sự kiện</TableCell>
+                            <TableCell align="center">
+                                Người tham gia
+                            </TableCell>
+                            <TableCell align="center">
+                                Chi tiết
+                            </TableCell>
+                            <TableCell align="center">Cập nhật</TableCell>
+                            <TableCell align="center">Xóa</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {events?.map((event) => (
+                            <TableRow
+                                key={event?.event_id}
+                                sx={{
+                                    '&:last-child td, &:last-child th': {
+                                        border: 0,
+                                    },
+                                }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {event?.event_id}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {event?.event_name}
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Link
+                                        to={`/manage/participated/${event.event_id}`}
+                                    >
+                                        <Button variant='contained'>Danh sách</Button>
+                                    </Link>
+                                </TableCell>
+                                <TableCell align="center">
+                                    <Button variant='contained' href="/management/eventdetail">
+                                        Xem
+                                    </Button>
+                                </TableCell>
+                                <TableCell align="center">
+                                <Link to={`/manage/update`}>
+                                        <Button variant="contained">Cập nhật</Button>
+                                    </Link>
+                                </TableCell>
+                                <TableCell align="center">
+                                <Button variant="contained">Xóa</Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
+    );
 };
 
 export default ManagerEvents;
