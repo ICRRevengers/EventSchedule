@@ -43,7 +43,7 @@ const Header = ({ children }) => {
     return (
         <>
             <Wrapper
-                className="bg-[#f24405] h-[55px] text-[#fff] p-[20px] sticky top-0 z-[9999]"
+                className="bg-[#f04a07] h-[55px] text-[#fff] p-[20px] sticky top-0 z-[9999]"
                 content="flex items-center h-[100%] "
             >
                 <div
