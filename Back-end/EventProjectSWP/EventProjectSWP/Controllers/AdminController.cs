@@ -96,7 +96,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-admin-by-name")]
-        public JsonResult GetClubByName(string name)
+        public async Task<IActionResult> GetClubByName(string name)
         {
             string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name like concat (@admin_name, '%')";
 
@@ -117,7 +117,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count == 0)
+            {
+                return BadRequest("No data");
+            }
+                return Ok(table);
         }
         [HttpPost("login-admin")]
         public async Task<IActionResult> loginAdmin(LoginAdmin loginAdmin)
