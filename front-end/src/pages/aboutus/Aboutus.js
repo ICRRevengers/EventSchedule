@@ -1,73 +1,84 @@
-import React from "react";
-import Wrapper from '../../components/layout/defaultLayout/wrapper/Wrapper';
+import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import ButtonBase from '@mui/material/ButtonBase';
 
-const clubs =
-    [
-        {
-            id: 0,
-            name: 'Câu Lạc Bộ Tổ Chức Sự Kiện : FEV - FPT Event Club',
-            image: '../assets/images/fev.jpg',
-            category: 'mains',
-            linkfb: 'https://www.facebook.com/FPTEventClub/'
-        },
-
-        {
-            id: 1,
-            name: 'Câu Lạc Bộ Học Thuật (Lập Trình) : F-Code',
-            image: '../assets/images/fcode.jpg',
-            category: 'mains',
-            linkfb: 'https://www.facebook.com/fcodefpt/'
-        },
-
-        {
-            id: 2,
-            name: 'Câu Lạc Bộ Tổ Chức Sự Kiện : FEV - FPT Event Club',
-            image: '../assets/images/fev.jpg',
-            category: 'mains',
-            linkfb: 'https://www.facebook.com/FPTEventClub/'
-        },
-        {
-            id: 3,
-            name: 'Câu Lạc Bộ Truyền thông : Cóc Sài Gòn',
-            image: '../assets/images/cocsaigon.jpg',
-            category: 'mains',
-            linkfb: 'https://www.facebook.com/cocsaigonfuhcm/'
-        },
-        {
-            id: 4,
-            name: 'Câu Lạc Bộ Tình Nguyện : Cộng Đồng Sinh viên tình nguyện SitiGroup',
-            image: '../assets/images/sitigroup.jpg',
-            category: 'mains',
-            linkfb: 'https://www.facebook.com/sitigroupfuhcm'
-        },
-        {
-            id: 5,
-            name: 'Câu Lạc Bộ Tổ Chức Sự Kiện : FEV - FPT Event Club',
-            image: '../assets/images/fev.jpg',
-            category: 'mains',
-            linkfb: 'https://www.facebook.com/FPTEventClub/'
-        },
-    ];
-
+const Img = styled('img')({
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+});
 
 const Aboutus = () => {
+    const [clubs, setClubs] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:5000/api/Admin/get-list-admin`)
+            .then((res) => {
+                const data = res.data;
+                setClubs(data);
+            })
+            .catch((error) => {
+                console.log(error.response);
+            });
+    }, []);
     return (
-        <Wrapper className="container p-[20px]">
-            <div className=" flex flex-col">
-                {clubs.map((club, index) => (
-                    <div key={index} className="row">
-                        <div className="max-w-[150px]">
-                            <img src={club.image} alt={club.name} />
-                        </div>
-                        <div className="text-[#f24405] text-[1em] ">
-                            <h5>{club.name}</h5>
-                            <a href={club.linkfb}>{club.linkfb}</a>
-                        </div>
-                    </div>
-                ))}             
-            </div>
-        </Wrapper>
-    )
-}
+        <Paper
+            sx={{
+                p: 2,
+                margin: 'auto',
+                marginBottom: 3,
+                maxWidth: 1000,
+                flexGrow: 1,
+                backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+            }}
+        >
+            {clubs.map((club) => (
+            <Grid container spacing={2} key={club?.admin_id} sx={{paddingBottom : 2 }}>
+                <Grid item>
+                    <ButtonBase sx={{ width: 128, height: 128 }}>
+                        <Img
+                            alt="complex"
+                            src="/static/images/grid/complex.jpg"
+                        />
+                    </ButtonBase>
+                </Grid>
+                <Grid item xs={12} sm container>
+                    <Grid item xs container direction="column" spacing={2}>
+                        <Grid item xs>
+                            <Typography
+                                gutterBottom
+                                variant="subtitle1"
+                                component="div"
+                                sx={{color: '#f22405'}}
+                            >
+                                {club?.admin_name}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                {club?.admin_phone}
+                            </Typography>
+                            <Typography variant="body2" gutterBottom>
+                                {club?.admin_email}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="subtitle1" component="div">
+                            {club?.admin_id}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Grid>
+            ))}
+        </Paper>
+    );
+};
 
 export default Aboutus;
