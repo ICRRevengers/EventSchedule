@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 
 const ManagerEvents = () => {
     const [events, setEvents] = useState([]);
