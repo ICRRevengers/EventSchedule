@@ -46,7 +46,7 @@ namespace EventProjectSWP.Controllers
             var userInfo = _authentication.GetUserInfo(result);
             if (userInfo == null)
             {
-                return Redirect("https://localhost:3000/login?error=fpt-invalid-email");
+                return Redirect("http://localhost:3000/login?error=fpt-invalid-email");
             }
             // Check email co ton tai chua
             string query = @"select * from tblUser Where users_email Like @users_email";
@@ -83,7 +83,7 @@ namespace EventProjectSWP.Controllers
                 }
             }
             var accessToken = await _authentication.GenerateToken(userInfo);
-            return Redirect($"https://localhost:3000/login?token={accessToken}");
+            return Redirect($"http://localhost:3000/login?token={accessToken}");
         }
     }
 }
