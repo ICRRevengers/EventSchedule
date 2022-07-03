@@ -52,7 +52,11 @@ namespace EventProjectSWP.Controllers
             string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
+<<<<<<< HEAD
                            where A.event_timeline >= GETDATE()";
+=======
+                           where A.event_timeline > GETDATE()";
+>>>>>>> backend-Long
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
