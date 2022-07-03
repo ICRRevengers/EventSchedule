@@ -6,7 +6,7 @@ import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
 
-function ParticipatedList() {
+function UserParticipatedList() {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [students, setStudents] = useState();
@@ -69,4 +69,4 @@ function ParticipatedList() {
     );
 }
 
-export default ParticipatedList;
+export default UserParticipatedList;
