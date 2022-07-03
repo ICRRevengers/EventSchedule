@@ -1,21 +1,42 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GoogleButton from 'react-google-button';
 import '../../App.scss';
 import { useNavigate } from 'react-router-dom';
+import {APP_API_URL} from "../../config"
+import { useLocation } from "react-router-dom"
+import queryString from "query-string"
+import { useSnackbar } from "../../HOCs"
+import jwt_decode from "jwt-decode"
+import { useAuthActions } from "../../recoil/auth"
 
 function Login() {
     const navigate = useNavigate();
+    const { search } = useLocation()
+    const showSnackbar = useSnackbar() 
+    const { token, error } = queryString.parse(search)
+    const { login } = useAuthActions()
+
     const [adminUserName, setAdminUserName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
-    const [error, setError] = useState({
+    const [errorAdmin, setErrorAdmin] = useState({
         username: null,
         password: null,
     });
 
+    useEffect(() => {
+        if(error && error === 'fpt-invalid-email'){
+            showSnackbar({ severity: 'error', children: 'Your email is not allowed to access.' })
+        }else if(error){
+            showSnackbar({ severity: 'error', children: 'Something went wrong, please try again later.' })
+        }else if (token){
+            login(token)
+        }
+    },[])
+
     const loginGoogle = () => {
         window.location.assign(
-            'http://localhost:5000/api/Authentication/google-login',
+            `${APP_API_URL}api/Authentication/google-login`,
         );
     };
 
@@ -23,10 +44,10 @@ function Login() {
         event.preventDefault();
         axios
             .get(
-                `http://localhost:5000/api/Admin/login-admin?clubName=${adminUserName}&clubPassword=${adminPassword}`,
+                `${APP_API_URL}api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
             )
             .then((res) => {
-                navigate('/manage/events')
+                console.log(res.data);
             })
             .catch((error) => {
                 console.log(error.response.data);
