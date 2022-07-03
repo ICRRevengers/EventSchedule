@@ -15,7 +15,7 @@ function UserParticipatedList() {
         setLoading(true);
         axios
             .get(
-                `http://localhost:5000/api/EventParticipated/get-user-list-from-event?id=${id}`,
+                `http://localhost:5000/api/EventParticipated/get-all-event-i-joined?id=1=${id}`,
             )
             .then((res) => {
                 const data = res.data

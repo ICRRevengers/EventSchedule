@@ -215,14 +215,14 @@ const EventDetailHeader = () => {
             >
                 <DialogTitle>
                     <Typography color="textPrimary" gutterBottom variant="h3" sx={{ fontWeight: 'regular' }}>
-                        {/* {item?.name} */} Name
+                        {/* {item?.name} */} FPT Event Club
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
                     <Grid container spacing={1}>
                         <Grid item xs={2}>
                             <DialogContentText color="textPrimary">
-                                Your Form
+                                Register Form here
                             </DialogContentText>
                         </Grid>
                         <Grid item xs={3}>
@@ -237,7 +237,7 @@ const EventDetailHeader = () => {
                                     boxShadow: "none"
                                 }}
                                 onClick={handleUploadCV}
-                            >Upload CV</Button>
+                            >Upload form</Button>
                         </Grid>
                         <Grid item xs={3} marginLeft="-15%">
                             {message && <Typography color="error">{message}</Typography>}
@@ -247,7 +247,7 @@ const EventDetailHeader = () => {
                     </Grid>
                     <br />
                     <Grid container spacing={0}>
-                        <Grid item xs={2}>Your thinking</Grid>
+                        <Grid item xs={2}>Type here if you have any questions!</Grid>
                         <Grid item xs={9}>
                             <TextareaAutosize
                                 minRows={5} style={{ width: "70%" }}

@@ -26,7 +26,7 @@ const UserProfile = () => {
                     <div className='form-row' >
                         <button className='form-submit'>Cập nhật</button>
                     </div>
-                    <Button variant="contained" sx={{md: 1,}}>Contained</Button>
+                   
                 </form>
         </div>
         
