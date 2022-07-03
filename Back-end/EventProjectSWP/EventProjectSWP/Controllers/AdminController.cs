@@ -143,7 +143,7 @@ namespace EventProjectSWP.Controllers
             }
             if (table.Rows.Count == 0)
             {
-                return Redirect("https://localhost:3000/login?error=invalid-username-or-password%22");
+                return Redirect("https://localhost:3000/login?error=invalid-username-or-password");
             }
 
             UserInfo userInfo = new UserInfo()
@@ -152,7 +152,7 @@ namespace EventProjectSWP.Controllers
                 UserName = table.Rows[0]["admin_name"].ToString(),
             };
             var accessToken = _authentication.GenerateToken(userInfo);
-            return Redirect($"https://localhost:3000/login?token=%7BaccessToken%7D%22");
+            return Redirect($"https://localhost:3000/login?token={accessToken}");
 
         }
 
