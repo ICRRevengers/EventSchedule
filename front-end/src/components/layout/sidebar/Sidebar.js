@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 const pages = [
     {
         title: 'Danh sách sự kiện',
-        href: '/manage/events',
+        href: '/admin/manage/events',
     },
     {
         title: 'Đăng sự kiện mới',
-        href: '/manage/postevent',
+        href: '/admin/manage/postevent',
     },
     {
         title: 'Hồ sơ',
-        href: '/manage/profile',
+        href: '/admin/manage/profile',
     },
 ];
 
