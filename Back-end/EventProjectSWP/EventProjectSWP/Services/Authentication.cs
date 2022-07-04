@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace EventProjectSWP.Services
 {
-    public class Authentication
+    public class Authentication : IAuthentication
     {
         private readonly IConfiguration _configuration;
         public readonly DateTime EXPIRED_AT = DateTime.UtcNow.AddMinutes(20);

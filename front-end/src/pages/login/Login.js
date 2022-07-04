@@ -2,20 +2,18 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import GoogleButton from 'react-google-button';
 import '../../App.scss';
-import { useNavigate } from 'react-router-dom';
-import {APP_API_URL} from "../../config"
-import { useLocation } from "react-router-dom"
-import queryString from "query-string"
-import { useSnackbar } from "../../HOCs"
-import jwt_decode from "jwt-decode"
-import { useAuthActions } from "../../recoil/auth"
+import { APP_API_URL } from '../../config';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+import { useSnackbar } from '../../HOCs';
+import { useAuthActions } from '../../recoil/auth';
+import HeaderFooter from '../../components/layout/defaultLayout/header-footer/HeaderFooter';
 
 function Login() {
-    const navigate = useNavigate();
-    const { search } = useLocation()
-    const showSnackbar = useSnackbar() 
-    const { token, error } = queryString.parse(search)
-    const { login } = useAuthActions()
+    const { search } = useLocation();
+    const showSnackbar = useSnackbar();
+    const { token, error } = queryString.parse(search);
+    const { login } = useAuthActions();
 
     const [adminUserName, setAdminUserName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
@@ -25,19 +23,23 @@ function Login() {
     });
 
     useEffect(() => {
-        if(error && error === 'fpt-invalid-email'){
-            showSnackbar({ severity: 'error', children: 'Your email is not allowed to access.' })
-        }else if(error){
-            showSnackbar({ severity: 'error', children: 'Something went wrong, please try again later.' })
-        }else if (token){
-            login(token)
+        if (error && error === 'fpt-invalid-email') {
+            showSnackbar({
+                severity: 'error',
+                children: 'Your email is not allowed to access.',
+            });
+        } else if (error) {
+            showSnackbar({
+                severity: 'error',
+                children: 'Something went wrong, please try again later.',
+            });
+        } else if (token) {
+            login(token);
         }
-    },[])
+    }, []);
 
     const loginGoogle = () => {
-        window.location.assign(
-            `${APP_API_URL}api/Authentication/google-login`,
-        );
+        window.location.assign(`${APP_API_URL}api/Authentication/google-login`);
     };
 
     const loginAdmin = (event) => {
@@ -63,7 +65,7 @@ function Login() {
     };
 
     return (
-        <>
+        <HeaderFooter>
             <div className="login ">
                 <form className="admin-form" onSubmit={loginAdmin}>
                     <p className="">
@@ -107,7 +109,7 @@ function Login() {
                     />
                 </div>
             </div>
-        </>
+        </HeaderFooter>
     );
 }
 
