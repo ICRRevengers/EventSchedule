@@ -14,12 +14,13 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
+
 const ManagerEvents = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
     const { getEvents } = useAdminEvents()
     useEffect(() => {
-        getEvents
+        getEvents()
             .then((resposne) => {
                 const data = resposne.data;
                 setEvents(data);

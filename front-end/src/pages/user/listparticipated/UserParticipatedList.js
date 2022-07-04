@@ -5,18 +5,17 @@ import axios from 'axios';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
+import { useStudentfromEvent } from '../../../recoil/adminEvents'
 
 function UserParticipatedList() {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [students, setStudents] = useState();
+    const { getStudents } = useStudentfromEvent();
 
     useEffect(() => {
         setLoading(true);
-        axios
-            .get(
-                `http://localhost:5000/api/EventParticipated/get-user-list-from-event?id=${id}`,
-            )
+        getStudents(id)
             .then((res) => {
                 const data = res.data
                 setStudents(data);
