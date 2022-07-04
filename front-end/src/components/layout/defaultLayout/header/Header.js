@@ -5,6 +5,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect } from 'react';
 import authAtom from '../../../../recoil/auth/atom';
 import { useRecoilValue } from 'recoil';
+import {Typography} from "@mui/material"
+import useAuthActions from '../../../../recoil/auth/action';
 
 const pages = [
     {
@@ -25,7 +27,7 @@ const pages = [
 const Header = ({ children }) => {
 
     const auth = useRecoilValue(authAtom)
-    console.log(auth);
+    const { logout } = useAuthActions()
 
     useEffect(() => {
         const menuIcon = document.querySelector('.menu');
@@ -39,6 +41,10 @@ const Header = ({ children }) => {
             sidebarMenu.style.display = '';
         };
     }, []);
+
+    const logoutHandlder = () => {
+        logout()
+    }
 
     return (
         <>
@@ -69,7 +75,7 @@ const Header = ({ children }) => {
                         </Link>
                     ))}
                     <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
-                        {auth.email ? (<Link className='md:ml-[25px] my-[10px]' to='/'>Đăng xuất</Link>) : (<Link to='/login' className='md:ml-[25px] my-[10px]'>Đăng nhập</Link>)}
+                        {auth.email ? (<Typography onClick={logoutHandlder} variant='h5' className='md:ml-[25px] my-[10px]'>Đăng xuất</Typography>) : (<Link to='/login' className='md:ml-[25px] my-[10px]'>Đăng nhập</Link>)}
                     </div>
                 </ul>
             </Wrapper>
