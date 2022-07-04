@@ -1,13 +1,19 @@
 import { get } from "../../utils/ApiCaller"
 import { APP_API_URL } from "../../config"
 
-const useAdminEvents = () => {
-    const getEvents =  () => {
-        return get(`${APP_API_URL}/api/Event/get-event-list`)
-    }
-    return {
-        getEvents
-    }
-}   
+const AdminManagement = () => {
 
-export default useAdminEvents
+    const useAdminEvents = () => {
+        const getEvents = () => {
+            return get(`${APP_API_URL}api/Event/get-event-list`)
+        }
+    }
+
+    const useStudentfromEvent = (id) => {
+        const getStudents = (id) => {
+            return get(`${APP_API_URL}/api/EventParticipated/get-user-list-from-event?id=${id}`)
+        }
+    }
+    return useAdminEvents, useStudentfromEvent
+}
+export default AdminManagement;

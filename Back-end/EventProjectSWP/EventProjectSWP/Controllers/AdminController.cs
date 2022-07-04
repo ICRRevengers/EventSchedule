@@ -1,10 +1,13 @@
+using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
+using EventProjectSWP.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace EventProjectSWP.Controllers
 {
@@ -93,7 +96,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-admin-by-name")]
-        public JsonResult GetClubByName(string name)
+        public async Task<IActionResult> GetClubByName(string name)
         {
             string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name like concat (@admin_name, '%')";
 
@@ -114,11 +117,16 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count == 0)
+            {
+                return BadRequest("No data");
+            }
+                return Ok(table);
         }
-        [HttpGet("login-admin")]
-        public JsonResult loginAdmin(string adminMail, string adminPassword)
+        [HttpPost("login-admin")]
+        public async Task<IActionResult> loginAdmin(LoginAdmin loginAdmin)
         {
+            Authentication _authentication = new Authentication(_configuration);
             string query = @"select * from tblAdmin where admin_email = @admin_email and admin_password=@admin_password";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -128,8 +136,8 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@admin_email", adminMail);
-                    myCommand.Parameters.AddWithValue("@admin_password", adminPassword);
+                    myCommand.Parameters.AddWithValue("@admin_email", loginAdmin.adminMail);
+                    myCommand.Parameters.AddWithValue("@admin_password", loginAdmin.adminPassword);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -137,7 +145,18 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count == 0)
+            {
+                return Redirect("https://localhost:3000/login?error=invalid-username-or-password");
+            }
+
+            UserInfo userInfo = new UserInfo()
+            {
+                Email = table.Rows[0]["admin_email"].ToString(),
+                UserName = table.Rows[0]["admin_name"].ToString(),
+            };
+            var accessToken = _authentication.GenerateToken(userInfo);
+            return Redirect($"https://localhost:3000/login?token={accessToken}");
 
         }
 

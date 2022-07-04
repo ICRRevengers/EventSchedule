@@ -5,18 +5,24 @@ import axios from 'axios';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
+import { useStudentfromEvent } from '../../../recoil/adminEvents'
 
 function UserParticipatedList() {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [students, setStudents] = useState();
+    const { getStudents } = useStudentfromEvent();
 
     useEffect(() => {
         setLoading(true);
+<<<<<<< HEAD
         axios
             .get(
                 `http://localhost:5000/api/EventParticipated/get-all-event-i-joined?id=1=${id}`,
             )
+=======
+        getStudents(id)
+>>>>>>> dc6ac1581bf7892955931ca06a211580c607e07d
             .then((res) => {
                 const data = res.data
                 setStudents(data);
