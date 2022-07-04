@@ -1,20 +1,19 @@
-<<<<<<< HEAD
+
 ﻿using EventProjectSWP.Models;
-=======
+
 using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
 using EventProjectSWP.Services;
->>>>>>> main
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-<<<<<<< HEAD
-=======
+
 using System.Threading.Tasks;
->>>>>>> main
+
 
 namespace EventProjectSWP.Controllers
 {
@@ -103,11 +102,11 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-admin-by-name")]
-<<<<<<< HEAD
+
         public JsonResult GetClubByName(string name)
-=======
+
         public async Task<IActionResult> GetClubByName(string name)
->>>>>>> main
+
         {
             string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name like concat (@admin_name, '%')";
 
@@ -128,7 +127,7 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-<<<<<<< HEAD
+
             return new JsonResult(table);
         }
         [HttpGet("login-admin")]
