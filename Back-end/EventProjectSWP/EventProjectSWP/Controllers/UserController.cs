@@ -94,7 +94,7 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult("Succeesful");
+            return new JsonResult("Update User Succeesful");
         }
 
 
