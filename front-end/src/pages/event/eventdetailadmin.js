@@ -9,7 +9,7 @@ import axios from "axios";
 import EventDetailHeader from "./eventdetailheader";
 import EventDetailBottom from "./eventdetailbottom";
 
-const EventDetail = () => {
+const EventDetailAdmin = () => {
     // const { id } = useParams(); // get id job
 
     // const [job, setJob] = useState({});
@@ -91,4 +91,4 @@ const EventDetail = () => {
     )
 }
 
-export default EventDetail
+export default EventDetailAdmin

@@ -9,13 +9,14 @@ import UpdateEvent from '../pages/admin/events/UpdateEvent';
 import ParticipatedList from '../pages/admin/events/ParticipatedList';
 import AdminProfile from '../pages/admin/profile/AdminProfile';
 import UserProfile from '../pages/user/profile/userprofile';
-import EventDetail from '../pages/event/eventdetail';
 import { Route, Routes } from 'react-router-dom';
 import HeaderFooter from '../components/layout/defaultLayout/header-footer/HeaderFooter';
 import AdminLayout from '../components/layout/adminLayout';
 import PublicRoute from './PublicRoute';
 import AdminHome from '../pages/home/AdminHome';
 import UserHome from '../pages/home/UserHome';
+import EventDetailAdmin from '../pages/event/eventdetailadmin';
+import EventDetailUser from '../pages/event/eventdetailuser';
 
 const publicRoutes = [
     { path: '/aboutus', element: Aboutus, layout: 'user', name: 'about us' },
