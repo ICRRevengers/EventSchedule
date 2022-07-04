@@ -7,7 +7,7 @@ const PrivateRoute = (props) => {
     const {role, ...rest} = props
 
     if (!auth.email) {
-        return <Redirect to="/" />
+        return <Navigate to="/" />
     }
 
     if (role.includes('admin')) {
