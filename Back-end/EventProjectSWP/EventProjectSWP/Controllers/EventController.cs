@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -18,65 +19,81 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-
         [HttpGet("get-event-list")]
         public IActionResult Get()
         {
-            string query = @"Select event_id, event_name, event_content, event_timeline,
+            try
+            {
+                string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id 
                             From dbo.tblEvent";
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+
+
             }
-            if (table.Rows.Count > 0)
+            catch (Exception e)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(e.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+
         }
 
         [HttpGet("show-upcoming-event")]
         public IActionResult Show_upcoming_event()
         {
-            string query = @"Select event_id, event_name, event_content, event_timeline,
+            try
+            {
+                string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
                            where A.event_timeline >= GETDATE()";
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception e)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(e.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
         }
 
 
@@ -84,76 +101,92 @@ namespace EventProjectSWP.Controllers
         [HttpGet("show-past-event")]
         public IActionResult Show_past_event()
         {
-            string query = @"Select event_id, event_name, event_content, event_timeline,
+            try
+            {
+                string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
                            where A.event_timeline < GETDATE()";
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception e)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(e.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+
         }
 
-
-
-
-
-
         [HttpPost("add-event")]
-        public JsonResult Post(Event Event)
+        public IActionResult Post(Event Event)
         {
-            string query = @"insert into dbo.tblEvent(event_id,event_name,event_content,event_timeline,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
+            try
+            {
+                string query = @"insert into dbo.tblEvent(event_id,event_name,event_content,event_timeline,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
 values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@event_name", Event.EventName);
-                    myCommand.Parameters.AddWithValue("@event_content", Event.EventContent);
-                    myCommand.Parameters.AddWithValue("@event_timeline", Event.EventTimeline);
-                    myCommand.Parameters.AddWithValue("@created_by", Event.CreatedBy);
-                    myCommand.Parameters.AddWithValue("@event_code", Event.EventCode);
-                    myCommand.Parameters.AddWithValue("@event_status", Event.EventStatus);
-                    myCommand.Parameters.AddWithValue("@payment_status", Event.EventStatus);
-                    myCommand.Parameters.AddWithValue("@category_id", Event.CategoryID);
-                    myCommand.Parameters.AddWithValue("@location_id", Event.LocationID);
-                    myCommand.Parameters.AddWithValue("@admin_id ", Event.AdminID);
-                    myCommand.Parameters.AddWithValue("@event_id", Event.EventID);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_name", Event.EventName);
+                        myCommand.Parameters.AddWithValue("@event_content", Event.EventContent);
+                        myCommand.Parameters.AddWithValue("@event_timeline", Event.EventTimeline);
+                        myCommand.Parameters.AddWithValue("@created_by", Event.CreatedBy);
+                        myCommand.Parameters.AddWithValue("@event_code", Event.EventCode);
+                        myCommand.Parameters.AddWithValue("@event_status", Event.EventStatus);
+                        myCommand.Parameters.AddWithValue("@payment_status", Event.EventStatus);
+                        myCommand.Parameters.AddWithValue("@category_id", Event.CategoryID);
+                        myCommand.Parameters.AddWithValue("@location_id", Event.LocationID);
+                        myCommand.Parameters.AddWithValue("@admin_id ", Event.AdminID);
+                        myCommand.Parameters.AddWithValue("@event_id", Event.EventID);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            return new JsonResult("Succeesful");
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+
         }
 
 
         [HttpPut("update-event")]
-        public JsonResult Put(Event Event)
+        public IActionResult Put(Event Event)
         {
+
             string query = @"update dbo.tblEvent 
                            set event_name = @event_name, event_content = @event_content, 
                            event_timeline = @event_timeline, created_by = @created_by,  
@@ -187,11 +220,15 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
 
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpDelete("delete-event")]
-        public JsonResult Delete(string id)
+        public IActionResult Delete(string id)
         {
             string query = @"delete from dbo.tblEvent where event_id = @event_id";
 
@@ -210,11 +247,15 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
 
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("get-event-by-name")]
-        public JsonResult GetEventByName(string name)
+        public IActionResult GetEventByName(string name)
         {
             string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
                               from dbo.tblEvent where event_name like concat (@event_name,'%')";
@@ -234,10 +275,14 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
         [HttpGet("get-event-by-timne")]
-        public JsonResult GetEventByTime(string start_time, string end_time)
+        public IActionResult GetEventByTime(string start_time, string end_time)
         {
             string query = @"select event_name from tblEvent 
                            where event_timeline between 
@@ -260,12 +305,16 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
 
         [HttpGet("get-event-by-timne-specific")]
-        public JsonResult GetEventByTimeSpecific(string event_time)
+        public IActionResult GetEventByTimeSpecific(string event_time)
         {
             string query = @"select event_name from tblEvent 
                            where event_timeline = @event_timeline";
@@ -278,7 +327,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
-                    myCommand.Parameters.AddWithValue("@event_timeline", event_time);                    
+                    myCommand.Parameters.AddWithValue("@event_timeline", event_time);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -286,7 +335,11 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
     }
