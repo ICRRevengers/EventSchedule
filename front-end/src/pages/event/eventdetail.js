@@ -76,7 +76,7 @@ const EventDetail = () => {
 
 
 
-                    </Grid>
+                    </Grid>w
                     <Grid item lg={12} md={12} xs={12}>
                         {/* <StudentJobDetailBottom item={job} /> */}
                         <EventDetailBottom />

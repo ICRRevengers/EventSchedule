@@ -173,7 +173,7 @@ namespace EventProjectSWP.Controllers
             {
                 return new JsonResult(e);
             }
-            return new JsonResult("Succeesful");
+            return new JsonResult("Image Uploaded Succeesful");
         }
     }
    

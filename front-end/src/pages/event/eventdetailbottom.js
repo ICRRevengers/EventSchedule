@@ -17,7 +17,7 @@ const EventDetailBottom = () => {
                 <CardContent sx={{ mb: 10 }}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <Divider>Job</Divider>
+                            <Divider>Event</Divider>
                         </Grid>
                         <Grid
                             item

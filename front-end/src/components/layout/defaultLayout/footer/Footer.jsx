@@ -49,7 +49,7 @@ const title3 = [
 const Footer = ({ children }) => {
     return (
         <>
-            <Wrapper className=" bg-[#f24405]" content="p-[20px]">
+            <Wrapper className=" bg-[#f04a07]" content="p-[20px]">
                 <div className="flex grow text-[#fff] mt-[15px] justify-between flex-col  md:flex-row">
                     <div className="text-[14px] flex flex-col ">
                         {titles1.map((title1, index) => (

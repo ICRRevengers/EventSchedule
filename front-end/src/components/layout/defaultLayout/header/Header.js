@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { HiMenu } from 'react-icons/hi';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect } from 'react';
+import authAtom from '../../../../recoil/auth/atom';
+import { useRecoilValue } from 'recoil';
 
 const pages = [
     {
@@ -19,14 +21,12 @@ const pages = [
     },
 ];
 
-const homeFeatures = [
-    {
-        title: 'Đăng nhập',
-        href: '/login',
-    },
-];
 
 const Header = ({ children }) => {
+
+    const auth = useRecoilValue(authAtom)
+    console.log(auth);
+
     useEffect(() => {
         const menuIcon = document.querySelector('.menu');
         const sidebarMenu = document.querySelector('.status');
@@ -43,7 +43,7 @@ const Header = ({ children }) => {
     return (
         <>
             <Wrapper
-                className="bg-[#f24405] h-[55px] text-[#fff] p-[20px] sticky top-0 z-[9999]"
+                className="bg-[#f04a07] h-[55px] text-[#fff] p-[20px] sticky top-0 z-[9999]"
                 content="flex items-center h-[100%] "
             >
                 <div
@@ -69,15 +69,7 @@ const Header = ({ children }) => {
                         </Link>
                     ))}
                     <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
-                        {homeFeatures.map((homeFeature, index) => (
-                            <Link
-                                to={homeFeature.href}
-                                className="md:ml-[25px] my-[10px]"
-                                key={index}
-                            >
-                                {homeFeature.title}
-                            </Link>
-                        ))}
+                        {auth.email ? (<Link className='md:ml-[25px] my-[10px]' to='/'>Đăng xuất</Link>) : (<Link to='/login' className='md:ml-[25px] my-[10px]'>Đăng nhập</Link>)}
                     </div>
                 </ul>
             </Wrapper>
