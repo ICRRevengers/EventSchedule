@@ -160,7 +160,7 @@ namespace EventProjectSWP.Controllers
             UserInfo userInfo = new UserInfo()
             {
                 Email = table.Rows[0]["admin_email"].ToString(),
-                UserName = table.Rows[0]["admin_name"].ToString(),
+                UserName = table.Rows[0]["admin_name"].ToString(), 
             };
             var accessToken = _authentication.GenerateToken(userInfo);
             return Redirect($"https://localhost:3000/login?token={accessToken}");
@@ -220,7 +220,7 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPut("Check attend")]
-            public JsonResult CheckAttend(bool status, int user_id, int event_id)
+            public JsonResult CheckAttend(bool status, CheckAttendance checkAttend)
             //public JsonResult CheckAttend(EventParticipated ev)
         {
             string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id and users_id = @users_id";
@@ -232,12 +232,9 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@event_id", event_id);
-                    myCommand.Parameters.AddWithValue("@users_id", user_id);
+                    myCommand.Parameters.AddWithValue("@event_id", checkAttend.EventID);
+                    myCommand.Parameters.AddWithValue("@users_id", checkAttend.UserID);
                     myCommand.Parameters.AddWithValue("@users_status", status);
-                    /*  myCommand.Parameters.AddWithValue("@event_id", ev.EventID);
-                      myCommand.Parameters.AddWithValue("@users_id", ev.UserID);
-                      myCommand.Parameters.AddWithValue("@users_status", ev.users_status);*/
                     myReader = myCommand.ExecuteReader();
                     myReader.Close();
                     myCon.Close();
