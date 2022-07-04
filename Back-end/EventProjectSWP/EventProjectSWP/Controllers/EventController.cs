@@ -20,7 +20,11 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpGet("get-event-list")]
+<<<<<<< HEAD
         public JsonResult Get()
+=======
+        public IActionResult Get()
+>>>>>>> main
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
@@ -42,10 +46,20 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
+<<<<<<< HEAD
             return new JsonResult(table);
         }
 
 
+=======
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
+        }
+
+>>>>>>> main
         [HttpGet("show-upcoming-event")]
         public JsonResult Show_upcoming_event()
         {
@@ -53,10 +67,14 @@ namespace EventProjectSWP.Controllers
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
 <<<<<<< HEAD
+<<<<<<< HEAD
                            where A.event_timeline >= GETDATE()";
 =======
                            where A.event_timeline > GETDATE()";
 >>>>>>> backend-Long
+=======
+                           where A.event_timeline >= GETDATE()";
+>>>>>>> main
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -74,6 +92,7 @@ namespace EventProjectSWP.Controllers
                 }
             }
             return new JsonResult(table);
+<<<<<<< HEAD
         }
 
 
@@ -144,6 +163,78 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
         }
 
 
+=======
+        }
+
+
+
+        [HttpGet("show-past-event")]
+        public JsonResult Show_past_event()
+        {
+            string query = @"Select event_id, event_name, event_content, event_timeline,
+                            created_by, created_by,event_status,payment_status,category_id,location_id
+                           ,admin_id From dbo.tblEvent A
+                           where A.event_timeline < GETDATE()";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
+
+
+
+
+        [HttpPost("add-event")]
+        public JsonResult Post(Event Event)
+        {
+            string query = @"insert into dbo.tblEvent(event_id,event_name,event_content,event_timeline,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
+values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@event_name", Event.EventName);
+                    myCommand.Parameters.AddWithValue("@event_content", Event.EventContent);
+                    myCommand.Parameters.AddWithValue("@event_timeline", Event.EventTimeline);
+                    myCommand.Parameters.AddWithValue("@created_by", Event.CreatedBy);
+                    myCommand.Parameters.AddWithValue("@event_code", Event.EventCode);
+                    myCommand.Parameters.AddWithValue("@event_status", Event.EventStatus);
+                    myCommand.Parameters.AddWithValue("@payment_status", Event.EventStatus);
+                    myCommand.Parameters.AddWithValue("@category_id", Event.CategoryID);
+                    myCommand.Parameters.AddWithValue("@location_id", Event.LocationID);
+                    myCommand.Parameters.AddWithValue("@admin_id ", Event.AdminID);
+                    myCommand.Parameters.AddWithValue("@event_id", Event.EventID);
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult("Succeesful");
+        }
+
+
+>>>>>>> main
         [HttpPut("update-event")]
         public JsonResult Put(Event Event)
         {

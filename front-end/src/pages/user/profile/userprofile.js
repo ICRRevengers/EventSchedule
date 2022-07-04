@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React from "react";
 import Wrapper from "../../../components/layout/defaultLayout/wrapper/Wrapper";
 import Sidebar from "../../../components/layout/sidebar/Sidebar";
@@ -25,8 +26,10 @@ const UserProfile = () => {
                     <div className='form-row' >
                         <button className='form-submit'>Cập nhật</button>
                     </div>
+                    <Button variant="contained" sx={{md: 1,}}>Contained</Button>
                 </form>
         </div>
+        
     )
 }
 export default UserProfile;

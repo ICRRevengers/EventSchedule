@@ -1,18 +1,12 @@
 
 ﻿using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
-=======
 
->>>>>>> backend-Long
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-<<<<<<< HEAD
-=======
 
->>>>>>> backend-Long
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,10 +14,7 @@ namespace EventProjectSWP.Settings
 {
     public class RandomRD
     {
-<<<<<<< HEAD
-=======
 
->>>>>>> backend-Long
         private readonly IConfiguration _configuration;
         public RandomRD(IConfiguration configuration)
         {
@@ -191,9 +182,6 @@ namespace EventProjectSWP.Settings
 
             return check;
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> backend-Long
     }
 }

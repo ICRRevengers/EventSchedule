@@ -17,6 +17,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
+<<<<<<< HEAD
 
         [HttpPut("update-payment")]
         public JsonResult Put(bool status, string id)
@@ -45,6 +46,16 @@ namespace EventProjectSWP.Controllers
         public JsonResult Get()
         {
             string query = @"select event_id , users_id, date_participated , payment_status from tblEventParticipated";
+=======
+        
+        [HttpGet("get-userinfo-join-event")]
+        // lấy tất cả thông tin người dùng đã tham gia event
+        public JsonResult Get()
+        {
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id";
+>>>>>>> main
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -64,10 +75,20 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
 
+<<<<<<< HEAD
         [HttpGet("get-list-user-join-event-participated")]
         public JsonResult GetUserEvent(string id)
         {
             string query = @"select event_id , date_participated , payment_status from tblEventParticipated where users_id = @users_id";
+=======
+        [HttpGet("get-all-event-i-joined")]
+        // Lấy tất cả event mà 1 user tham gia 
+        public JsonResult GetUserEvent(string id)
+        {
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id and U.users_id = @users_id";
+>>>>>>> main
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
@@ -87,10 +108,21 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
 
+<<<<<<< HEAD
         [HttpGet("get-user-list-from-event")]
         public JsonResult GetUserParticipatedEvent(string id)
         {
             string query = @"select users_id , date_participated, payment_status from tblEventParticipated where event_id = @event_id";
+=======
+        [HttpGet("get-user-list-from-an-event")]
+        // Lấy tất cả user từ 1 event
+        public JsonResult GetUserParticipatedEvent(string id)
+        {
+            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+from tblEventParticipated EP, tblUser U
+where Ep.users_id = U.users_id and EP.event_id = @event_id
+";
+>>>>>>> main
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
             SqlDataReader myReader;
@@ -135,7 +167,11 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> main
 
 
 
