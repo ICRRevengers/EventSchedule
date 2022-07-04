@@ -18,7 +18,7 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-
+        //Lấy feedBack của event 
         [HttpGet("get-event-feedback")]
         public JsonResult GetUserParticipatedEvent(string id)
         {
@@ -41,7 +41,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-
+        //Thêm mới feedback vào event
         [HttpPost("add-feedback-to-event")]
         public JsonResult Post(Feedback Feedback)
         {
@@ -68,7 +68,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
+        //Xóa feedback
         [HttpDelete("delete-feedback")]
         public JsonResult Delete(int id)
         {

@@ -55,6 +55,7 @@ namespace EventProjectSWP.Controllers
             return new JsonResult("Succeesful");
         }
         */
+        //lấy video
         [HttpGet("get-video")]
         public JsonResult Get()
         {
@@ -77,6 +78,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
+        //thêm hình ảnh
         [HttpPost("Add-image")]
         public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
