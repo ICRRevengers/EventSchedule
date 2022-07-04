@@ -17,7 +17,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-<<<<<<< HEAD
+
 
         [HttpPut("update-payment")]
         public JsonResult Put(bool status, string id)
@@ -46,7 +46,7 @@ namespace EventProjectSWP.Controllers
         public JsonResult Get()
         {
             string query = @"select event_id , users_id, date_participated , payment_status from tblEventParticipated";
-=======
+
         
         [HttpGet("get-userinfo-join-event")]
         // lấy tất cả thông tin người dùng đã tham gia event
@@ -55,7 +55,7 @@ namespace EventProjectSWP.Controllers
             string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
 from tblEventParticipated EP, tblUser U
 where Ep.users_id = U.users_id";
->>>>>>> main
+
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -167,11 +167,7 @@ where Ep.users_id = U.users_id and EP.event_id = @event_id
             }
             return new JsonResult("Succeesful");
         }
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> main
 
 
 
