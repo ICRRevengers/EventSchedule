@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -17,7 +18,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("Get-category-by-id")]
-        public JsonResult GetCategoryById(string id)
+        public IActionResult GetCategoryById(string id)
         {
             string query = @"select * from tblEvent where category_id = @category_id ";
             DataTable table = new DataTable();
@@ -36,11 +37,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("Get-category")]
-        public JsonResult GetCategory()
+        public IActionResult GetCategory()
         {
             string query = @"select * from tblCategory ";
             DataTable table = new DataTable();
@@ -58,7 +63,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
 

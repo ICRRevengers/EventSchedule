@@ -23,7 +23,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-list-admin")]
-        public JsonResult Get()
+        public IActionResult Get()
         {
             string query = @"select admin_id , admin_name, admin_phone , admin_email from dbo.tblAdmin";
 
@@ -42,11 +42,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpPut("update-admin")]
-        public JsonResult Put(Admin club)
+        public IActionResult Put(Admin club)
         {
             string query = @"update dbo.tblAdmin set admin_name =@admin_name , admin_phone=@admin_phone , admin_email=@admin_email where admin_id =@admin_id";
 
@@ -68,11 +72,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("get-admin-by-id")]
-        public JsonResult GetClubById(string id)
+        public IActionResult GetClubById(string id)
         {
             string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_id = @admin_id";
 
@@ -92,7 +100,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+             if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("get-admin-by-name")]
@@ -213,7 +225,7 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPut("Check attend")]
-            public JsonResult CheckAttend(bool status, int user_id, int event_id)
+            public IActionResult CheckAttend(bool status, int user_id, int event_id)
             //public JsonResult CheckAttend(EventParticipated ev)
         {
             string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id and users_id = @users_id";
@@ -237,7 +249,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult("Check attend success");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
     }

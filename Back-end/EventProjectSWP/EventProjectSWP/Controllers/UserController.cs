@@ -20,7 +20,7 @@ namespace EventProjectSWP.Controllers
         
 
         [HttpGet("get-list-user")]
-        public JsonResult Get()
+        public IActionResult Get()
         {
             string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser";
 
@@ -39,11 +39,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpPost("add-user")]
-        public JsonResult Post(UserInfo user)
+        public IActionResult Post(UserInfo user)
         {
             string query = @"insert into dbo.tblUser(users_id, users_name,users_phone,users_address,users_email) values(@users_id,@users_name,@users_phone,@users_address,@users_email)";
 
@@ -67,11 +71,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpPut("update-user")]
-        public JsonResult Put(UserInfo user)
+        public IActionResult Put(UserInfo user)
         {
             string query = @"update dbo.tblUser set users_name = @users_name , users_phone = @users_phone , users_address = @users_address , users_email = @users_email where users_id = @users_id";
 
@@ -94,7 +102,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult("Update User Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
 
@@ -122,7 +134,7 @@ namespace EventProjectSWP.Controllers
          }*/
 
         [HttpGet("get-user-by-id")]
-        public JsonResult GetUserByID(string id)
+        public IActionResult GetUserByID(string id)
         {
             string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
              where users_id = @users_id";
@@ -144,11 +156,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("get-user-by-name")]
-        public JsonResult GetUserByName(string name)
+        public IActionResult GetUserByName(string name)
         {
             string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
              where users_name like concat  ( @users_name,'%')";
@@ -170,7 +186,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
     }

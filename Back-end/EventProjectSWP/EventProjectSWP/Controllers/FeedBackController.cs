@@ -20,7 +20,7 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpGet("get-event-feedback")]
-        public JsonResult GetUserParticipatedEvent(string id)
+        public IActionResult GetUserParticipatedEvent(string id)
         {
             string query = @"select comment , rating , created_time, users_id from tblFeedback where event_id = @event_id";
             DataTable table = new DataTable();
@@ -39,11 +39,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpPost("add-feedback-to-event")]
-        public JsonResult Post(Feedback Feedback)
+        public IActionResult Post(Feedback Feedback)
         {
             string query = @"insert into tblFeedback values(@feedback_id,@comment,@rating,@created_time,@event_id,@users_id)";
 
@@ -66,11 +70,15 @@ namespace EventProjectSWP.Controllers
                     myCon.Close();
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpDelete("delete-feedback")]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             string query = @"delete from tblFeedback where feedback_id =@feedback_id ";
 
@@ -89,7 +97,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
     }
 }

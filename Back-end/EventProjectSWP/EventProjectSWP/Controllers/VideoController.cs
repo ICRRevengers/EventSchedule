@@ -54,10 +54,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-<<<<<<< HEAD
-=======
         */
->>>>>>> main
         [HttpGet("get-video")]
         public JsonResult Get()
         {

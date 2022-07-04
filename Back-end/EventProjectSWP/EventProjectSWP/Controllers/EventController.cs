@@ -50,7 +50,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("show-upcoming-event")]
-        public JsonResult Show_upcoming_event()
+        public IActionResult Show_upcoming_event()
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
@@ -72,13 +72,17 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
 
 
         [HttpGet("show-past-event")]
-        public JsonResult Show_past_event()
+        public IActionResult Show_past_event()
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
@@ -100,7 +104,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
 

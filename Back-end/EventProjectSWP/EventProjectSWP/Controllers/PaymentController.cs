@@ -18,7 +18,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPut("update-payment")]
-        public JsonResult Put(bool status, int id, int event_id)
+        public IActionResult Put(bool status, int id, int event_id)
         {
             string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id and event_id = @event_id";
             DataTable table = new DataTable();
@@ -37,11 +37,15 @@ namespace EventProjectSWP.Controllers
                     myCon.Close();
                 }
             }
-            return new JsonResult("Succeesful");
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("get-Payment")]
-        public JsonResult Get(int id)
+        public IActionResult Get(int id)
         {
             string query = @"select * from tblPayment where event_id =@event_id";
 
@@ -61,7 +65,11 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
     }
 }
