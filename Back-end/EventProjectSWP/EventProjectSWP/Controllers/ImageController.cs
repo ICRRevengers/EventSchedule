@@ -84,12 +84,13 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPost("Add-image")]
-        public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
+        public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
             string imgname;
             int id;
             Boolean check;
             FileStream ms;
+            DataTable table = new DataTable();
             try
             {
                 string path = Directory.GetCurrentDirectory() + "\\images\\";
@@ -107,7 +108,6 @@ namespace EventProjectSWP.Controllers
                     id = rdid.Next(10000);
                     check = rD.CheckRandom_ImageId(id);
                 } while (check);
-                    
 
                 if (file.Length > 0)
                 {
@@ -139,8 +139,8 @@ namespace EventProjectSWP.Controllers
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
                     string query = @"insert into tblImage values (@image_id,@image_url,@event_id,@image_name)";
-
-                    DataTable table = new DataTable();
+                    string checkquery = @"select image_name from tblImage where image_id = @image_id";
+                    table = new DataTable();
                     string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                     SqlDataReader myReader;
                     using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -154,6 +154,13 @@ namespace EventProjectSWP.Controllers
                             myCommand.Parameters.AddWithValue("@event_id", eventid);
                             myReader = myCommand.ExecuteReader();
                             myReader.Close();
+                        }
+                        using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+                        {
+                            myCommand.Parameters.AddWithValue("@image_id", id);
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
                             myCon.Close();
                         }
                     }
@@ -164,14 +171,127 @@ namespace EventProjectSWP.Controllers
                         fileinfo.Delete();
                     }
                     Directory.Delete(path);
+  
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok("Image uploaded successfully");
+                }
+                return BadRequest("Image have failed to upload");
             }
             catch (Exception e)
             {
-                return new JsonResult(e);
+                return BadRequest(new Response<string>("Something wrong when trying to delete Image"));
             }
-            return new JsonResult("Image Uploaded Succeesful");
+        }
+        [HttpPost("Delete-image")]
+        public async Task<IActionResult> Delete(Image imageInfo)
+        {
+            try
+            {
+
+                    var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
+                    var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
+                    var cancellation = new CancellationTokenSource();
+
+                    var task = new FirebaseStorage(
+                        Bucket,
+                        new FirebaseStorageOptions
+                        {
+                            AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                            ThrowOnCancel = true
+                        })
+                        .Child("Images")
+                        .Child($"{imageInfo.ImageName}")
+                        .DeleteAsync();
+                string query = @"delete from tblImage where image_id = @image_id";
+                string checkquery = @"select image_name from tblImage where image_id = @image_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                    }
+                    using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return BadRequest("Image have failed to delete");
+                }
+                return Ok("Image deleted successfully");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>("Something wrong when trying to delete Image"));
+            }
+        }
+        [HttpPost("Update-image")]
+        public async Task<IActionResult> Update([FromForm] FileUploadcs objectFile, string ImageName)
+        {
+            FileStream ms;
+            try
+            {
+                string path = Directory.GetCurrentDirectory() + "\\images\\";
+                var file = objectFile.files;
+                if (file.Length > 0)
+                {
+
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    using (FileStream fileStream = System.IO.File.Create(path + file.FileName))
+                    {
+                        file.CopyTo(fileStream);
+                        fileStream.Flush();
+                    }
+                    ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
+                    var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
+                    var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
+                    var cancellation = new CancellationTokenSource();
+
+                    var task = new FirebaseStorage(
+                        Bucket,
+                        new FirebaseStorageOptions
+                        {
+                            AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                            ThrowOnCancel = true
+                        })
+                        .Child("Images")
+                        .Child($"{ImageName}")
+                        .PutAsync(ms, cancellation.Token);
+                    await task;
+                    ms.Close();
+                    DirectoryInfo DI = new DirectoryInfo(path);
+                    foreach (FileInfo fileinfo in DI.GetFiles())
+                    {
+                        fileinfo.Delete();
+                    }
+                    Directory.Delete(path);
+
+                }
+                    return Ok("Image uploaded successfully");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>("Something wrong when trying to delete Image"));
+            }
         }
     }
-   
 }
+   
+
