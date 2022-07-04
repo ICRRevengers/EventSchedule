@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -17,13 +18,16 @@ namespace EventProjectSWP.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public AdminController(IConfiguration configuration)
+        private readonly IAuthentication _authentication;
+
+        public AdminController(IConfiguration configuration, IAuthentication authentication)
         {
             _configuration = configuration;
+            _authentication = authentication;
         }
 
         [HttpGet("get-list-admin")]
-        public JsonResult Get()
+        public IActionResult Get()
         {
             string query = @"select admin_id , admin_name, admin_phone , admin_email from dbo.tblAdmin";
 
@@ -42,33 +46,43 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data in Admin"));
         }
 
         [HttpPut("update-admin")]
-        public JsonResult Put(Admin club)
+        public IActionResult Put(Admin club)
         {
-            string query = @"update dbo.tblAdmin set admin_name =@admin_name , admin_phone=@admin_phone , admin_email=@admin_email where admin_id =@admin_id";
-
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"update dbo.tblAdmin set admin_name =@admin_name,admin_phone=@admin_phone,admin_email=@admin_email where admin_id =@admin_id";
+                table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@admin_name", club.AdminName);
-                    myCommand.Parameters.AddWithValue("@admin_phone", club.AdminPhone);
-                    myCommand.Parameters.AddWithValue("@admin_email", club.AdminEmail);
-                    myCommand.Parameters.AddWithValue("@admin_id", club.AdminID);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
-
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_name", club.AdminName);
+                        myCommand.Parameters.AddWithValue("@admin_phone", club.AdminPhone);
+                        myCommand.Parameters.AddWithValue("@admin_email", club.AdminEmail);
+                        myCommand.Parameters.AddWithValue("@admin_id", club.AdminID);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
                 }
+            }catch(Exception error)
+            {
+
             }
-            return new JsonResult("Succeesful");
+                return Ok(new Response<DataTable>(table));
+            
         }
 
         [HttpGet("get-admin-by-id")]

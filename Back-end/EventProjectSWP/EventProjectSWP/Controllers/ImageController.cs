@@ -125,8 +125,6 @@ namespace EventProjectSWP.Controllers
                     ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
                     var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
                     var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
-
-                    // you can use CancellationTokenSource to cancel the upload midway
                     var cancellation = new CancellationTokenSource();
 
                     var task = new FirebaseStorage(
@@ -134,8 +132,7 @@ namespace EventProjectSWP.Controllers
                         new FirebaseStorageOptions
                         {
                             AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                            ThrowOnCancel = true                        // when you cancel the upload, exception is thrown. By default no exception is thrown
-                        // when you cancel the upload, exception is thrown. By default no exception is thrown
+                            ThrowOnCancel = true 
                     })
                         .Child("Images")
                         .Child($"{imgname}")
