@@ -30,6 +30,35 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
             _env = env;
         }
+<<<<<<< HEAD
+=======
+        /*
+        [HttpPost("add-video")]
+        public JsonResult Post(Video video)
+        {
+            string query = @"insert into tblVideo values (@video_id,@video_url,@event_id)";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@video_id", video.VideoId);
+                    myCommand.Parameters.AddWithValue("@video_url", video.VideoUrl);
+                    myCommand.Parameters.AddWithValue("@event_id", video.EventId);
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+            return new JsonResult("Succeesful");
+        }
+        */
+        //lấy video
+>>>>>>> backend-Long
         [HttpGet("get-video")]
         public JsonResult Get()
         {
@@ -52,8 +81,14 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
+<<<<<<< HEAD
         [HttpPost("Add-video")]
         public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
+=======
+        //thêm hình ảnh
+        [HttpPost("Add-image")]
+        public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
+>>>>>>> backend-Long
         {
             string vidname;
             int id;

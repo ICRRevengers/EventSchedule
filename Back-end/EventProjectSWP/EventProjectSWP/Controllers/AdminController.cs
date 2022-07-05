@@ -1,6 +1,10 @@
+
+﻿using EventProjectSWP.Models;
+
 using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
 using EventProjectSWP.Services;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +12,9 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+
 using System.Threading.Tasks;
+
 
 namespace EventProjectSWP.Controllers
 {
@@ -25,9 +31,13 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
             _authentication = authentication;
         }
+<<<<<<< HEAD
 
 
 
+=======
+        //lấy danh sách admin
+>>>>>>> backend-Long
         [HttpGet("get-list-admin")]
         public IActionResult Get()
         {
@@ -92,7 +102,7 @@ namespace EventProjectSWP.Controllers
             }
 
         }
-
+        //update thông tin admin
         [HttpPut("update-admin")]
         public IActionResult Put(UpdateAdmin updateAdmin)
         {
@@ -122,7 +132,7 @@ namespace EventProjectSWP.Controllers
                 return Ok(new Response<DataTable>(ex.Message));
             }
         }
-
+        //tìm admin bằng id của admin
         [HttpGet("get-admin-by-id")]
         public IActionResult GetClubById(string id)
         {
@@ -157,7 +167,7 @@ namespace EventProjectSWP.Controllers
             }
             
         }
-
+        //tìm admin bằng tên admin
         [HttpGet("get-admin-by-name")]
         public async Task<IActionResult> GetClubByName(string name)
         {
@@ -190,8 +200,13 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>(ex.Message));
             }
+<<<<<<< HEAD
 
+=======
+            return Ok(table);
+>>>>>>> backend-Long
         }
+        //đăng nhập cho admin
         [HttpPost("login-admin")]
         public async Task<IActionResult> loginAdmin(LoginAdmin loginAdmin)
         {
@@ -220,9 +235,14 @@ namespace EventProjectSWP.Controllers
 
             Admin admin = new Admin()
             {
+<<<<<<< HEAD
                 AdminEmail = table.Rows[0]["admin_email"].ToString(),
                 AdminName = table.Rows[0]["admin_name"].ToString(),
                 AdminRole = table.Rows[0]["admin_role"].ToString(),
+=======
+                Email = table.Rows[0]["admin_email"].ToString(),
+                UserName = table.Rows[0]["admin_name"].ToString(), 
+>>>>>>> backend-Long
             };
             var accessToken = _authentication.GenerateTokenAdmin(admin);
             return Redirect($"https://localhost:3000/login?token={accessToken}");
@@ -279,9 +299,17 @@ namespace EventProjectSWP.Controllers
               return new JsonResult("Check attend success");
           }*/
 
+<<<<<<< HEAD
         [HttpPut("Check attend")]
         public IActionResult CheckAttend(bool status, int user_id, int event_id)
         //public JsonResult CheckAttend(EventParticipated ev)
+=======
+
+        //điểm danh sinh viên tham gia events
+        [HttpPut("Check attend")]
+            public JsonResult CheckAttend(bool status, CheckAttendance checkAttend)
+            //public JsonResult CheckAttend(EventParticipated ev)
+>>>>>>> backend-Long
         {
             try
             {
@@ -291,6 +319,7 @@ namespace EventProjectSWP.Controllers
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
+<<<<<<< HEAD
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
@@ -303,6 +332,14 @@ namespace EventProjectSWP.Controllers
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
+=======
+                    myCommand.Parameters.AddWithValue("@event_id", checkAttend.EventID);
+                    myCommand.Parameters.AddWithValue("@users_id", checkAttend.UserID);
+                    myCommand.Parameters.AddWithValue("@users_status", status);
+                    myReader = myCommand.ExecuteReader();
+                    myReader.Close();
+                    myCon.Close();
+>>>>>>> backend-Long
 
                     }
                 }
