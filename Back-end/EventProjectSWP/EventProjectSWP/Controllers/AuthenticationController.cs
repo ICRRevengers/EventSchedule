@@ -82,7 +82,7 @@ namespace EventProjectSWP.Controllers
                     myCon.Close();
                 }
             }
-            var accessToken = await _authentication.GenerateToken(userInfo);
+            var accessToken = await _authentication.GenerateTokenUser(userInfo);
             return Redirect($"http://localhost:3000/login?token={accessToken}");
         }
     }
