@@ -20,25 +20,10 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-<<<<<<< HEAD
         [HttpGet("get-event-list")]
         public IActionResult Get()
         {
             try
-=======
-        //lấy danh sách events
-        [HttpGet("get-event-list")]
-        public IActionResult Get()
-        {
-            string query = @"SELECT tblEvent.*, tblLocation.location_detail
-                           FROM tblEvent
-                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
->>>>>>> backend-Long
             {
                 string query = @"Select event_id, event_name, event_content, event_timeline, created_by, created_by,event_status,payment_status,category_id,location_id,admin_id
 From dbo.tblEvent";
@@ -110,7 +95,6 @@ Where E.event_id = I.event_id ";
                 return BadRequest(new Response<string>(e.Message));
             }
         }
-<<<<<<< HEAD
         [HttpGet("get-imageurl-by-eventid")]
         public IActionResult GetImageUrl()
         {
@@ -151,9 +135,6 @@ Where E.event_id = I.event_id ";
                 return BadRequest(new Response<string>(e.Message));
             }
         }
-=======
-        //hiện event sắp tới so với thời gian hiện tại
->>>>>>> backend-Long
         [HttpGet("show-upcoming-event")]
         public IActionResult Show_upcoming_event()
         {
@@ -191,11 +172,6 @@ Where E.event_id = I.event_id ";
             }
         }
 
-<<<<<<< HEAD
-=======
-
-        //hiện event đã qua so với thời gian hiện tại
->>>>>>> backend-Long
         [HttpGet("show-past-event")]
         public IActionResult Show_past_event()
         {
@@ -231,18 +207,8 @@ Where E.event_id = I.event_id ";
             {
                 return BadRequest(new Response<string>(e.Message));
             }
-<<<<<<< HEAD
 
         }
-=======
-            return new JsonResult(table);
-        }
-
-
-
-
-        //thêm mới events
->>>>>>> backend-Long
 
         [HttpPost("add-event")]
         public IActionResult Post(AddEvent addEvent)
@@ -282,10 +248,6 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             }
         }
 
-<<<<<<< HEAD
-=======
-        //update thông tin events
->>>>>>> backend-Long
         [HttpPut("update-event")]
         public IActionResult Put(Event Event)
         {
@@ -331,7 +293,6 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
 
         }
 
-        //xóa events
         [HttpDelete("delete-event")]
         public IActionResult Delete(string id)
         {
@@ -363,7 +324,6 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
       
         }
 
-        //Tìm event bằng tên
         [HttpGet("get-event-by-name")]
         public IActionResult GetEventByName(string name)
         {
@@ -398,7 +358,6 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             }
            
         }
-        //tìm event bằng 1 khoảng thời gian
         [HttpGet("get-event-by-timne")]
         public IActionResult GetEventByTime(string start_time, string end_time)
         {
@@ -436,7 +395,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             }   
         }
 
-        //tìm event bằng 1 mốc thời gian cụ thể
+
         [HttpGet("get-event-by-timne-specific")]
         public IActionResult GetEventByTimeSpecific(string event_time)
         {
@@ -449,7 +408,6 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-<<<<<<< HEAD
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
@@ -461,15 +419,6 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                         myCon.Close();
 
                     }
-=======
-                    //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
-                    myCommand.Parameters.AddWithValue("@event_timeline", event_time);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
-
->>>>>>> backend-Long
                 }
                 if (table.Rows.Count > 0)
                 {

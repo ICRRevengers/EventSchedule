@@ -18,7 +18,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-
+        
         [HttpGet("get-userinfo-join-event")]
         // lấy tất cả thông tin người dùng đã tham gia event
         public IActionResult Get()
@@ -133,7 +133,7 @@ namespace EventProjectSWP.Controllers
         }
 
 
-        //thêm người tham gia events vào list những người tham gia events
+
         [HttpPost("add-user-join-event")]
         public IActionResult Post(EventParticipated EventParticipated)
         {

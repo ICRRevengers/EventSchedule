@@ -20,7 +20,7 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-        //Lấy feedBack của event 
+
         [HttpGet("get-event-feedback")]
         public IActionResult GetUserParticipatedEvent(string id)
         {
@@ -55,7 +55,7 @@ namespace EventProjectSWP.Controllers
             }
            
         }
-        //Thêm mới feedback vào event
+
         [HttpPost("add-feedback-to-event")]
         public IActionResult Post(AddFeedback Feedback)
         {
@@ -89,7 +89,7 @@ namespace EventProjectSWP.Controllers
             }
          
         }
-        //Xóa feedback
+
         [HttpDelete("delete-feedback")]
         public IActionResult Delete(int id)
         {

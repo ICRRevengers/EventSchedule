@@ -31,7 +31,6 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
             _authentication = authentication;
         }
-        //login bang google cho users
         [HttpGet("google-login")]
         public IActionResult GoogleLogin()
         {
