@@ -33,34 +33,8 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
             _env = env;
         }
-
-        /*
-        [HttpPost("add-image")]
-        public JsonResult Post(Image image)
-        {
-            string query = @"insert into tblImage values (@image_id,@image_url,@event_id)";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@image_id", image.ImageId);
-                    myCommand.Parameters.AddWithValue("@image_url", image.ImageUrl);
-                    myCommand.Parameters.AddWithValue("@event_id", image.EventId);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            return new JsonResult("Succeesful");
-        }
-        */
         [HttpGet("get-image")]
-        public JsonResult Get()
+        public IActionResult Get()
         {
             string query = @"select * from tblImage";
 
@@ -79,11 +53,15 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
-
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data in Image"));
         }
 
         [HttpPost("Add-image")]
+        // Add image bằng cách browse hình ảnh(Trong quá trình tạo event)
         public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
             string imgname;
@@ -139,7 +117,7 @@ namespace EventProjectSWP.Controllers
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
                     string query = @"insert into tblImage values (@image_id,@image_url,@event_id,@image_name)";
-                    string checkquery = @"select image_name from tblImage where image_id = @image_id";
+                    string checkquery = @"select * from tblImage where image_id = @image_id";
                     table = new DataTable();
                     string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                     SqlDataReader myReader;
@@ -185,11 +163,29 @@ namespace EventProjectSWP.Controllers
             }
         }
         [HttpPost("Delete-image")]
+        // Delete image dựa vào Image
         public async Task<IActionResult> Delete(Image imageInfo)
         {
             try
             {
-
+                string checkquery1 = @"select image_name from tblImage where image_id = @image_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(checkquery1, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
                     var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
                     var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
                     var cancellation = new CancellationTokenSource();
@@ -204,34 +200,38 @@ namespace EventProjectSWP.Controllers
                         .Child("Images")
                         .Child($"{imageInfo.ImageName}")
                         .DeleteAsync();
-                string query = @"delete from tblImage where image_id = @image_id";
-                string checkquery = @"select image_name from tblImage where image_id = @image_id";
-                DataTable table = new DataTable();
-                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-                SqlDataReader myReader;
-                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-                {
-                    myCon.Open();
-                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    string query = @"delete from tblImage where image_id = @image_id";
+                    string checkquery = @"select image_name from tblImage where image_id = @image_id";
+                    table = new DataTable();
+                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                     {
-                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
-                        myReader = myCommand.ExecuteReader();
-                        myReader.Close();
+                        myCon.Open();
+                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                        {
+                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                            myReader = myCommand.ExecuteReader();
+                            myReader.Close();
+                        }
+                        using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+                        {
+                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                            myReader = myCommand.ExecuteReader();
+                            table.Load(myReader);
+                            myReader.Close();
+                            myCon.Close();
+                        }
                     }
-                    using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+                    if (table.Rows.Count > 0)
                     {
-                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
-                        myReader = myCommand.ExecuteReader();
-                        table.Load(myReader);
-                        myReader.Close();
-                        myCon.Close();
+                        return  BadRequest(new Response<string>("Failed to delete Image")); ;
                     }
+                    return Ok("Image deleted successfully");
                 }
-                if (table.Rows.Count > 0)
+                else
                 {
-                    return BadRequest("Image have failed to delete");
+                    return BadRequest(new Response<string>("No Image was found"));
                 }
-                return Ok("Image deleted successfully");
+                
             }
             catch (Exception e)
             {
@@ -239,6 +239,7 @@ namespace EventProjectSWP.Controllers
             }
         }
         [HttpPost("Update-image")]
+        // Update image dựa vào tên của image, update bằng cách browse hình ảnh
         public async Task<IActionResult> Update([FromForm] FileUploadcs objectFile, string ImageName)
         {
             FileStream ms;

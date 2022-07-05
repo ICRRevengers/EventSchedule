@@ -9,7 +9,8 @@ namespace EventProjectSWP.Services
 {
     public interface IAuthentication
     {
-        public Task<string> GenerateToken(UserInfo userInfo);
+        public Task<string> GenerateTokenUser(UserInfo userInfo);
+        public Task<string> GenerateTokenAdmin(Admin admin);
         public UserInfo? GetUserInfo(AuthenticateResult info);
     }
 }
