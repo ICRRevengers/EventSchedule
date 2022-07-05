@@ -33,6 +33,7 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
             _env = env;
         }
+
         /*
         [HttpPost("add-image")]
         public JsonResult Post(Image image)
@@ -78,8 +79,10 @@ namespace EventProjectSWP.Controllers
 
                 }
             }
+
             return new JsonResult(table);
         }
+
         [HttpPost("Add-image")]
         public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
@@ -94,7 +97,7 @@ namespace EventProjectSWP.Controllers
                 do
                 {
                     RandomRD rD = new RandomRD(_configuration);
-                    imgname = rD.Random_ImageName();
+                    imgname = rD.Random_Name();
                     check = rD.CheckRandom_ImageName(imgname);
                 } while (check);
                 do
@@ -104,6 +107,7 @@ namespace EventProjectSWP.Controllers
                     id = rdid.Next(10000);
                     check = rD.CheckRandom_ImageId(id);
                 } while (check);
+                    
 
                 if (file.Length > 0)
                 {
@@ -130,7 +134,7 @@ namespace EventProjectSWP.Controllers
                         new FirebaseStorageOptions
                         {
                             AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                            ThrowOnCancel = true
+                            ThrowOnCancel = true                        // when you cancel the upload, exception is thrown. By default no exception is thrown
                         // when you cancel the upload, exception is thrown. By default no exception is thrown
                     })
                         .Child("Images")
@@ -169,7 +173,7 @@ namespace EventProjectSWP.Controllers
             {
                 return new JsonResult(e);
             }
-            return new JsonResult("Succeesful");
+            return new JsonResult("Image Uploaded Succeesful");
         }
     }
    

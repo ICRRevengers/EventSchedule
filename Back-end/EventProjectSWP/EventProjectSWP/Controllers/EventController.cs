@@ -18,14 +18,43 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-
+        //lấy danh sách events
         [HttpGet("get-event-list")]
-        public JsonResult Get()
+        public IActionResult Get()
+        {
+            string query = @"SELECT tblEvent.*, tblLocation.location_detail
+                           FROM tblEvent
+                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
+        }
+        //hiện event sắp tới so với thời gian hiện tại
+        [HttpGet("show-upcoming-event")]
+        public JsonResult Show_upcoming_event()
         {
             string query = @"Select event_id, event_name, event_content, event_timeline,
                             created_by, created_by,event_status,payment_status,category_id,location_id
-                           ,admin_id 
-                            From dbo.tblEvent";
+                           ,admin_id From dbo.tblEvent A
+                           where A.event_timeline >= GETDATE()";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -44,6 +73,39 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
+
+
+        //hiện event đã qua so với thời gian hiện tại
+        [HttpGet("show-past-event")]
+        public JsonResult Show_past_event()
+        {
+            string query = @"Select event_id, event_name, event_content, event_timeline,
+                            created_by, created_by,event_status,payment_status,category_id,location_id
+                           ,admin_id From dbo.tblEvent A
+                           where A.event_timeline < GETDATE()";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
+
+
+        //thêm mới events
 
         [HttpPost("add-event")]
         public JsonResult Post(Event Event)
@@ -79,6 +141,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult("Succeesful");
         }
 
+        //update thông tin events
         [HttpPut("update-event")]
         public JsonResult Put(Event Event)
         {
@@ -118,6 +181,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult("Succeesful");
         }
 
+        //xóa events
         [HttpDelete("delete-event")]
         public JsonResult Delete(string id)
         {
@@ -141,6 +205,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult("Succeesful");
         }
 
+        //Tìm event bằng tên
         [HttpGet("get-event-by-name")]
         public JsonResult GetEventByName(string name)
         {
@@ -164,6 +229,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             }
             return new JsonResult(table);
         }
+        //tìm event bằng 1 khoảng thời gian
         [HttpGet("get-event-by-timne")]
         public JsonResult GetEventByTime(string start_time, string end_time)
         {
@@ -191,7 +257,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult(table);
         }
 
-
+        //tìm event bằng 1 mốc thời gian cụ thể
         [HttpGet("get-event-by-timne-specific")]
         public JsonResult GetEventByTimeSpecific(string event_time)
         {
@@ -206,7 +272,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
-                    myCommand.Parameters.AddWithValue("@event_timeline", event_time);                    
+                    myCommand.Parameters.AddWithValue("@event_timeline", event_time);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();

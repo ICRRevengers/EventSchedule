@@ -1,0 +1,111 @@
+$primary-color: #f04a07;
+$secondary-color: #779ECC;
+
+.Contact {
+    padding: 2%;
+    @media only screen and (min-width: 768px) {
+        margin-left: 25%;
+    }
+    .form-row {
+        width: 100%;
+        max-width: 510px;
+        padding: 1%;
+        .form-label {
+            width: 130px;
+            display: inline-block;
+            color: #f24405;
+            align-items: center;
+        }
+        .form-input {
+            min-width: 350px;
+            min-height: 50px;
+            border: #f24405 solid 2px;
+            padding: 1%;
+            border-radius: 10px;
+            color: #f24405
+        }
+        .form-submit {
+            color: white;
+            background-color: #f24405;
+            border-radius: 10px;
+            padding: 1%;
+            width: 80px;
+            display: block;
+            margin: 0 auto;
+        }
+    }
+}
+
+.login {
+    padding: 2% 5%;
+    @media only screen and (min-width: 768px) {
+        padding: 2% 35%;
+    }
+    .form-row {
+        width: 100%;
+        max-width: 380px;
+        padding: 1%;
+        .form-input::placeholder {
+            color: #f24405
+        }
+        .form-input {
+            min-width: 350px;
+            min-height: 50px;
+            border: #f24405 solid 2px;
+            padding: 1%;
+            border-radius: 10px;
+            color: #f24405;
+        }
+        .form-submit {
+            color: white;
+            background-color: #f24405;
+            border-radius: 10px;
+            padding: 1%;
+            width: 120px;
+            display: block;
+            margin: 0 auto;
+        }
+    }
+    .student-form {
+        display: block;
+        text-align: center;
+        .googleButton {
+            // @media only screen and (min-width: 768px) {
+                margin-left: 15%;
+                      
+        }
+    }
+}
+
+.Create-event {
+padding: 2%;
+    @media only screen and (min-width: 768px) {
+        margin-left: 25%;
+    }
+    .form-row {
+        width: 100%;
+        padding: 1%;
+        .form-label {
+            display: inline-block;
+            color: #000050;
+            align-items: center;
+        }
+        .form-input {
+            min-width: 400px;
+            min-height: 50px;
+            // background-color: #f24405;
+            border: #000050 solid 2px;
+            padding: 1%;
+            border-radius: 10px;
+            color: #000050
+        }
+        .form-submit {
+            color: white;
+            background-color: #000050;
+            border-radius: 10px;
+            padding: 2%;
+            width: 100px;
+            float: left;
+        }
+    }
+}
