@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
@@ -22,91 +23,113 @@ namespace EventProjectSWP.Controllers
         // lấy tất cả thông tin người dùng đã tham gia event
         public IActionResult Get()
         {
-            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
-from tblEventParticipated EP, tblUser U
-where Ep.users_id = U.users_id";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+                                from tblEventParticipated EP, tblUser U
+                                where Ep.users_id = U.users_id";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+      
         }
 
         [HttpGet("get-all-event-i-joined")]
         // Lấy tất cả event mà 1 user tham gia 
         public IActionResult GetUserEvent(string id)
         {
-            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
-from tblEventParticipated EP, tblUser U
-where Ep.users_id = U.users_id and U.users_id = @users_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+                             from tblEventParticipated EP, tblUser U
+                             where Ep.users_id = U.users_id and U.users_id = @users_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@users_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+           
         }
 
         [HttpGet("get-user-list-from-an-event")]
         // Lấy tất cả user từ 1 event
         public IActionResult GetUserParticipatedEvent(string id)
         {
-            string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
-from tblEventParticipated EP, tblUser U
-where Ep.users_id = U.users_id and EP.event_id = @event_id
-";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+                             from tblEventParticipated EP, tblUser U
+                             where Ep.users_id = U.users_id and EP.event_id = @event_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@event_id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
-
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+      
         }
 
 
@@ -114,33 +137,31 @@ where Ep.users_id = U.users_id and EP.event_id = @event_id
         [HttpPost("add-user-join-event")]
         public IActionResult Post(EventParticipated EventParticipated)
         {
-            string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";        
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
-                    myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
-                    myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
+                        myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
+                        myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
                 }
+                    return Ok("Successfully");
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+         
         }
-
-
-
-
     }
 }

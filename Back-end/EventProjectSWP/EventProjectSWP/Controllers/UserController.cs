@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -22,91 +23,109 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-list-user")]
         public IActionResult Get()
         {
-            string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using(SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using(SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+         
         }
 
-        [HttpPost("add-user")]
-        public IActionResult Post(UserInfo user)
-        {
-            string query = @"insert into dbo.tblUser(users_id, users_name,users_phone,users_address,users_email) values(@users_id,@users_name,@users_phone,@users_address,@users_email)";
+        //[HttpPost("add-user")]
+        //public IActionResult Post(UserInfo user)
+        //{
+        //    try
+        //    {
+        //        string query = @"insert into dbo.tblUser(users_id, users_name,users_phone,users_address,users_email) values(@users_id,@users_name,@users_phone,@users_address,@users_email)";
+        //        string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+        //        SqlDataReader myReader;
+        //        using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+        //        {
+        //            myCon.Open();
+        //            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+        //            {
+        //                myCommand.Parameters.AddWithValue("@users_id", user.UserId);
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@users_id", user.UserId);
-                
-                    myCommand.Parameters.AddWithValue("@users_name", user.UserName);
-                    myCommand.Parameters.AddWithValue("@users_phone", user.Phone);
-                    myCommand.Parameters.AddWithValue("@users_address", user.Address);
-                    myCommand.Parameters.AddWithValue("@users_email", user.Email);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+        //                myCommand.Parameters.AddWithValue("@users_name", user.UserName);
+        //                myCommand.Parameters.AddWithValue("@users_phone", user.Phone);
+        //                myCommand.Parameters.AddWithValue("@users_address", user.Address);
+        //                myCommand.Parameters.AddWithValue("@users_email", user.Email);
+        //                myReader = myCommand.ExecuteReader();
+        //                myReader.Close();
+        //                myCon.Close();
 
-                }
-            }
-            if (table.Rows.Count > 0)
-            {
-                return Ok(new Response<DataTable>(table));
-            }
-            return BadRequest(new Response<string>("No Data"));
-        }
+        //            }
+        //        }
+        //            return Ok("Add Successfully");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new Response<string>(ex.Message));
+        //    }
+            
+        //}
 
         [HttpPut("update-user")]
         public IActionResult Put(UserInfo user)
         {
-            string query = @"update dbo.tblUser set users_name = @users_name , users_phone = @users_phone , users_address = @users_address , users_email = @users_email where users_id = @users_id";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"update dbo.tblUser set users_name = @users_name , users_phone = @users_phone , users_address = @users_address , users_email = @users_email where users_id = @users_id";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@users_name", user.UserName);
-                    myCommand.Parameters.AddWithValue("@users_phone", user.Phone);
-                    myCommand.Parameters.AddWithValue("@users_address", user.Address);
-                    myCommand.Parameters.AddWithValue("@users_email", user.Email);
-                    myCommand.Parameters.AddWithValue("@users_id", user.UserId);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@users_name", user.UserName);
+                        myCommand.Parameters.AddWithValue("@users_phone", user.Phone);
+                        myCommand.Parameters.AddWithValue("@users_address", user.Address);
+                        myCommand.Parameters.AddWithValue("@users_email", user.Email);
+                        myCommand.Parameters.AddWithValue("@users_id", user.UserId);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+           
         }
 
 
@@ -136,61 +155,77 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-user-by-id")]
         public IActionResult GetUserByID(string id)
         {
-            string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
+            try
+            {
+                string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
              where users_id = @users_id";
 
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@users_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+            
         }
 
         [HttpGet("get-user-by-name")]
         public IActionResult GetUserByName(string name)
         {
-            string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
+            try
+            {
+                string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
              where users_name like concat  ( @users_name,'%')";
 
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@users_name", name);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@users_name", name);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+           
         }
 
     }

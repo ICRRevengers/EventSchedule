@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -22,28 +23,36 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-event-feedback")]
         public IActionResult GetUserParticipatedEvent(string id)
         {
-            string query = @"select comment , rating , created_time, users_id from tblFeedback where event_id = @event_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"select comment , rating , created_time, users_id from tblFeedback where event_id = @event_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@event_id", id);
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
 
+                    }
                 }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+           
         }
 
         [HttpPost("add-feedback-to-event")]
