@@ -60,7 +60,7 @@ namespace EventProjectSWP.Controllers
         }
         */
         [HttpGet("get-image")]
-        public JsonResult Get()
+        public IActionResult Get()
         {
             string query = @"select * from tblImage";
 
@@ -80,7 +80,11 @@ namespace EventProjectSWP.Controllers
                 }
             }
 
-            return new JsonResult(table);
+            if (table.Rows.Count > 0)
+            {
+                return Ok(new Response<DataTable>(table));
+            }
+            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpPost("Add-image")]
