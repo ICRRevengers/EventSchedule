@@ -12,11 +12,8 @@ const useAuthActions = () => {
         LocalStorageUtils.setUser(token);
         const { email, name, exp, role } = jwtDecode(token);
         setAuth({ email, name, exp, role, token });
-        if (role === 'user') {
-            history.push('/');
-        } else {
-            history.push('/admin/manage/events');
-        }
+        history.push('/');
+        history.push('/admin/manage/events');
     };
 
     const autoLogin = () => {
@@ -32,22 +29,22 @@ const useAuthActions = () => {
                     token,
                     role: user.role,
                 });
-            }else {
-                logout()
+            } else {
+                logout();
             }
-        }else {
+        } else {
             setAuth({
                 token: null,
                 email: '',
                 name: '',
                 role: '',
                 exp: 0,
-            })
+            });
         }
     };
 
     const logout = () => {
-        LocalStorageUtils.deleteUser()
+        LocalStorageUtils.deleteUser();
         setAuth({
             token: null,
             email: '',
@@ -56,11 +53,14 @@ const useAuthActions = () => {
             image: '',
             role: '',
             exp: 0,
-        })
-    }
+        });
+    };
+
     return {
-        login, autoLogin, logout
-    }
+        login,
+        autoLogin,
+        logout
+    };
 };
 
 export default useAuthActions;

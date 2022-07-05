@@ -64,7 +64,7 @@ const AdminHome = () => {
                     padding={{ xs: 2, md: 5 }}
                     columns={{ xs: 3, sm: 12 }}
                 >
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={3} padding={{ sm: 2 }} item>
                         <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
@@ -75,7 +75,7 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={3} padding={{ sm: 2 }} item>
                         <FormControl fullWidth>
                             <Input
                                 onChange={handleChange}
@@ -85,7 +85,7 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }} >
+                    <Grid xs={3} padding={{ sm: 2 }} item>
                         <FormControl fullWidth variant="standard" >
                             <Select
                                 id="searchStatus"
@@ -99,7 +99,7 @@ const AdminHome = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={3} padding={{ sm: 2 }} item>
                         <FormControl fullWidth>
                             <Button variant="contained" onChange={handleChange}>
                                 Tìm kiếm
