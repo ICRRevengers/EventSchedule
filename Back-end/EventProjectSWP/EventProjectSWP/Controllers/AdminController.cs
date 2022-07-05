@@ -27,7 +27,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-
+        //lấy danh sách admin
         [HttpGet("get-list-admin")]
         public JsonResult Get()
         {
@@ -50,7 +50,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-
+        //update thông tin admin
         [HttpPut("update-admin")]
         public JsonResult Put(Admin club)
         {
@@ -76,7 +76,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
+        //tìm admin bằng id của admin
         [HttpGet("get-admin-by-id")]
         public JsonResult GetClubById(string id)
         {
@@ -100,7 +100,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-
+        //tìm admin bằng tên admin
         [HttpGet("get-admin-by-name")]
         public async Task<IActionResult> GetClubByName(string name)
         {
@@ -129,7 +129,7 @@ namespace EventProjectSWP.Controllers
             }
             return Ok(table);
         }
-
+        //đăng nhập cho admin
         [HttpPost("login-admin")]
         public async Task<IActionResult> loginAdmin(LoginAdmin loginAdmin)
         {
@@ -218,7 +218,7 @@ namespace EventProjectSWP.Controllers
           }*/
 
 
-
+        //điểm danh sinh viên tham gia events
         [HttpPut("Check attend")]
             public JsonResult CheckAttend(bool status, CheckAttendance checkAttend)
             //public JsonResult CheckAttend(EventParticipated ev)
