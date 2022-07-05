@@ -124,8 +124,7 @@ namespace EventProjectSWP.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new Response<string>(ex.Message));
-            }
-           
+            }     
         }
 
 

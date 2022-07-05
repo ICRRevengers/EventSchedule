@@ -25,7 +25,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_timeline,
+                string query = @"Select event_id, event_name, event_content, event_start,event_end,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id 
                             From dbo.tblEvent";
@@ -59,15 +59,17 @@ namespace EventProjectSWP.Controllers
             }
         }
 
+
+
         [HttpGet("show-upcoming-event")]
         public IActionResult Show_upcoming_event()
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_timeline,
+                string query = @"Select event_id, event_name, event_content, event_start,event_end,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
-                           where A.event_timeline >= GETDATE()";
+                           where A.event_start >= GETDATE()";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -101,10 +103,10 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_timeline,
+                string query = @"Select event_id, event_name, event_content, event_start,event_end,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
-                           where A.event_timeline < GETDATE()";
+                           where A.event_start < GETDATE()";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -139,8 +141,8 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"insert into dbo.tblEvent(event_name,event_content,event_timeline,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
-values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
+                string query = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
+values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
 
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -151,7 +153,8 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     {
                         myCommand.Parameters.AddWithValue("@event_name", addEvent.EventName);
                         myCommand.Parameters.AddWithValue("@event_content", addEvent.EventContent);
-                        myCommand.Parameters.AddWithValue("@event_timeline", addEvent.EventTimeline);
+                        myCommand.Parameters.AddWithValue("@event_start", addEvent.EventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", addEvent.EventEnd);
                         myCommand.Parameters.AddWithValue("@created_by", addEvent.CreatedBy);
                         myCommand.Parameters.AddWithValue("@event_code", addEvent.EventCode);
                         myCommand.Parameters.AddWithValue("@event_status", addEvent.EventStatus);
@@ -179,7 +182,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             {
                 string query = @"update dbo.tblEvent 
                            set event_name = @event_name, event_content = @event_content, 
-                           event_timeline = @event_timeline, created_by = @created_by,  
+                           event_start = @event_start,event_end = @event_end, created_by = @created_by,  
                            event_code = @event_code, event_status = @event_status, 
                            payment_status = @payment_status, category_id = @category_id, 
                            location_id = @location_id, admin_id = @admin_id 
@@ -195,7 +198,8 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     {
                         myCommand.Parameters.AddWithValue("@event_name", Event.EventName);
                         myCommand.Parameters.AddWithValue("@event_content", Event.EventContent);
-                        myCommand.Parameters.AddWithValue("@event_timeline", Event.EventTimeline);
+                        myCommand.Parameters.AddWithValue("@event_start", Event.EventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", Event.EventEnd);
                         myCommand.Parameters.AddWithValue("@created_by", Event.CreatedBy);
                         myCommand.Parameters.AddWithValue("@event_code", Event.EventCode);
                         myCommand.Parameters.AddWithValue("@event_status", Event.EventStatus);
@@ -215,6 +219,38 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                 return BadRequest(new Response<string>(ex.Message));
             }
 
+        }
+
+        [HttpPut("Update-event-status-true/false-by-endtime")]
+        public IActionResult UpdateEvenStatusByEndTime()
+        {
+            try
+            {
+                string query = @"update tblEvent 
+                                 set event_status = case 
+                                 when GETDATE() > event_end then 'False'
+                                 else 'True' end";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                return Ok("Set Event Status Successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
         }
 
         [HttpDelete("delete-event")]
@@ -288,7 +324,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             try
             {
                 string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id  from tblEvent 
-                           where event_timeline between 
+                           where event_start between 
                             @d1 AND @d2";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -326,7 +362,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             try
             {
                 string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id  from tblEvent 
-                           where event_timeline = @event_timeline";
+                           where event_start = @event_start";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -336,7 +372,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
                         //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
-                        myCommand.Parameters.AddWithValue("@event_timeline", event_time);
+                        myCommand.Parameters.AddWithValue("@event_start", event_time);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -355,6 +391,8 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             }
             
         }
+
+        
 
     }
 }
