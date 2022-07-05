@@ -43,8 +43,12 @@ function Login() {
         console.log(adminUserName, adminPassword);
         event.preventDefault()
         axios({
-            url:`${APP_API_URL}/api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
-            method:'get',
+            url:`${APP_API_URL}/api/Admin/login-admin}`,
+            method:'post',
+            data: {
+                adminMail: adminUserName,
+                adminPassword: adminPassword,
+            },
         }).then(res => {
             console.log(res);
         }).catch(error => {
