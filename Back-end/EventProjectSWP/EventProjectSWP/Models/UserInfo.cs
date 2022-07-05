@@ -5,7 +5,7 @@ namespace EventProjectSWP.Models
 {
     public class UserInfo
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string UserName { get; set; }
         public int Phone { get; set; }
         public string Address { get; set; }

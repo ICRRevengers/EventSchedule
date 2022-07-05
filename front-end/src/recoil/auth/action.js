@@ -1,11 +1,11 @@
 import { useSetRecoilState } from 'recoil';
 import LocalStorageUtils from '../../utils/LocalStorageUtils';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import authAtom from './atom';
 import jwtDecode from 'jwt-decode';
 
 const useAuthActions = () => {
-    const navigate = useNavigate();
+    const history = useHistory();
     const setAuth = useSetRecoilState(authAtom);
 
     const login = (token) => {
@@ -13,9 +13,9 @@ const useAuthActions = () => {
         const { email, name, exp, role } = jwtDecode(token);
         setAuth({ email, name, exp, role, token });
         if (role === 'user') {
-            navigate('/');
+            history.push('/');
         } else {
-            navigate('/manage/events');
+            history.push('/admin/manage/events');
         }
     };
 
