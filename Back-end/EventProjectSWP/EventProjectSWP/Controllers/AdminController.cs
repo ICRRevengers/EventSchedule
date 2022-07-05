@@ -215,7 +215,7 @@ namespace EventProjectSWP.Controllers
             }
             if (table.Rows.Count == 0)
             {
-                return Redirect("https://localhost:3000/login?error=invalid-username-or-password");
+                return BadRequest(new Response<string>("invalid-email-or-password"));
             }
 
             Admin admin = new Admin()
@@ -224,9 +224,8 @@ namespace EventProjectSWP.Controllers
                 AdminName = table.Rows[0]["admin_name"].ToString(),
                 AdminRole = table.Rows[0]["admin_role"].ToString(),
             };
-            var accessToken = _authentication.GenerateTokenAdmin(admin);
-            return Redirect($"https://localhost:3000/login?token={accessToken}");
-
+            var accessToken = await _authentication.GenerateTokenAdmin(admin);
+            return Ok(new Response<string>(accessToken, null));
         }
 
         /*[HttpPut("Check attend")]
