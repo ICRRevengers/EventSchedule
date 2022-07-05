@@ -5,6 +5,7 @@
         public int VideoId { get; set; }
         public string VideoUrl { get; set; }
         public int EventId { get; set; }
+        public string VideoName { get; set; }
 
     }
 }
