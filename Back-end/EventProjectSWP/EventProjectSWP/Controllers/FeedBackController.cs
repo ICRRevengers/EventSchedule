@@ -1,4 +1,5 @@
-﻿using EventProjectSWP.Models;
+﻿using EventProjectSWP.DTOs;
+using EventProjectSWP.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -56,34 +57,37 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPost("add-feedback-to-event")]
-        public IActionResult Post(Feedback Feedback)
+        public IActionResult Post(AddFeedback Feedback)
         {
-            string query = @"insert into tblFeedback values(@feedback_id,@comment,@rating,@created_time,@event_id,@users_id)";
+            try
+            {
+                string query = @"insert into tblFeedback values(@comment,@rating,@created_time,@event_id,@users_id)";
 
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@feedback_id", Feedback.FeedbackId);
-                    myCommand.Parameters.AddWithValue("@comment", Feedback.Comment);
-                    myCommand.Parameters.AddWithValue("@rating", Feedback.Rating);
-                    myCommand.Parameters.AddWithValue("@created_time", Feedback.CreatedTime);
-                    myCommand.Parameters.AddWithValue("@event_id", Feedback.EventId);
-                    myCommand.Parameters.AddWithValue("@users_id", Feedback.UserId);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@comment", Feedback.Comment);
+                        myCommand.Parameters.AddWithValue("@rating", Feedback.Rating);
+                        myCommand.Parameters.AddWithValue("@created_time", Feedback.CreatedTime);
+                        myCommand.Parameters.AddWithValue("@event_id", Feedback.EventId);
+                        myCommand.Parameters.AddWithValue("@users_id", Feedback.UserId);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
                 }
+                    return Ok("Feedback Successfully");
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
+         
         }
 
         [HttpDelete("delete-feedback")]
