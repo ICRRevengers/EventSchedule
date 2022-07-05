@@ -22,10 +22,9 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-event-list")]
         public IActionResult Get()
         {
-            string query = @"Select event_id, event_name, event_content, event_timeline,
-                            created_by, created_by,event_status,payment_status,category_id,location_id
-                           ,admin_id 
-                            From dbo.tblEvent";
+            string query = @"SELECT tblEvent.*, tblLocation.location_detail
+                           FROM tblEvent
+                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
