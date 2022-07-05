@@ -29,6 +29,45 @@ namespace EventProjectSWP.Controllers
 From dbo.tblEvent E, tblImage I, tblVideo V
 Where E.event_id = I.event_id ";
                 */
+                string query = @"Select event_id, event_name, event_content, event_timeline, created_by, created_by,event_status,payment_status,category_id,location_id,admin_id
+From dbo.tblEvent";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+        [HttpGet("get-event-with-image")]
+        public IActionResult GetEventWithImage()
+        {
+            try
+            {
+                /*string query = @"Select E.event_id, event_name, event_content, event_timeline, created_by, created_by,event_status,payment_status,category_id,location_id,admin_id,I.image_url,v.video_url
+From dbo.tblEvent E, tblImage I, tblVideo V
+Where E.event_id = I.event_id ";
+                */
                 string query = @"Select E.event_id, event_name, event_content, event_timeline, created_by, created_by,event_status,payment_status,category_id,location_id,admin_id,I.image_url
 From dbo.tblEvent E, tblImage I
 Where E.event_id = I.event_id ";
@@ -60,7 +99,6 @@ Where E.event_id = I.event_id ";
                 return BadRequest(new Response<string>(e.Message));
             }
         }
-
         [HttpGet("show-upcoming-event")]
         public IActionResult Show_upcoming_event()
         {
