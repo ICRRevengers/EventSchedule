@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
 
-const ManagerEvents = () => {
+const ManageEvents = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
     const { getEvents } = useAdminEvents()
@@ -100,4 +100,4 @@ const ManagerEvents = () => {
     );
 };
 
-export default ManagerEvents;
+export default ManageEvents;

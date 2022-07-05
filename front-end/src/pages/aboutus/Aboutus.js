@@ -21,11 +21,11 @@ const Aboutus = () => {
         axios
             .get(`http://localhost:5000/api/Admin/get-list-admin`)
             .then((res) => {
-                const data = res.data;
+                const data = res.data.data;
                 setClubs(data);
             })
             .catch((error) => {
-                console.log(error.response);
+                console.log(error);
             });
     }, []);
     return (
