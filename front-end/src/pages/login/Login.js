@@ -8,12 +8,15 @@ import queryString from 'query-string';
 import { useSnackbar } from '../../HOCs';
 import { useAuthActions } from '../../recoil/auth';
 import HeaderFooter from '../../components/layout/defaultLayout/header-footer/HeaderFooter';
+import { useAdminEvents } from '../../recoil/adminEvents'
+
 
 function Login() {
     const { search } = useLocation();
     const showSnackbar = useSnackbar();
     const { token, error } = queryString.parse(search);
     const { login } = useAuthActions();
+    const { loginAdmin } = useAdminEvents();
 
     const [adminUserName, setAdminUserName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
@@ -39,22 +42,16 @@ function Login() {
     }, []);
 
     const loginGoogle = () => {
-        window.location.assign(`${APP_API_URL}api/Authentication/google-login`);
+        window.location.assign(`${APP_API_URL}/api/Authentication/google-login`);
     };
 
-    const loginAdmin = (event) => {
-        event.preventDefault();
-        axios
-            .get(
-                `${APP_API_URL}api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
-            )
+    loginAdmin(adminUserName, adminPassword)
             .then((res) => {
                 console.log(res.data);
             })
             .catch((error) => {
                 console.log(error.response.data);
             });
-    };
 
     const userNameHandler = (event) => {
         setAdminUserName(event.target.value);
