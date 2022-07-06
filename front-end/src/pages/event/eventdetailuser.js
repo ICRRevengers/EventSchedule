@@ -4,10 +4,11 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import Paper from "@mui/material";
 import axios from "axios";
 import EventDetailHeader from "./eventdetailheader";
 import EventDetailBottom from "./eventdetailbottom";
+
+// import Paper from "@mui/material";
 
 const EventDetailUser = () => {
     // const { id } = useParams(); // get id job
@@ -87,7 +88,7 @@ const EventDetailUser = () => {
 
             </Container>
         </Box>
-
+        
     )
 }
 

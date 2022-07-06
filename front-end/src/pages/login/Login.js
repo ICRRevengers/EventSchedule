@@ -39,14 +39,14 @@ function Login() {
     }, []);
 
     const loginGoogle = () => {
-        window.location.assign(`${APP_API_URL}api/Authentication/google-login`);
+        window.location.assign(`${APP_API_URL}/api/Authentication/google-login`);
     };
 
     const loginAdmin = (event) => {
         event.preventDefault();
         axios
             .get(
-                `${APP_API_URL}api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
+                `${APP_API_URL}/api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
             )
             .then((res) => {
                 console.log(res.data);
