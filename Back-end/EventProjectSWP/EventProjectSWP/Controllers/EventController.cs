@@ -331,7 +331,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             try
             {
                 string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
-                              from dbo.tblEvent where event_name like concat (@event_name,'%')";
+                              from dbo.tblEvent where event_name like @event_name";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -340,7 +340,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_name", name);
+                        myCommand.Parameters.AddWithValue("@event_name", "%"+name+"%");
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
