@@ -24,11 +24,12 @@ namespace EventProjectSWP.Controllers
     {
         
         private readonly IConfiguration _configuration;
+        private readonly IAuthentication _authentication;
 
-        public AuthenticationController( IConfiguration configuration)
-        {
-           
+        public AuthenticationController(IConfiguration configuration, IAuthentication authentication)
+        {    
             _configuration = configuration;
+            _authentication = authentication;
         }
         [HttpGet("google-login")]
         public IActionResult GoogleLogin()
@@ -41,7 +42,6 @@ namespace EventProjectSWP.Controllers
         [Route("~/sigin-google")]
         public async Task<IActionResult> GoogleResponse()
         {
-            Authentication _authentication = new Authentication(_configuration);
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var userInfo = _authentication.GetUserInfo(result);
             if (userInfo == null)
@@ -65,10 +65,10 @@ namespace EventProjectSWP.Controllers
                     table.Load(myReader);
                     if (table.Rows.Count == 0)
                     {
-                        string addUser = @"insert into tblUser (users_id,users_name,users_phone,users_address,users_email) values (@users_id,@users_name,@users_phone,@users_address,@users_email)";
+                        string addUser = @"insert into tblUser (users_name,users_phone,users_address,users_email) values (@users_name,@users_phone,@users_address,@users_email)";
                         using (SqlCommand myCommand1 = new SqlCommand(addUser, myCon))
                         {
-                            myCommand1.Parameters.AddWithValue("@users_id", "");
+                            
                             myCommand1.Parameters.AddWithValue("@users_name", userInfo.UserName);
                             myCommand1.Parameters.AddWithValue("@users_phone", "");
                             myCommand1.Parameters.AddWithValue("@users_address", "");
@@ -82,7 +82,7 @@ namespace EventProjectSWP.Controllers
                     myCon.Close();
                 }
             }
-            var accessToken = await _authentication.GenerateToken(userInfo);
+            var accessToken = await _authentication.GenerateTokenUser(userInfo);
             return Redirect($"http://localhost:3000/login?token={accessToken}");
         }
     }

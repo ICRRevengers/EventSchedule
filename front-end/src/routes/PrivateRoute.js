@@ -28,7 +28,7 @@ const PrivateRoute = (props) => {
         }
     }
 
-    return <Route {...rest} />
+    return <Route {...rest}/>
 }
 export default PrivateRoute
 

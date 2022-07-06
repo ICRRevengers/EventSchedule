@@ -32,22 +32,22 @@ const useAuthActions = () => {
                     token,
                     role: user.role,
                 });
-            }else {
-                logout()
+            } else {
+                logout();
             }
-        }else {
+        } else {
             setAuth({
                 token: null,
                 email: '',
                 name: '',
                 role: '',
                 exp: 0,
-            })
+            });
         }
     };
 
     const logout = () => {
-        LocalStorageUtils.deleteUser()
+        LocalStorageUtils.deleteUser();
         setAuth({
             token: null,
             email: '',
@@ -56,11 +56,14 @@ const useAuthActions = () => {
             image: '',
             role: '',
             exp: 0,
-        })
-    }
+        });
+    };
+
     return {
-        login, autoLogin, logout
-    }
+        login,
+        autoLogin,
+        logout,
+    };
 };
 
 export default useAuthActions;

@@ -1,8 +1,7 @@
-﻿namespace EventProjectSWP.Models
+﻿namespace EventProjectSWP.DTOs
 {
-    public class Admin
+    public class AddAdmin
     {
-        public int AdminID { get; set; }
         public string AdminName { get; set; }
         public string AdminPhone { get; set; }
         public string AdminEmail { get; set; }

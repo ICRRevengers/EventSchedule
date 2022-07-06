@@ -1,5 +1,4 @@
 import { Button } from "@mui/material";
-import Table from '@mui/material/Table';
 import React from "react";
 import Wrapper from "../../../components/layout/defaultLayout/wrapper/Wrapper";
 import Sidebar from "../../../components/layout/sidebar/Sidebar";
@@ -24,12 +23,13 @@ const UserProfile = () => {
                         <label className='form-label'>Link facebook</label>
                         <input className="form-input" type="url" name="user_link" required />
                     </div>
-                    
-                    <Button variant="contained" sx={{md: 1,}}>Cập Nhật</Button>
+                    <div className='form-row' >
+                        <button className='form-submit'>Cập nhật</button>
+                    </div>
+                    <Button variant="contained" sx={{md: 1,}}>Contained</Button>
                 </form>
         </div>
         
     )
 }
 export default UserProfile;
-

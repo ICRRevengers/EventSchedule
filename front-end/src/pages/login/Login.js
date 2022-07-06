@@ -9,18 +9,15 @@ import { useSnackbar } from '../../HOCs';
 import { useAuthActions } from '../../recoil/auth';
 import HeaderFooter from '../../components/layout/defaultLayout/header-footer/HeaderFooter';
 
+
 function Login() {
     const { search } = useLocation();
     const showSnackbar = useSnackbar();
     const { token, error } = queryString.parse(search);
-    const { login } = useAuthActions();
+    const { login} = useAuthActions();
 
     const [adminUserName, setAdminUserName] = useState('');
     const [adminPassword, setAdminPassword] = useState('');
-    const [errorAdmin, setErrorAdmin] = useState({
-        username: null,
-        password: null,
-    });
 
     useEffect(() => {
         if (error && error === 'fpt-invalid-email') {
@@ -42,19 +39,25 @@ function Login() {
         window.location.assign(`${APP_API_URL}/api/Authentication/google-login`);
     };
 
-    const loginAdmin = (event) => {
-        event.preventDefault();
-        axios
-            .get(
-                `${APP_API_URL}/api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
-            )
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((error) => {
-                console.log(error.response.data);
+    const adminLogin = (event) => {
+        console.log(adminUserName, adminPassword);
+        event.preventDefault()
+        axios({
+            url:`${APP_API_URL}/api/Admin/login-admin`,
+            method:'post',
+            data: {
+                adminMail: adminUserName,
+                adminPassword: adminPassword,
+            },
+        }).then(res => {
+            login(res.data.data)
+        }).catch(error => {
+            showSnackbar({
+                severity: 'error',
+                children: error.response.data.message,
             });
-    };
+        })
+    }
 
     const userNameHandler = (event) => {
         setAdminUserName(event.target.value);
@@ -67,7 +70,7 @@ function Login() {
     return (
         <HeaderFooter>
             <div className="login ">
-                <form className="admin-form" onSubmit={loginAdmin}>
+                <form className="admin-form" onSubmit={adminLogin}>
                     <p className="">
                         Nếu bạn là <strong>quản trị viên</strong>, đăng nhập ở
                         đây

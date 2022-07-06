@@ -1,3 +1,4 @@
+using EventProjectSWP.Services;
 using EventProjectSWP.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,7 @@ namespace EventProjectSWP
             //Email configuration
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailService, Settings.MailService>();
+            services.AddTransient<IAuthentication, Authentication>();
 
             //Enable CORS
             services.AddCors(c =>
