@@ -10,16 +10,12 @@ import ParticipatedList from '../pages/admin/events/ParticipatedList';
 import AdminProfile from '../pages/admin/profile/AdminProfile';
 import UserProfile from '../pages/user/profile/userprofile';
 import EventDetail from '../pages/event/eventdetail';
-<<<<<<< HEAD
-import UserParticipatedList from '../pages/user/listparticipated/UserParticipatedList';
-=======
 import { Route, Routes } from 'react-router-dom';
 import HeaderFooter from '../components/layout/defaultLayout/header-footer/HeaderFooter';
 import AdminLayout from '../components/layout/adminLayout';
 import PublicRoute from './PublicRoute';
 import AdminHome from '../pages/home/AdminHome';
 import UserHome from '../pages/home/UserHome';
->>>>>>> dc6ac1581bf7892955931ca06a211580c607e07d
 
 const publicRoutes = [
     { path: '/aboutus', element: Aboutus, layout: 'user', name: 'about us' },
@@ -80,14 +76,6 @@ const privateRoutes = [
         name: 'user profile',
         role:['user']
     },
-<<<<<<< HEAD
-    { path: '/user/profile', component: UserProfile },
-    { path: '/event/detailpage', component: EventDetail },
-    { path: '/user/usereventlist', component: UserParticipatedList },
-    { path: '/*', component: Error, layout: null },
-    
-=======
->>>>>>> dc6ac1581bf7892955931ca06a211580c607e07d
 ];
 
 const Routess = (
