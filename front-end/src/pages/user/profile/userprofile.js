@@ -2,34 +2,38 @@ import { Button } from "@mui/material";
 import React from "react";
 import Wrapper from "../../../components/layout/defaultLayout/wrapper/Wrapper";
 import Sidebar from "../../../components/layout/sidebar/Sidebar";
+import {TextField} from "@mui/material";
+import {Box} from "@mui/material";
 
-const UserProfile = () => {
+function UserProfile(){
     return (
-        <div >
-                <form className='Contact max-w-[700px]' method='post'>
-                    <div className='form-row' >
-                        <label className="form-label">Họ và tên</label>
-                        <input className='form-input' type="text" name="user_name" required />
-                    </div>
-                    <div className='form-row' >
-                        <label className="form-label">Email</label>
-                        <input className="form-input" type="email" name="user_email" required />
-                    </div>
-                    <div className='form-row' >
-                        <label className="form-label">Số điện thoại</label>
-                        <input className="form-input" type="tel" name="user_phone" required />
-                    </div>
-                    <div className='form-row' >
-                        <label className='form-label'>Link facebook</label>
-                        <input className="form-input" type="url" name="user_link" required />
-                    </div>
-                    <div className='form-row' >
-                        <button className='form-submit'>Cập nhật</button>
-                    </div>
-                    <Button variant="contained" sx={{md: 1,}}>Contained</Button>
-                </form>
+        <Box
+        component="form"
+        sx={{
+          '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <div>
+          <TextField
+            id="outlined-read-only-input"
+            label="Name"
+            defaultValue="Pham Xuan Phu"
+            InputProps={{
+              readOnly: true,
+            }}
+          />         
+          <TextField
+            id="outlined-read-only-input"
+            label="Email"
+            defaultValue="sogoku1113@gmail.com"
+            InputProps={{
+              readOnly: true,
+            }}
+          />         
         </div>
-        
+      </Box>
     )
 }
 export default UserProfile;
