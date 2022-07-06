@@ -1,19 +1,21 @@
-import { get } from "../../utils/ApiCaller"
-import { APP_API_URL } from "../../config"
+import { get, remove } from '../../utils/ApiCaller';
 
-const AdminManagement = () => {
+const useAdminEvents = () => {
+    const getEvents = () => get({ endpoint: '/api/Event/get-event-list' });
 
-    const useAdminEvents = () => {
-        const getEvents = () => {
-            return get(`${APP_API_URL}api/Event/get-event-list`)
-        }
-    }
-
-    const useStudentfromEvent = (id) => {
-        const getStudents = (id) => {
-            return get(`${APP_API_URL}/api/EventParticipated/get-user-list-from-event?id=${id}`)
-        }
-    }
-    return useAdminEvents, useStudentfromEvent
-}
-export default AdminManagement;
+    const getStudentsFromEvent = (id) =>
+        get({
+            endpoint: `/api/EventParticipated/get-user-list-from-event?id=${id}`,
+        });
+    
+    const deleteEvent = (id) =>
+        remove({
+            endpoint: `/api/Event/delete-event?id=${id}`,
+        })
+    return {
+        getEvents,
+        getStudentsFromEvent,
+        deleteEvent
+    };
+};
+export default useAdminEvents;

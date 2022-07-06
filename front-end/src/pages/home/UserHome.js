@@ -1,27 +1,41 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Button,
+    Typography,
+    Box,
+    Grid,
+    Paper,
+    FormControl,
+    Input,
+    Select,
+    MenuItem,
+    experimentalStyled as styled,
+} from '@mui/material/';
 import { useEffect, useState } from 'react';
 import { useAdminEvents } from '../../recoil/adminEvents';
 import { useSnackbar } from '../../HOCs';
-import axios from 'axios';
-import { APP_API_URL } from '../../config';
 
-const UserHome = () => {
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
+
+const AdminHome = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
-    const { getEvents } = useAdminEvents()
+    const { getEvents } = useAdminEvents();
     useEffect(() => {
-        axios
-        .get(`${APP_API_URL}api/Event/get-event-list`)
+        getEvents()
             .then((resposne) => {
-                const data = resposne.data;
+                const data = resposne.data.data;
                 setEvents(data);
-                console.log(data);
             })
             .catch(() => {
                 showSackbar({
@@ -30,29 +44,112 @@ const UserHome = () => {
                 });
             });
     }, []);
-  return (
-    <Card sx={{ maxWidth: 345, marginLeft: 10, marginBottom: 5}}>
-      <CardMedia
-        component="img"
-        height="140"
-        image="/assets/images/campus.jpg"
-        alt="green iguana"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          Lizard
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
-  );
-}
 
-export default UserHome;
+    const [values, setValues] = useState();
+
+    const handleChange = (event) => {
+        this.setState({ value: event.target.value });
+    };
+
+    const handleSubmit = (event) => {
+        alert('A name was submitted: ' + this.state.value);
+        event.preventDefault();
+    };
+
+    return (
+        <>
+            <Box sx={{ flexGrow: 1 }}>
+                <Grid
+                    container
+                    padding={{ xs: 2, md: 5 }}
+                    columns={{ xs: 3, sm: 12 }}
+                >
+                    <Grid xs={3} padding={{ sm: 2 }}>
+                        <FormControl fullWidth>
+                            <Input
+                                placeholder="Tên sự kiện..."
+                                onChange={handleChange}
+                                name="searchEvent"
+                                id="searchEventName"
+                                type="text"
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid xs={3} padding={{ sm: 2 }}>
+                        <FormControl fullWidth>
+                            <Input
+                                onChange={handleChange}
+                                name="searchEvent"
+                                id="searchEventTime"
+                                type="date"
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid xs={3} padding={{ sm: 2 }} >
+                        <FormControl fullWidth variant="standard" >
+                            <Select
+                                id="searchStatus"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={1}>Online</MenuItem>
+                                <MenuItem value={0}>Offline</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid xs={3} padding={{ sm: 2 }}>
+                        <FormControl fullWidth>
+                            <Button variant="contained" onChange={handleChange}>
+                                Tìm kiếm
+                            </Button>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+            </Box>
+            <Box sx={{ flexGrow: 1 }}>
+                <Grid
+                    container
+                    padding={{ xs: 2, md: 5 }}
+                    spacing={{ xs: 2, md: 3 }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                >
+                    {events?.map((event) => (
+                        <Grid item xs={2} sm={4} md={4} key={event?.event_id}>
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image="/assets/images/campus.jpg"
+                                    alt="green iguana"
+                                />
+                                <CardContent>
+                                    <Typography
+                                        gutterBottom
+                                        variant="h5"
+                                        component="div"
+                                    >
+                                        {event.event_name}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                    >
+                                        {event.event_timeline}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button size="small">Share</Button>
+                                    <Button size="small">More detail</Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            </Box>
+        </>
+    );
+};
+
+export default AdminHome;

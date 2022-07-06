@@ -1,4 +1,6 @@
-﻿namespace EventProjectSWP.Models
+﻿using System.Runtime.InteropServices;
+
+namespace EventProjectSWP.Models
 {
     public class Response<T>
     {
@@ -6,7 +8,7 @@
         public string message { get; set; }
         public bool isSuccess { get; set; }
 
-        public Response(T data)
+        public Response([Optional] T data, [Optional] string message)
         {
             isSuccess = true;
             this.data = data;
