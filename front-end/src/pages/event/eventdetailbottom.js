@@ -8,8 +8,8 @@ import {
     Typography
 } from "@mui/material";
 
-const EventDetailBottom = () => {
-    // const { item } = props;
+const EventDetailBottom = (props) => {
+    const { item } = props;
     return (
         <>
             <Card>
@@ -37,12 +37,7 @@ const EventDetailBottom = () => {
                                 {/* {item?.topReasons?.map((reason, index) => (
                                     <li key={index}>{reason}</li>
                                 ))} */}
-                                 <li>Tham gia sự kiện này sẽ mang đến cho bạn một trải nghiệm chưa từng có về âm nhạc</li>
-                                 <li>Tìm được một nửa còn lại của mình trong lễ hội âm nhạc lớn nhất FPT</li>
-                                 <li>Một trong những sự kiện âm nhạc tầm cỡ nhất từng được tổ chức</li>
-                                 <li>Là câu lạc bộ chuyên tổ chức sự kiện được thành lập từ 10 năm về trước</li>
-                                 <li>Tham gia sự kiện này sẽ mang đến cho bạn một trải nghiệm chưa từng có về âm nhạc</li>
-                                 <li>Tham gia sự kiện này sẽ mang đến cho bạn một trải nghiệm chưa từng có về âm nhạc</li>
+                                 {item?.event_content}
                             </Typography>
                             <br />
                             <Typography color="textPrimary" gutterBottom variant="h4">
