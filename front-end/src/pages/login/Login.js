@@ -43,16 +43,19 @@ function Login() {
         console.log(adminUserName, adminPassword);
         event.preventDefault()
         axios({
-            url:`${APP_API_URL}/api/Admin/login-admin}`,
+            url:`${APP_API_URL}/api/Admin/login-admin`,
             method:'post',
             data: {
                 adminMail: adminUserName,
                 adminPassword: adminPassword,
             },
         }).then(res => {
-            console.log(res);
+            login(res.data.data)
         }).catch(error => {
-            console.log(error);
+            showSnackbar({
+                severity: 'error',
+                children: error.response.data.message,
+            });
         })
     }
 

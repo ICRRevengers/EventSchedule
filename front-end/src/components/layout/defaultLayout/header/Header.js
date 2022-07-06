@@ -5,8 +5,9 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useEffect } from 'react';
 import authAtom from '../../../../recoil/auth/atom';
 import { useRecoilValue } from 'recoil';
-import {Typography} from "@mui/material"
 import useAuthActions from '../../../../recoil/auth/action';
+import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
 
 const pages = [
     {
@@ -23,11 +24,9 @@ const pages = [
     },
 ];
 
-
 const Header = ({ children }) => {
-
-    const auth = useRecoilValue(authAtom)
-    const { logout } = useAuthActions()
+    const auth = useRecoilValue(authAtom);
+    const { logout } = useAuthActions();
 
     useEffect(() => {
         const menuIcon = document.querySelector('.menu');
@@ -43,8 +42,8 @@ const Header = ({ children }) => {
     }, []);
 
     const logoutHandlder = () => {
-        logout()
-    }
+        logout();
+    };
 
     return (
         <>
@@ -75,7 +74,21 @@ const Header = ({ children }) => {
                         </Link>
                     ))}
                     <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
-                        {auth.email ? (<Typography onClick={logoutHandlder} variant='h5' className='md:ml-[25px] my-[10px]'>Đăng xuất</Typography>) : (<Link to='/login' className='md:ml-[25px] my-[10px]'>Đăng nhập</Link>)}
+                        {auth.email ? (
+                            <Link
+                                onClick={logoutHandlder}
+                                className="md:ml-[25px] my-[10px]"
+                            >
+                                <LogoutIcon /> Đăng xuất
+                            </Link>
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="md:ml-[25px] my-[10px]"
+                            >
+                                <LoginIcon /> Đăng nhập
+                            </Link>
+                        )}
                     </div>
                 </ul>
             </Wrapper>
