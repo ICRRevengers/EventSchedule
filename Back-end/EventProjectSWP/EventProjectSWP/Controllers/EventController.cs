@@ -179,6 +179,7 @@ Where E.event_id = I.event_id ";
                 return BadRequest(new Response<string>(e.Message));
             }
         }
+
         [HttpGet("show-upcoming-event")]
         public IActionResult Show_upcoming_event()
         {
