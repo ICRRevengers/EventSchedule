@@ -401,8 +401,10 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"select event_name,event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
-                              from dbo.tblEvent where event_id = @event_id";
+                string query = @"SELECT tblEvent.*, tblLocation.*
+                           FROM tblEvent
+                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
+                           where event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
