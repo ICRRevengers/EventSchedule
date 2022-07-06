@@ -330,7 +330,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
         {
             try
             {
-                string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
+                string query = @"select event_name,event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
                               from dbo.tblEvent where event_name LIKE @event_name  ";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
