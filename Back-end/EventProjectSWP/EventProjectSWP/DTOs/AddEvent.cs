@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace EventProjectSWP.DTOs
 {
@@ -15,5 +17,6 @@ namespace EventProjectSWP.DTOs
         public string CategoryID { get; set; }
         public string LocationID { get; set; }
         public int AdminID { get; set; }
+        public IFormFile files { get; set; }
     }
 }

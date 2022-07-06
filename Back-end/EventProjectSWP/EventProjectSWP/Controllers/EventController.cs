@@ -256,7 +256,7 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public IActionResult Post(AddEvent addEvent)
+        public IActionResult Post(AddEvent addEvent, [FromForm] FileUploadcs objectFile)
         {
             try
             {
@@ -445,11 +445,13 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"SELECT tblEvent.*, tblLocation.* , tblPayment.payment_fee
+                string query = @"SELECT tblEvent.*,tblLocation.location_detail,tblLocation.location_status , tblPayment.payment_fee,tblImage.image_url,tblVideo.video_url
                            FROM tblEvent
                            INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
                            INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id
-                           where tblEvent.event_id = @event_id";
+						   INNER JOIN tblImage ON tblEvent.event_id = tblImage.event_id 
+						   INNER JOIN tblVideo ON tblEvent.event_id = tblVideo.event_id 
+                           where tblEvent.event_id =@event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
