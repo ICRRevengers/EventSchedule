@@ -95,13 +95,6 @@ const privateRoutes = [
         name: 'user profile',
         role: ['user'],
     },
-    {
-        path: '/event/userdetail',
-        component: lazy(() => import('../pages/event/eventdetailuser')),
-        layout: 'user',
-        name: 'user profile',
-        role: ['user'],
-    },
 ];
 
 const Routes = (

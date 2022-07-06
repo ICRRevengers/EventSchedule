@@ -39,7 +39,6 @@ function Login() {
         window.location.assign(`${APP_API_URL}/api/Authentication/google-login`);
     };
 
-<<<<<<< HEAD
     const adminLogin = (event) => {
         console.log(adminUserName, adminPassword);
         event.preventDefault()
@@ -56,19 +55,6 @@ function Login() {
             showSnackbar({
                 severity: 'error',
                 children: error.response.data.message,
-=======
-    const loginAdmin = (event) => {
-        event.preventDefault();
-        axios
-            .get(
-                `${APP_API_URL}/api/Admin/login-admin?adminMail=${adminUserName}&adminPassword=${adminPassword}`,
-            )
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((error) => {
-                console.log(error.response.data);
->>>>>>> Phu-frontend-branch
             });
         })
     }
