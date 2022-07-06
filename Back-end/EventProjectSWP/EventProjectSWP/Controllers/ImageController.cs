@@ -65,7 +65,7 @@ namespace EventProjectSWP.Controllers
         public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {
             string imgname;
-            int id;
+            //int id;
             Boolean check;
             FileStream ms;
             DataTable table = new DataTable();
@@ -79,6 +79,7 @@ namespace EventProjectSWP.Controllers
                     imgname = rD.Random_Name();
                     check = rD.CheckRandom_ImageName(imgname);
                 } while (check);
+                /*
                 do
                 {
                     Random rdid = new Random();
@@ -86,7 +87,7 @@ namespace EventProjectSWP.Controllers
                     id = rdid.Next(10000);
                     check = rD.CheckRandom_ImageId(id);
                 } while (check);
-
+                */
                 if (file.Length > 0)
                 {
 
@@ -116,8 +117,8 @@ namespace EventProjectSWP.Controllers
                         .Child($"{imgname}")
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
-                    string query = @"insert into tblImage values (@image_id,@image_url,@event_id,@image_name)";
-                    string checkquery = @"select * from tblImage where image_id = @image_id";
+                    string query = @"insert into tblImage values (@image_url,@event_id,@image_name)";
+                    string checkquery = @"select * from tblImage where image_name = @image_name";
                     table = new DataTable();
                     string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                     SqlDataReader myReader;
@@ -126,7 +127,7 @@ namespace EventProjectSWP.Controllers
                         myCon.Open();
                         using (SqlCommand myCommand = new SqlCommand(query, myCon))
                         {
-                            myCommand.Parameters.AddWithValue("@image_id", id);
+                            //myCommand.Parameters.AddWithValue("@image_id", id);
                             myCommand.Parameters.AddWithValue("@image_url", link);
                             myCommand.Parameters.AddWithValue("@image_name", imgname);
                             myCommand.Parameters.AddWithValue("@event_id", eventid);
@@ -135,7 +136,7 @@ namespace EventProjectSWP.Controllers
                         }
                         using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
                         {
-                            myCommand.Parameters.AddWithValue("@image_id", id);
+                            myCommand.Parameters.AddWithValue("@image_name", imgname);
                             myReader = myCommand.ExecuteReader();
                             table.Load(myReader);
                             myReader.Close();
@@ -159,7 +160,7 @@ namespace EventProjectSWP.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new Response<string>("Something wrong when trying to delete Image"));
+                return BadRequest(new Response<string>("Something wrong when trying to add Image"));
             }
         }
         [HttpPost("Delete-image")]

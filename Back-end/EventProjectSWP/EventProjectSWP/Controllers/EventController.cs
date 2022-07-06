@@ -97,7 +97,7 @@ Where E.event_id = I.event_id ";
             }
         }
         [HttpGet("get-imageurl-by-eventid")]
-        public IActionResult GetImageUrl()
+        public IActionResult GetImageUrl(int id)
         {
             try
             {
@@ -106,8 +106,8 @@ From dbo.tblEvent E, tblImage I, tblVideo V
 Where E.event_id = I.event_id ";
                 */
                 string query = @"Select I.image_url
-From dbo.tblEvent E, tblImage I
-Where E.event_id = I.event_id ";
+                                 From dbo.tblEvent E, tblImage I
+                                 Where E.event_id = @event_id ";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -116,6 +116,48 @@ Where E.event_id = I.event_id ";
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
+                        myCommand.Parameters.AddWithValue("@event_id",id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+        [HttpGet("get-videourl-by-eventid")]
+        public IActionResult GetVideoUrl(int id)
+        {
+            try
+            {
+                /*string query = @"Select E.event_id, event_name, event_content, event_timeline, created_by, created_by,event_status,payment_status,category_id,location_id,admin_id,I.image_url,v.video_url
+From dbo.tblEvent E, tblImage I, tblVideo V
+Where E.event_id = I.event_id ";
+                */
+                string query = @"Select V.video_url
+                                 From dbo.tblEvent E, tblVideo V
+                                 Where E.event_id = @event_id ";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", id);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
