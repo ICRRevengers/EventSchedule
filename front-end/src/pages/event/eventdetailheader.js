@@ -162,6 +162,19 @@ const EventDetailHeader = () => {
                                         {/* Title: {item?.title} */}25/10/2023
                                     </Typography>
                                 </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        {/* Title: {item?.title} */}Địa điểm: Hội trường A Đại Học FPT
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        {/* Title: {item?.title} */}Sự kiện: Âm Nhạc
+                                    </Typography>
+                                </Grid>
+
 
                                 {/* <Grid item xs={1}>
                                     <Typography color="textPrimary"
@@ -178,7 +191,7 @@ const EventDetailHeader = () => {
                                 </Grid>
                             </Grid>
                             <Typography color="textSecondary" gutterBottom variant="body1">
-                                {/* {item?.company?.name} */} FPT Event Club
+                                {/* {item?.company?.name} */} Status: Online
                             </Typography>
                             
 
@@ -215,7 +228,7 @@ const EventDetailHeader = () => {
             >
                 <DialogTitle>
                     <Typography color="textPrimary" gutterBottom variant="h3" sx={{ fontWeight: 'regular' }}>
-                        {/* {item?.name} */} Name
+                        {/* {item?.name} */}
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
