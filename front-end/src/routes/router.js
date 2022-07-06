@@ -1,99 +1,217 @@
 import Error from '../pages/error/Error';
-import ManageEvents from '../pages/admin/events/ManageEvent';
-import Header from '../components/layout/defaultLayout/header/Header';
-import Aboutus from '../pages/aboutus/Aboutus';
-import Contact from '../pages/contact/Contact';
-import Login from '../pages/login/Login';
-import Create from '../pages/admin/events/CreateEvent';
-import UpdateEvent from '../pages/admin/events/UpdateEvent';
-import ParticipatedList from '../pages/admin/events/ParticipatedList';
-import AdminProfile from '../pages/admin/profile/AdminProfile';
-import UserProfile from '../pages/user/profile/userprofile';
-import { Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import HeaderFooter from '../components/layout/defaultLayout/header-footer/HeaderFooter';
 import AdminLayout from '../components/layout/adminLayout';
 import PublicRoute from './PublicRoute';
-import AdminHome from '../pages/home/AdminHome';
-import UserHome from '../pages/home/UserHome';
 import EventDetailAdmin from '../pages/event/eventdetailadmin';
 import EventDetailUser from '../pages/event/eventdetailuser';
+import HybridRoute from './HybridRoute';
+import PrivateRoute from './PrivateRoute';
+import { lazy } from 'react';
+import { Suspense } from 'react';
+import Loading from '../components/loading/loading';
 
 const publicRoutes = [
-    { path: '/aboutus', element: Aboutus, layout: 'user', name: 'about us' },
+    {
+        path: '/login',
+        component: lazy(() => import('../pages/login/Login')),
+        name: 'login',
+        layout: false,
+    },
+];
+
+const hybridRoutes = [
+    {
+        path: '/aboutus',
+        publicComponent: lazy(() => import('../pages/aboutus/Aboutus')),
+        privateComponent: lazy(() => import('../pages/aboutus/Aboutus')),
+        layout: 'user',
+        name: 'about us',
+    },
     {
         path: '/contactus',
-        element: Contact,
+        publicComponent: lazy(() => import('../pages/contact/Contact')),
+        privateComponent: lazy(() => import('../pages/contact/Contact')),
         layout: 'user',
         name: 'contact us',
     },
-    { path: '/login', element: Login, layout: 'user', name: 'login' },
-    ,
-    { path: '/', element: UserHome, layout: 'user', name: 'home'}
-
+    {
+        path: '/',
+        publicComponent: lazy(() => import('../pages/home/UserHome')),
+        privateComponent: lazy(() => import('../pages/home/UserHome')),
+        layout: 'user',
+        name: 'user home',
+    },
 ];
-
-//    { path: '/*', element: Error, layout: null },
 
 const privateRoutes = [
     {
-        path: '/admin/manage/events',
-        element: ManageEvents,
-        layout:'admin',
-        name:'manage events',
+        path: '/admin',
+        component: lazy(() => import('../pages/home/AdminHome')),
+        layout: 'admin',
+        name: 'admin home',
         role:['admin', 'club']
+    },
+    {
+        path: '/admin/manage/events',
+        component: lazy(() => import('../pages/admin/events/ManageEvent')),
+        layout: 'admin',
+        name: 'manage events',
+        role: ['admin', 'club'],
     },
     {
         path: '/admin/manage/postevent',
-        element: Create,
-        layout:'admin',
-        name:'create event',
-        role:['admin', 'club']
+        component: lazy(() => import('../pages/admin/events/CreateEvent')),
+        layout: 'admin',
+        name: 'create event',
+        role: ['admin', 'club'],
     },
     {
         path: '/admin/manage/update',
-        element: UpdateEvent,
-        layout:'admin',
-        name:'update event',
-        role:['admin', 'club']
+        component: lazy(() => import('../pages/admin/events/UpdateEvent')),
+        layout: 'admin',
+        name: 'update event',
+        role: ['admin', 'club'],
     },
     {
         path: '/admin/manage/participated/:id',
-        element: ParticipatedList,
-        layout:'admin',
-        name:'manage participant',
-        role:['admin', 'club']
+        component: lazy(() => import('../pages/admin/events/ParticipatedList')),
+        layout: 'admin',
+        name: 'manage participant',
+        role: ['admin', 'club'],
     },
     {
         path: '/admin/manage/profile',
-        element: AdminProfile,
-        layout:'admin',
-        name:'manage profile',
-        role:['admin', 'club']
+        component: lazy(() => import('../pages/admin/profile/AdminProfile')),
+        layout: 'admin',
+        name: 'manage profile',
+        role: ['admin', 'club'],
     },
     {
         path: '/user/profile',
-        element: UserProfile,
+        component: lazy(() => import('../pages/user/profile/userprofile')),
         layout: 'user',
         name: 'user profile',
-        role:['user']
+        role: ['user'],
     },
+<<<<<<< HEAD
+=======
+    {
+        path: '/user/eventdetail',
+        component: lazy(() => import('../pages/event/eventdetailuser')),
+        layout: 'user',
+        name: 'user profile',
+        role: ['user'],
+    },
+>>>>>>> Phu-frontend-branch
 ];
 
-const Routess = (
-    <Routes>
-        <Route path="/admin">
-            <AdminLayout></AdminLayout>
-        </Route>
-        <Route>
-            <HeaderFooter>
-                {publicRoutes.map(({layout, ...route}) => layout === 'user' && (
-                    <PublicRoute exact={true} {...route} key={route.name}/>
-                ))}
-            </HeaderFooter>
-        </Route>
-    </Routes>
+const Routes = (
+    <Suspense fallback={<Loading />}>
+        <Switch>
+            {publicRoutes.map(
+                ({ layout, ...route }) =>
+                    !layout && (
+                        <PublicRoute key={route.name} exact={true} {...route} />
+                    ),
+            )}
+            {privateRoutes.map(
+                ({ layout, ...route }) =>
+                    !layout && (
+                        <PrivateRoute
+                            key={route.name}
+                            exact={true}
+                            {...route}
+                        />
+                    ),
+            )}
+            {hybridRoutes.map(
+                ({ layout, ...route }) =>
+                    !layout && (
+                        <HybridRoute key={route.name} exact={true} {...route} />
+                    ),
+            )}
+            <Route path="/admin">
+                <AdminLayout>
+                    <Suspense fallback={<Loading />}>
+                        <Switch>
+                            {publicRoutes.map(
+                                ({ layout, ...route }) =>
+                                    layout === 'admin' && (
+                                        <PublicRoute
+                                            exact={true}
+                                            {...route}
+                                            key={route.name}
+                                        />
+                                    ),
+                            )}
+                            {privateRoutes.map(
+                                ({ layout, ...route }) =>
+                                    layout === 'admin' && (
+                                        <PrivateRoute
+                                            exact={true}
+                                            {...route}
+                                            key={route.name}
+                                        />
+                                    ),
+                            )}
+                            {hybridRoutes.map(
+                                ({ layout, ...route }) =>
+                                    layout === 'admin' && (
+                                        <HybridRoute
+                                            exact={true}
+                                            {...route}
+                                            key={route.name}
+                                        />
+                                    ),
+                            )}
+                            <Route path="/*" component={<Error />} />
+                        </Switch>
+                    </Suspense>
+                </AdminLayout>
+            </Route>
+            <Route>
+                <HeaderFooter>
+                    <Suspense fallback={<Loading />}>
+                        <Switch>
+                            {publicRoutes.map(
+                                ({ layout, ...route }) =>
+                                    layout === 'user' && (
+                                        <PublicRoute
+                                            exact={true}
+                                            {...route}
+                                            key={route.name}
+                                        />
+                                    ),
+                            )}
+                            {privateRoutes.map(
+                                ({ layout, ...route }) =>
+                                    layout === 'user' && (
+                                        <PrivateRoute
+                                            exact={true}
+                                            {...route}
+                                            key={route.name}
+                                        />
+                                    ),
+                            )}
+                            {hybridRoutes.map(
+                                ({ layout, ...route }) =>
+                                    layout === 'user' && (
+                                        <HybridRoute
+                                            exact={true}
+                                            {...route}
+                                            key={route.name}
+                                        />
+                                    ),
+                            )}
+                            <Route path="/*" component={<Error />} />
+                        </Switch>
+                    </Suspense>
+                </HeaderFooter>
+            </Route>
+        </Switch>
+    </Suspense>
 );
 
-export default Routess;
-
-export { publicRoutes, privateRoutes };
+export default Routes;

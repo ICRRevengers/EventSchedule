@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace EventProjectSWP.Models
+namespace EventProjectSWP.DTOs
 {
-    public class Event
+    public class AddEvent
     {
-        public int EventID { get; set; }
         public string EventName { get; set; }
         public string EventContent { get; set; }
         public DateTime EventTimeline { get; set; }
@@ -15,6 +14,5 @@ namespace EventProjectSWP.Models
         public string CategoryID { get; set; }
         public string LocationID { get; set; }
         public int AdminID { get; set; }
-
     }
 }
