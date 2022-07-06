@@ -64,7 +64,7 @@ const AdminHome = () => {
                     padding={{ xs: 2, md: 5 }}
                     columns={{ xs: 3, sm: 12 }}
                 >
-                    <Grid xs={3} padding={{ sm: 2 }} item>
+                    <Grid item xs={3} padding={{ sm: 2 }} >
                         <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
@@ -75,7 +75,7 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }} item>
+                    <Grid item xs={3} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
                                 onChange={handleChange}
@@ -85,12 +85,9 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }} item>
-                        <FormControl fullWidth variant="standard" >
-                            <Select
-                                id="searchStatus"
-                                onChange={handleChange}
-                            >
+                    <Grid item xs={3} padding={{ sm: 2 }}>
+                        <FormControl fullWidth variant="standard">
+                            <Select id="searchStatus" onChange={handleChange}>
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
@@ -99,9 +96,9 @@ const AdminHome = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }} item>
+                    <Grid item xs={3} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
-                            <Button variant="contained" onChange={handleChange}>
+                            <Button variant="contained" onClick={handleSubmit}>
                                 Tìm kiếm
                             </Button>
                         </FormControl>

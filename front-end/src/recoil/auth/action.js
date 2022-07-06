@@ -12,8 +12,11 @@ const useAuthActions = () => {
         LocalStorageUtils.setUser(token);
         const { email, name, exp, role } = jwtDecode(token);
         setAuth({ email, name, exp, role, token });
-        history.push('/');
-        history.push('/admin/manage/events');
+        if (role === 'user') {
+            history.push('/');
+        } else {
+            history.push('/admin/manage/events');
+        }
     };
 
     const autoLogin = () => {
@@ -59,7 +62,7 @@ const useAuthActions = () => {
     return {
         login,
         autoLogin,
-        logout
+        logout,
     };
 };
 
