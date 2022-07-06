@@ -53,10 +53,10 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
         [HttpPost("Add-video")]
-        public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
+        public async Task<IActionResult> Post([FromForm] FileUpload objectFile, int eventid)
         {
             string vidname;
-            //int id;
+            int id;
             Boolean check;
             FileStream ms;
             DataTable table = new DataTable();
@@ -70,7 +70,6 @@ namespace EventProjectSWP.Controllers
                     vidname = rD.Random_Name();
                     check = rD.CheckRandom_VideoName(vidname);
                 } while (check);
-                /*
                 do
                 {
                     Random rdid = new Random();
@@ -79,7 +78,7 @@ namespace EventProjectSWP.Controllers
                     check = rD.CheckRandom_VideoId(id);
                 } while (check);
 
-                */
+
                 if (file.Length > 0)
                 {
 
@@ -109,8 +108,8 @@ namespace EventProjectSWP.Controllers
                         .Child($"{vidname}")
                         .PutAsync(ms, cancellation.Token);
                     string link = await task;
-                    string query = @"insert into tblVideo values (@video_url,@event_id,@video_name)";
-                    string checkquery = @"select * from tblVideo where video_name = @video_name";
+                    string query = @"insert into tblVideo values (@video_id,@video_url,@event_id,@video_name)";
+                    string checkquery = @"select * from tblVideo where video_id = @video_id";
                     string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                     SqlDataReader myReader;
                     using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -118,7 +117,7 @@ namespace EventProjectSWP.Controllers
                         myCon.Open();
                         using (SqlCommand myCommand = new SqlCommand(query, myCon))
                         {
-                            //myCommand.Parameters.AddWithValue("@video_id", id);
+                            myCommand.Parameters.AddWithValue("@video_id", id);
                             myCommand.Parameters.AddWithValue("@video_url", link);
                             myCommand.Parameters.AddWithValue("@event_id", eventid);
                             myCommand.Parameters.AddWithValue("@video_name", vidname);
@@ -127,8 +126,7 @@ namespace EventProjectSWP.Controllers
                         }
                         using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
                         {
-                            //myCommand.Parameters.AddWithValue("@video_id", id);
-                            myCommand.Parameters.AddWithValue("@video_name", vidname);
+                            myCommand.Parameters.AddWithValue("@video_id", id);
                             myReader = myCommand.ExecuteReader();
                             table.Load(myReader);
                             myReader.Close();
@@ -152,9 +150,8 @@ namespace EventProjectSWP.Controllers
             }
             catch (Exception e)
             {
-                throw;
                 //return BadRequest(new Response<string>("Something wrong when try to add video"));
-               
+                throw;
             }
         }
         [HttpPost("Delete-video")]
@@ -235,7 +232,7 @@ namespace EventProjectSWP.Controllers
         }
         [HttpPost("Update-video")]
         // Update video dựa vào tên của video, update bằng cách browse hình ảnh
-        public async Task<IActionResult> Update([FromForm] FileUploadcs objectFile, string VideoName)
+        public async Task<IActionResult> Update([FromForm] FileUpload objectFile, string VideoName)
         {
             FileStream ms;
             try

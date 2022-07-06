@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace EventProjectSWP.Models
 {
-    public class MultipleFilesUpload
+    public class FileUpload
     {
-        public List<IFormFile> files { get; set; }
+        public IFormFile files { get; set; }
     }
 }
