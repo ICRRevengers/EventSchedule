@@ -25,9 +25,10 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"SELECT tblEvent.*, tblLocation.location_detail
+                string query = @"SELECT tblEvent.*, tblLocation.* , tblPayment.payment_fee
                            FROM tblEvent
-                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id";
+                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
+                           INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -401,10 +402,11 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"SELECT tblEvent.*, tblLocation.*
+                string query = @"SELECT tblEvent.*, tblLocation.* , tblPayment.payment_fee
                            FROM tblEvent
                            INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
-                           where event_id = @event_id";
+                           INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id
+                           where tblEvent.event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
