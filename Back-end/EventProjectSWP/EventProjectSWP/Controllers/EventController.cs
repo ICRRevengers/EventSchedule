@@ -393,6 +393,45 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
             }
            
         }
+
+
+
+        [HttpGet("get-event-by-id")]
+        public IActionResult GetEventById(int id)
+        {
+            try
+            {
+                string query = @"select event_name,event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
+                              from dbo.tblEvent where event_id = @event_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+        }
+
+
         [HttpGet("get-event-by-timne")]
         public IActionResult GetEventByTime(string start_time, string end_time)
         {
