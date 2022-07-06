@@ -20,7 +20,8 @@ import { useSnackbar } from '../../../HOCs';
 const ManageEvents = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
-    const { getEvents, deleteEvent } = useAdminEvents();
+    const { getEvents, deleteEvent, searchEvent } = useAdminEvents();
+    const [name, setName] = useState('');
 
     function deleteItem(id) {
         deleteEvent(id)
@@ -39,6 +40,27 @@ const ManageEvents = () => {
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
                 });
+            });
+    }
+
+    const eventNameHandler = (event) => {
+        setName(event.target.value);
+        console.log(name);
+    };
+
+    function searchEventlist(name) {
+        searchEvent(name)
+            .then((resposne) => {
+                console.log(resposne.data.data)
+                const data = resposne.data.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+                console.log(error.resposne);
             });
     }
 
@@ -70,6 +92,12 @@ const ManageEvents = () => {
                     sx={{ padding: 2 }}
                     id="filled-basic"
                     variant="filled"
+                    onChange={eventNameHandler}
+                    onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                            searchEventlist(name);
+                        }
+                    }}
                     fullWidth
                 />
                 <Table
