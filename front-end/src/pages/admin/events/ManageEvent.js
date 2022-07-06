@@ -19,10 +19,11 @@ const ManageEvents = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
     const { getEvents } = useAdminEvents()
+
     useEffect(() => {
         getEvents()
             .then((resposne) => {
-                const data = resposne.data;
+                const data = resposne.data.data;
                 setEvents(data);
             })
             .catch(() => {
