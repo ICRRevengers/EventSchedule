@@ -159,7 +159,6 @@ namespace EventProjectSWP.Controllers
                 string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
              where users_id = @users_id";
 
-
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
