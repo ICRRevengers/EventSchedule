@@ -10,9 +10,9 @@ import axios from "axios";
 
 
 
-const EventDetailHeader = () => {
+const EventDetailHeader = (props) => {
     const [load, setLoad] = useState(false);
-    // const { item } = props;
+    const { item } = props;
     const [open, setOpen] = useState(false);
     const [CV, setCV] = useState();
     const [message, setMessage] = useState("");
@@ -52,41 +52,7 @@ const EventDetailHeader = () => {
         setOpen(false);
 
     };
-    // const params = {
-    //     "experience": experience,
-    //     "jobId": item?.id,
-    //     "attachments": attachment
-    // }
-
-    // console.log(params);
-    // const apply = async () => {
-    //     try {
-    //         setLoad(true)
-    //         const response = await axiosPrivate.post("/applications/apply-for-a-position",
-
-    //             params
-
-    //         )
-    //         if (response.status === 200) {
-    //             setLoad(false)
-    //             // success apply message 
-    //             setMessageApply("Apply Successfully!")
-    //             setStatusApply(0)
-    //             handleClickModal();
-
-    //         }
-    //     } catch (error) {
-    //         setLoad(false)
-    //         console.log(error?.response?.data?.message);
-    //         setStatusApply(1)
-    //         if (error?.response?.data?.message) {
-    //             setMessageApply(error?.response?.data?.message);
-    //         } else {
-    //             setMessageApply("Cannot apply")
-    //         }
-    //         handleClickModal();
-    //     }
-    // }
+    
     const handleApply = (event, reason) => {
         if (attachment.length) {
             // apply();
@@ -153,7 +119,7 @@ const EventDetailHeader = () => {
                     >
                         <Grid>
                             <Typography color="textPrimary" gutterBottom variant="h2" sx={{ fontWeight: 'regular' }}>
-                                {/* {item?.name} */}Lễ hội âm nhạc lớn nhất mọi thời đại
+                                {item?.event_name}
                             </Typography>
                             <Grid container spacing={1}>
                                 <Grid item xs={5}>
@@ -162,6 +128,19 @@ const EventDetailHeader = () => {
                                         {/* Title: {item?.title} */}25/10/2023
                                     </Typography>
                                 </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        {/* Title: {item?.title} */}Địa điểm: Hội trường A Đại Học FPT
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        {/* Title: {item?.title} */}{item?.created_by}
+                                    </Typography>
+                                </Grid>
+
 
                                 {/* <Grid item xs={1}>
                                     <Typography color="textPrimary"
@@ -178,7 +157,7 @@ const EventDetailHeader = () => {
                                 </Grid>
                             </Grid>
                             <Typography color="textSecondary" gutterBottom variant="body1">
-                                {/* {item?.company?.name} */} FPT Event Club
+                                {/* {item?.company?.name} */} Status: Online
                             </Typography>
                             
 
@@ -215,7 +194,7 @@ const EventDetailHeader = () => {
             >
                 <DialogTitle>
                     <Typography color="textPrimary" gutterBottom variant="h3" sx={{ fontWeight: 'regular' }}>
-                        {/* {item?.name} */} Name
+                        {/* {item?.name} */}
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
@@ -307,4 +286,3 @@ const EventDetailHeader = () => {
 
 
 export default EventDetailHeader;
-

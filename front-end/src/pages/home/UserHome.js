@@ -18,6 +18,8 @@ import {
 import { useEffect, useState } from 'react';
 import { useAdminEvents } from '../../recoil/adminEvents';
 import { useSnackbar } from '../../HOCs';
+import { Link } from 'react-router-dom';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -141,7 +143,14 @@ const AdminHome = () => {
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">Share</Button>
-                                    <Button size="small">More detail</Button>
+                                    
+                                    
+                                    <Link
+                                        to={`/user/eventdetail/${event.event_id}`}
+                                    >
+                                        <Button size="small">More detail</Button>
+                                            
+                                    </Link>
                                 </CardActions>
                             </Card>
                         </Grid>
