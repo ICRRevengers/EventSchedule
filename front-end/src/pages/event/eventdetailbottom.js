@@ -50,7 +50,7 @@ const EventDetailBottom = (props) => {
                                 sx={{ fontWeight: 'normal' }}
                             >
                                 {/* {item?.company?.description} */}
-                                Link video
+                                {item?.video_url}
                             </Typography>
                         </Grid>
                     </Grid>

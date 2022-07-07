@@ -131,7 +131,7 @@ const EventDetailHeader = (props) => {
                                 <Grid item xs={5}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* Title: {item?.title} */}Địa điểm: Hội trường A Đại Học FPT
+                                        {/* Title: {item?.title} */}Địa điểm: {item?.location_detail}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
@@ -151,7 +151,7 @@ const EventDetailHeader = (props) => {
 
                                 <Grid item xs={7}>
                                     <Typography color="textPrimary" gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* $ {item?.salary} */} Giá vé: 50000 VND
+                                        {/* $ {item?.salary} */} Price: {item?.payment_fee}
                                     </Typography>
                                     
                                 </Grid>
