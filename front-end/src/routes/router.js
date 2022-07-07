@@ -102,6 +102,14 @@ const privateRoutes = [
         name: 'user profile',
         role: ['user'],
     },
+    {
+        path: '/user/paymentpage/:id',
+        component: lazy(() => import('../pages/event/paymentpage')),
+        layout: 'user',
+        name: 'user profile',
+        role: ['user'],
+    },
+    
 ];
 
 const Routes = (
