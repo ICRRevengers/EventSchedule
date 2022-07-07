@@ -220,6 +220,7 @@ namespace EventProjectSWP.Controllers
 
             Admin admin = new Admin()
             {
+                AdminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
                 AdminEmail = table.Rows[0]["admin_email"].ToString(),
                 AdminName = table.Rows[0]["admin_name"].ToString(),
                 AdminRole = table.Rows[0]["admin_role"].ToString(),
@@ -302,7 +303,6 @@ namespace EventProjectSWP.Controllers
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
-
                     }
                 }
                     return Ok(new Response<string>("Check Attend Successfully"));
@@ -311,7 +311,7 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>(ex.Message));
             }
-            
+      
         }
 
     }

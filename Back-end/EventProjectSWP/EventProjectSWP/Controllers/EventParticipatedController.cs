@@ -132,7 +132,6 @@ namespace EventProjectSWP.Controllers
         }
 
 
-
         [HttpPost("add-user-join-event")]
         public IActionResult Post(EventParticipated EventParticipated)
         {
@@ -161,6 +160,36 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>(ex.Message));
             }
          
+        }
+
+        [HttpGet("Check-user-participated")]
+        public IActionResult Get(EventParticipated EventParticipated)
+        {
+            try
+            {
+                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
+                        myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
+                        myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                return Ok("Successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+
         }
     }
 }

@@ -80,6 +80,7 @@ namespace EventProjectSWP.Services
                 new("email", userInfo.Email),
                 new("name", userInfo.UserName),
                 new("role", "user"),
+                new("userId", userInfo.UserId.ToString()),
             };
 
             return Task.FromResult(claims);
@@ -92,8 +93,8 @@ namespace EventProjectSWP.Services
                 new("email", admin.AdminEmail),
                 new("name", admin.AdminName),
                 new("role", admin.AdminRole),
+                new("userId", admin.AdminID.ToString()),
             };
-
             return Task.FromResult(claims);
         }
 
