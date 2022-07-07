@@ -256,7 +256,7 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public IActionResult Post(AddEvent addEvent, [FromForm] FileUploadcs objectFile)
+        public IActionResult Post(AddEvent addEvent)
         {
             try
             {
