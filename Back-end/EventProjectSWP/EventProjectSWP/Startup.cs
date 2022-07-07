@@ -1,7 +1,9 @@
+using EventProjectSWP.Services;
 using EventProjectSWP.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,24 +34,26 @@ namespace EventProjectSWP
                    options.LogoutPath = "/account/google-logout";
                })
                .AddGoogle(options =>
-               {
+               {    
                    options.ClientId = "837003437206-060ov85d36jcbooc5dbe9mc8saaiglpg.apps.googleusercontent.com";
                    options.ClientSecret = "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";
+
                });
             //Email configuration
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailService, Settings.MailService>();
+            services.AddTransient<IAuthentication, Authentication>();
 
             //Enable CORS
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options => options.WithOrigins("domain information").AllowAnyMethod().AllowAnyHeader());
 
             });
 
             //JSON serializer
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
-            options.SerializerSettings.ReferenceLoopHandling=Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 
@@ -59,7 +63,7 @@ namespace EventProjectSWP
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EventProjectSWP", Version = "v1" });
             });
-         
+
 
 
 
@@ -78,17 +82,28 @@ namespace EventProjectSWP
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventProjectSWP v1")
-                
+
                 );
-  
+
             }
 
             app.UseRouting();
 
+            app.UseCors(options =>
+            {
+                options.
+                WithOrigins("domain information", "").
+                AllowAnyMethod().
+                AllowAnyHeader();
+            });
+
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            app.UseCookiePolicy(new CookiePolicyOptions()
+            {
+                MinimumSameSitePolicy = SameSiteMode.Lax
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
