@@ -7,7 +7,8 @@ namespace EventProjectSWP.Models
         public int EventID { get; set; }
         public string EventName { get; set; }
         public string EventContent { get; set; }
-        public DateTime EventTimeline { get; set; }
+        public DateTime EventStart { get; set; }
+        public DateTime EventEnd { get; set; }
         public string CreatedBy { get; set; }
         public string EventCode { get; set; }
         public bool EventStatus { get; set; }

@@ -95,16 +95,13 @@ const privateRoutes = [
         name: 'user profile',
         role: ['user'],
     },
-<<<<<<< HEAD
-=======
     {
-        path: '/user/eventdetail',
+        path: '/user/eventdetail/:id',
         component: lazy(() => import('../pages/event/eventdetailuser')),
         layout: 'user',
         name: 'user profile',
         role: ['user'],
     },
->>>>>>> Phu-frontend-branch
 ];
 
 const Routes = (

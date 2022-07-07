@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace EventProjectSWP.DTOs
 {
@@ -6,7 +8,8 @@ namespace EventProjectSWP.DTOs
     {
         public string EventName { get; set; }
         public string EventContent { get; set; }
-        public DateTime EventTimeline { get; set; }
+        public DateTime EventStart { get; set; }
+        public DateTime EventEnd { get; set; }
         public string CreatedBy { get; set; }
         public string EventCode { get; set; }
         public bool EventStatus { get; set; }
@@ -14,5 +17,6 @@ namespace EventProjectSWP.DTOs
         public string CategoryID { get; set; }
         public string LocationID { get; set; }
         public int AdminID { get; set; }
+        public IFormFile files { get; set; }
     }
 }

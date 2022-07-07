@@ -25,9 +25,10 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"SELECT tblEvent.*, tblLocation.location_detail
+                string query = @"SELECT tblEvent.*, tblLocation.* , tblPayment.payment_fee
                            FROM tblEvent
-                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id";
+                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
+                           INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -97,7 +98,7 @@ Where E.event_id = I.event_id ";
             }
         }
         [HttpGet("get-imageurl-by-eventid")]
-        public IActionResult GetImageUrl()
+        public IActionResult GetImageUrl(int id)
         {
             try
             {
@@ -106,8 +107,8 @@ From dbo.tblEvent E, tblImage I, tblVideo V
 Where E.event_id = I.event_id ";
                 */
                 string query = @"Select I.image_url
-From dbo.tblEvent E, tblImage I
-Where E.event_id = I.event_id ";
+                                 From dbo.tblEvent E, tblImage I
+                                 Where E.event_id = @event_id ";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -116,6 +117,7 @@ Where E.event_id = I.event_id ";
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
+                        myCommand.Parameters.AddWithValue("@event_id",id);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -136,15 +138,57 @@ Where E.event_id = I.event_id ";
                 return BadRequest(new Response<string>(e.Message));
             }
         }
+        [HttpGet("get-videourl-by-eventid")]
+        public IActionResult GetVideoUrl(int id)
+        {
+            try
+            {
+                /*string query = @"Select E.event_id, event_name, event_content, event_timeline, created_by, created_by,event_status,payment_status,category_id,location_id,admin_id,I.image_url,v.video_url
+From dbo.tblEvent E, tblImage I, tblVideo V
+Where E.event_id = I.event_id ";
+                */
+                string query = @"Select V.video_url
+                                 From dbo.tblEvent E, tblVideo V
+                                 Where E.event_id = @event_id ";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+
         [HttpGet("show-upcoming-event")]
         public IActionResult Show_upcoming_event()
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_timeline,
+                string query = @"Select event_id, event_name, event_content, event_start,event_end,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
-                           where A.event_timeline >= GETDATE()";
+                           where A.event_start >= GETDATE()";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -178,10 +222,10 @@ Where E.event_id = I.event_id ";
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_timeline,
+                string query = @"Select event_id, event_name, event_content, event_start,event_end,
                             created_by, created_by,event_status,payment_status,category_id,location_id
                            ,admin_id From dbo.tblEvent A
-                           where A.event_timeline < GETDATE()";
+                           where A.event_start < GETDATE()";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -212,12 +256,12 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public IActionResult Post(AddEvent addEvent)
+        public IActionResult Post(AddEvent addEvent, [FromForm] MultipleFilesUpload objectFile)
         {
             try
             {
-                string query = @"insert into dbo.tblEvent(event_name,event_content,event_timeline,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
-values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
+                string query = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
+values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
 
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -228,7 +272,8 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     {
                         myCommand.Parameters.AddWithValue("@event_name", addEvent.EventName);
                         myCommand.Parameters.AddWithValue("@event_content", addEvent.EventContent);
-                        myCommand.Parameters.AddWithValue("@event_timeline", addEvent.EventTimeline);
+                        myCommand.Parameters.AddWithValue("@event_start", addEvent.EventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", addEvent.EventEnd);
                         myCommand.Parameters.AddWithValue("@created_by", addEvent.CreatedBy);
                         myCommand.Parameters.AddWithValue("@event_code", addEvent.EventCode);
                         myCommand.Parameters.AddWithValue("@event_status", addEvent.EventStatus);
@@ -256,7 +301,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             {
                 string query = @"update dbo.tblEvent 
                            set event_name = @event_name, event_content = @event_content, 
-                           event_timeline = @event_timeline, created_by = @created_by,  
+                           event_start = @event_start,event_end = @event_end, created_by = @created_by,  
                            event_code = @event_code, event_status = @event_status, 
                            payment_status = @payment_status, category_id = @category_id, 
                            location_id = @location_id, admin_id = @admin_id 
@@ -272,7 +317,8 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     {
                         myCommand.Parameters.AddWithValue("@event_name", Event.EventName);
                         myCommand.Parameters.AddWithValue("@event_content", Event.EventContent);
-                        myCommand.Parameters.AddWithValue("@event_timeline", Event.EventTimeline);
+                        myCommand.Parameters.AddWithValue("@event_start", Event.EventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", Event.EventEnd);
                         myCommand.Parameters.AddWithValue("@created_by", Event.CreatedBy);
                         myCommand.Parameters.AddWithValue("@event_code", Event.EventCode);
                         myCommand.Parameters.AddWithValue("@event_status", Event.EventStatus);
@@ -292,6 +338,38 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                 return BadRequest(new Response<string>(ex.Message));
             }
 
+        }
+
+        [HttpPut("Update-event-status-true/false-by-endtime")]
+        public IActionResult UpdateEvenStatusByEndTime()
+        {
+            try
+            {
+                string query = @"update tblEvent 
+                                 set event_status = case 
+                                 when GETDATE() > event_end then 'False'
+                                 else 'True' end";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                return Ok("Set Event Status Successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
         }
 
         [HttpDelete("delete-event")]
@@ -359,13 +437,57 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             }
            
         }
+
+
+
+        [HttpGet("get-event-by-id")]
+        public IActionResult GetEventById(int id)
+        {
+            try
+            {
+                string query = @"SELECT tblEvent.*,tblLocation.location_detail,tblLocation.location_status , tblPayment.payment_fee,tblImage.image_url,tblVideo.video_url
+                           FROM tblEvent
+                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
+                           INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id
+						   INNER JOIN tblImage ON tblEvent.event_id = tblImage.event_id 
+						   INNER JOIN tblVideo ON tblEvent.event_id = tblVideo.event_id 
+                           where tblEvent.event_id =@event_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+        }
+
+
         [HttpGet("get-event-by-timne")]
         public IActionResult GetEventByTime(string start_time, string end_time)
         {
             try
             {
                 string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id  from tblEvent 
-                           where event_timeline between 
+                           where event_start between 
                             @d1 AND @d2";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -403,7 +525,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             try
             {
                 string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id  from tblEvent 
-                           where event_timeline = @event_timeline";
+                           where event_start = @event_start";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -413,7 +535,7 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
                         //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
-                        myCommand.Parameters.AddWithValue("@event_timeline", event_time);
+                        myCommand.Parameters.AddWithValue("@event_start", event_time);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -432,6 +554,8 @@ values (@event_name,@event_content,@event_timeline,@created_by,@event_code,@even
             }
             
         }
+
+        
 
     }
 }
