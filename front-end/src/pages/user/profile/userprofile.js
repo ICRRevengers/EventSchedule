@@ -1,10 +1,6 @@
-import { Avatar, Button, Divider, Grid, Typography } from "@mui/material";
+import { Avatar, Divider, Grid, Typography } from "@mui/material";
 import React from "react";
-import Wrapper from "../../../components/layout/defaultLayout/wrapper/Wrapper";
-import Sidebar from "../../../components/layout/sidebar/Sidebar";
 import {TextField} from "@mui/material";
-import {Box} from "@mui/material";
-import { styled } from "@mui/material/styles";
 
 function UserProfile(){
     return (

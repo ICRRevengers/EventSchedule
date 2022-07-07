@@ -1,70 +1,105 @@
-import Sidebar from '../../../components/layout/sidebar/Sidebar';
-import { Table } from 'reactstrap';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
-import { useStudentfromEvent } from '../../../recoil/adminEvents'
+import { useUserEvents } from '../../../recoil/user';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    Paper,
+    Button
+} from '@mui/material';
 
 function UserParticipatedList() {
-    const { id } = useParams();
-    const [loading, setLoading] = useState(false);
-    const [students, setStudents] = useState();
-    const { getStudents } = useStudentfromEvent();
+    // const { id } = useParams();
+    // const [loading, setLoading] = useState(false);
+    // const [events, setEvents] = useState();
+    // const { getEventIjoined } = useUserEvents();
 
-    useEffect(() => {
-        setLoading(true);
-        getStudents(id)
-            .then((res) => {
-                const data = res.data
-                setStudents(data);
-                setTimeout(() => {
-                    setLoading(false);
-                }, 500);
-            })
-            .catch((error) => {
-                console.log(error.response);
-                setTimeout(() => {
-                    setLoading(false);
-                }, 500);
-            });
-    }, []);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     getEventIjoined(id)
+    //         .then((res) => {
+    //             const data = res.data
+    //             setEvents(data);
+    //             setTimeout(() => {
+    //                 setLoading(false);
+    //             }, 500);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error.response);
+    //             setTimeout(() => {
+    //                 setLoading(false);
+    //             }, 500);
+    //         });
+    // }, []);
 
-    return loading ? (
-        <Loading />
-    ) : (
-        <div className="flex">
-            <Sidebar />
-            <Table className="m-[20px] w-[900px]">
-                <thead>
-                    <tr>
-                        <th>MSSV</th>
-                        <th>Tên sinh viên</th>
-                        <th>Ngày đăng kí</th>
-                        <th>Thanh toán</th>
-                        <th>Đã tham gia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {students?.map((student) => {
-                        return (
-                            <tr className="hover:bg-[#f99779]">
-                                <td>{student?.users_id}</td>
-                                <td>asjbdsj</td>
-                                <td>{student.date_participated}</td>
-                                <td>
-                                    <input type="checkbox" value="true" />
-                                </td>
-                                <td>
-                                    <input type="checkbox" value="true" />
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
+    return (
+        // loading ? (
+        //     <Loading />
+        // ) : (
+        //     <>
+        //     {events.length === 0 ? <Typography>
+        //         <h1 > Bạn chưa tham gia sự kiện nào </h1>
+        //     </Typography> : (
+        <TableContainer component={Paper} sx={{ maxWidth: 980 }}>
+            <Table sx={{ minWidth: 650 }} aria-label="user list">
+                <TableHead>
+                    <TableRow>
+                        <TableCell align="center">Tên sự kiện</TableCell>
+                        <TableCell align="center">Tổ chức bởi</TableCell>
+                        <TableCell align="center">Ngày tham gia</TableCell>
+                        <TableCell align="center">Feedback</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {/* {events?.map((event) => ( */}
+                    <TableRow
+                        // key={event?.users_id}
+                        sx={{
+                            '&:last-child td, &:last-child th': {
+                                border: 0,
+                            },
+                        }}
+                    >
+                        <TableCell align="center">
+                            {/* {event?.users_name} */}
+                            ádsdsd
+                        </TableCell>
+                        <TableCell align="center">
+                            {/* {event.users_email} */}
+                            adad
+                        </TableCell>
+                        <TableCell align="center">
+                            {/* {event.users_email} */}
+                            adad
+                        </TableCell>
+                        <TableCell align="center">
+                            <Button variant="contained">Feedback</Button>
+                        </TableCell>
+
+                        {/* <TableCell align="center">
+                            {new Intl.DateTimeFormat('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: '2-digit',
+                            }).format(
+                                new Date(Date.parse(event.date_participated)),
+                            )}
+                        </TableCell> */}
+                    </TableRow>
+                    {/* ))} */}
+                </TableBody>
             </Table>
-        </div>
+        </TableContainer>
+
+        // )}
+        // </>
     );
 }
 
