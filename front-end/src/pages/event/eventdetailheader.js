@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
-
+import { Link as RouterLink } from "react-router-dom";
 
 
 
@@ -36,9 +36,6 @@ const EventDetailHeader = (props) => {
     // const [upload, setUpload] = useState(false);
     const [attachment, setAttachment] = useState([])
     // const axiosPrivate = useAxiosPrivate();
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = (event, reason) => {
         setMessage("");
@@ -90,20 +87,20 @@ const EventDetailHeader = (props) => {
         }
     }
     const uploadCV = async () => {
-        try {
-            setMessage("");
-            const formData = new FormData();
-            formData.append("files", CV);
-            const response = await axios.post("/storage", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setAttachment(response.data);
-            setMessageUploadCVSuccess("Your CV is uploaded")
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     setMessage("");
+        //     const formData = new FormData();
+        //     formData.append("files", CV);
+        //     const response = await axios.post("/storage", formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     });
+        //     setAttachment(response.data);
+        //     setMessageUploadCVSuccess("Your CV is uploaded")
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
     console.log("Attatchment: ", attachment);
     console.log("Experience: ", experience);
@@ -177,7 +174,8 @@ const EventDetailHeader = (props) => {
                             marginBottom: "0.2%",
                             fontSize: "larger"
                         }}
-                        onClick={handleClickOpen}
+                        component={RouterLink}
+                        to={`/user/paymentpage/${item?.event_id}`}
                     >Join In now</Button>
                 </CardActions>
 
