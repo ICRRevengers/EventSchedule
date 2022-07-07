@@ -53,7 +53,7 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
         [HttpPost("Add-video")]
-        public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
+        public async Task<IActionResult> Post([FromForm] FileUpload objectFile, int eventid)
         {
             string vidname;
             int id;
@@ -232,7 +232,7 @@ namespace EventProjectSWP.Controllers
         }
         [HttpPost("Update-video")]
         // Update video dựa vào tên của video, update bằng cách browse hình ảnh
-        public async Task<IActionResult> Update([FromForm] FileUploadcs objectFile, string VideoName)
+        public async Task<IActionResult> Update([FromForm] FileUpload objectFile, string VideoName)
         {
             FileStream ms;
             try
