@@ -96,8 +96,8 @@ const AdminHome = () => {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={1}>Online</MenuItem>
-                                <MenuItem value={0}>Offline</MenuItem>
+                                <MenuItem value={1}>Sắp diễn ra</MenuItem>
+                                <MenuItem value={0}>Đã diễn ra</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -138,7 +138,7 @@ const AdminHome = () => {
                                         variant="body2"
                                         color="text.secondary"
                                     >
-                                        {event.event_timeline}
+                                        {event.event_start} - {event.event_end}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>

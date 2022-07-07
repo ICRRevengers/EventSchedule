@@ -11,13 +11,13 @@ import HeaderFooter from '../../components/layout/defaultLayout/header-footer/He
 
 
 function Login() {
-    const { search } = useLocation();
-    const showSnackbar = useSnackbar();
-    const { token, error } = queryString.parse(search);
-    const { login} = useAuthActions();
+    const { search } = useLocation()
+    const showSnackbar = useSnackbar()
+    const { token, error } = queryString.parse(search)
+    const { login} = useAuthActions()
 
-    const [adminUserName, setAdminUserName] = useState('');
-    const [adminPassword, setAdminPassword] = useState('');
+    const [adminUserName, setAdminUserName] = useState('')
+    const [adminPassword, setAdminPassword] = useState('')
 
     useEffect(() => {
         if (error && error === 'fpt-invalid-email') {
@@ -59,13 +59,13 @@ function Login() {
         })
     }
 
-    const userNameHandler = (event) => {
-        setAdminUserName(event.target.value);
-    };
+    const userNameHandle = (event) => {
+        setAdminUserName(event.target.value)
+    }
 
-    const passwordHandler = (event) => {
-        setAdminPassword(event.target.value);
-    };
+    const passwordHandle = (event) => {
+        setAdminPassword(event.target.value)
+    }
 
     return (
         <HeaderFooter>
@@ -81,7 +81,7 @@ function Login() {
                                 // type="email"
                                 className="form-input"
                                 id="inputAccount"
-                                onChange={userNameHandler}
+                                onChange={userNameHandle}
                                 placeholder="Tài khoản"
                             />
                         </div>
@@ -90,7 +90,7 @@ function Login() {
                                 type="password"
                                 className="form-input"
                                 id="inputPassword"
-                                onChange={passwordHandler}
+                                onChange={passwordHandle}
                                 placeholder="Mật khẩu"
                             />
                         </div>
