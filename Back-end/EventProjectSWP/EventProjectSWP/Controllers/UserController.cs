@@ -25,7 +25,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser";
+                string query = @"select users_id, users_name, users_email from dbo.tblUser";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -94,7 +94,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"update dbo.tblUser set users_name = @users_name , users_phone = @users_phone , users_address = @users_address , users_email = @users_email where users_id = @users_id";
+                string query = @"update dbo.tblUser set users_name = @users_name , users_email = @users_email where users_id = @users_id";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -105,8 +105,6 @@ namespace EventProjectSWP.Controllers
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
                         myCommand.Parameters.AddWithValue("@users_name", user.UserName);
-                        myCommand.Parameters.AddWithValue("@users_phone", user.Phone);
-                        myCommand.Parameters.AddWithValue("@users_address", user.Address);
                         myCommand.Parameters.AddWithValue("@users_email", user.Email);
                         myCommand.Parameters.AddWithValue("@users_id", user.UserId);
                         myReader = myCommand.ExecuteReader();
@@ -156,7 +154,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
+                string query = @"select users_id, users_name,  users_email from dbo.tblUser
              where users_id = @users_id";
 
                 DataTable table = new DataTable();
@@ -193,7 +191,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select users_id, users_name, users_phone, users_address, users_email from dbo.tblUser
+                string query = @"select users_id, users_name,  users_email from dbo.tblUser
              where users_name like concat  ( @users_name,'%')";
 
 
