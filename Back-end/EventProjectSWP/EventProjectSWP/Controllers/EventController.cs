@@ -22,7 +22,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-event-list")]
-        public IActionResult Get()
+        public IActionResult Get(GetUser user)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace EventProjectSWP.Controllers
                             LocationID = table.Rows[i]["location_id"].ToString(),
                             AdminID = Convert.ToInt32(table.Rows[i]["admin_id"]),
                             //sua so 1 thanh user id truyen vao
-                            CanFeedBack = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), 1)
+                            CanFeedBack = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(user.UserId))
                         });
                     }
                     return Ok(new Response<List<GetListEvent>>(listEvents));
