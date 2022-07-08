@@ -35,22 +35,22 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-event-list")]
-        public IActionResult Get(GetUser user)
+        public IActionResult Get()
         {
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
-       tblAdmin.admin_id, tblAdmin.admin_name,
-       tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name,
-       tblImage.image_url,tblVideo.video_url    
-       from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id";
+                               tblAdmin.admin_id, tblAdmin.admin_name,
+                               tblPayment.payment_fee, tblPayment.payment_url,
+                               tblCategory.category_name,
+                               tblImage.image_url,tblVideo.video_url    
+                               from tblEvent E
+                               inner JOIN tblLocation ON E.location_id = tblLocation.location_id
+                               inner JOIN tblPayment ON E.event_id = tblPayment.event_id
+                               inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+                               inner JOIN tblCategory ON e.category_id = tblCategory.category_id
+                               inner JOIN tblImage ON e.event_id = tblImage.event_id
+                               inner JOIN tblVideo ON e.event_id = tblVideo.event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -67,7 +67,6 @@ namespace EventProjectSWP.Controllers
                 }
                 if (table.Rows.Count > 0)
                 {
-                    /*
                     List<GetListEvent> listEvents = new List<GetListEvent>();
                     for (int i = 0; i < table.Rows.Count; i++)
                     {
@@ -85,16 +84,9 @@ namespace EventProjectSWP.Controllers
                             paymentFee = Convert.ToInt32(table.Rows[i]["payment_fee"]),
                             paymentUrl = table.Rows[i]["payment_url"].ToString(),
                             categoryName = table.Rows[i]["category_name"].ToString(),
-                            //sua so 1 thanh user id truyen vao
-<<<<<<< HEAD
-                            CanFeedBack = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(user.UserId))
-=======
-                            canFeedBack = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), 1)
->>>>>>> main
                         });
                     }
-                    return Ok(new Response<List<GetListEvent>>(listEvents));*/
-                    return Ok(new Response<DataTable>(table, null));
+                    return Ok(new Response<List<GetListEvent>>(listEvents));
                 }
                 return BadRequest(new Response<string>("No Data"));
 
@@ -618,18 +610,18 @@ where event_id = @event_id";
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
-       tblAdmin.admin_id, tblAdmin.admin_name,
-       tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name,
-       tblImage.image_url,tblVideo.video_url    
-       from tblEvent E
-       INNER JOIN tblLocation ON E.location_id = tblLocation.location_id
-       INNER JOIN tblPayment ON E.event_id = tblPayment.event_id
-       INNER JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       INNER JOIN tblCategory ON e.category_id = tblCategory.category_id
-       INNER JOIN tblImage ON e.event_id = tblImage.event_id
-       INNER JOIN tblVideo ON e.event_id = tblVideo.event_id
-       where E.event_id = @event_id";
+                               tblAdmin.admin_id, tblAdmin.admin_name,
+                               tblPayment.payment_fee, tblPayment.payment_url,
+                               tblCategory.category_name,
+                               tblImage.image_url,tblVideo.video_url    
+                               from tblEvent E
+                               INNER JOIN tblLocation ON E.location_id = tblLocation.location_id
+                               INNER JOIN tblPayment ON E.event_id = tblPayment.event_id
+                               INNER JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+                               INNER JOIN tblCategory ON e.category_id = tblCategory.category_id
+                               INNER JOIN tblImage ON e.event_id = tblImage.event_id
+                               INNER JOIN tblVideo ON e.event_id = tblVideo.event_id
+                               where E.event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
