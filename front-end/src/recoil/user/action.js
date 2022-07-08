@@ -3,11 +3,12 @@ import { get, post } from '../../utils/ApiCaller';
 const useUserEvents = () => {
     const getEventIJoined = (id) =>
         get({
-            endpoint: `/api/EventParticipated/get-all-event-i-joined?id=${id}`
-        })
+            endpoint: `/api/EventParticipated/get-all-event-i-joined?id=${id}`,
+        });
     const getDetailFromEvent = (id) =>
         get({
             endpoint: `/api/Event/get-event-by-id?id=${id}`,
+        });
 
         })
   
@@ -27,14 +28,18 @@ const useUserEvents = () => {
         get({
             endpoint: `/api/Payment/get-Payment?id=${id}`,
         });
-   
+
+    const getUserProfile = (id) =>
+        get({
+            endpoint: `/api/User/get-user-by-id?id=${id}`,
+        });
+
     return {
         getDetailFromEvent,
         getPayment,
         getEventIJoined,
         joinInEvent
-
-
+        getUserProfile
     };
 };
 export default useUserEvents;

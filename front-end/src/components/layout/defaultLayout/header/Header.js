@@ -77,7 +77,7 @@ const Header = ({ children }) => {
                         {auth.email ? (
                             <>
                                 <Link
-                                    to={`user/profile/${auth.userId}`}
+                                    to={`/user/profile/${auth.userId}`}
                                     className="md:ml-[25px] my-[10px]"
                                 >
                                     Hồ sơ của bạn

@@ -7,6 +7,8 @@ namespace EventProjectSWP.Models
     {
         public int userId { get; set; }
         public string userName { get; set; }
+        public int Phone { get; set; }
+        public string Address { get; set; }
 
         public string email { get; set; }
        // public int user_status { get; set; }

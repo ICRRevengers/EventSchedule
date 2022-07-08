@@ -158,8 +158,6 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>("Something wrong when trying to add Image"));
             }
-            
-            return Ok();
         }
 
         [HttpPost("Delete-image")]
