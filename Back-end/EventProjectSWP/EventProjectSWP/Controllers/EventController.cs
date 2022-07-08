@@ -28,9 +28,9 @@ namespace EventProjectSWP.Controllers
             {
                 string query = @"SELECT tblEvent.*, tblLocation.* , tblPayment.payment_fee
                            FROM tblEvent
-                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
-                           INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id";
-                DataTable table = new DataTable();                              
+                           FULL JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
+                           FULL JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id";
+                DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))

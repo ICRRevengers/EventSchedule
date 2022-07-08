@@ -1,0 +1,2 @@
+Ai upload file DB script làm ơn set tên theo format
+Tên(ngày upload), nhớ thông báo cho các thành viên khác để họ xóa DB cũ)
