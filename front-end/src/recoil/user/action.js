@@ -9,8 +9,6 @@ const useUserEvents = () => {
         get({
             endpoint: `/api/Event/get-event-by-id?id=${id}`,
         });
-
-        })
   
     const joinInEvent = (eventID, userID, dateParticipated) =>
         post({
@@ -38,7 +36,7 @@ const useUserEvents = () => {
         getDetailFromEvent,
         getPayment,
         getEventIJoined,
-        joinInEvent
+        joinInEvent,
         getUserProfile
     };
 };
