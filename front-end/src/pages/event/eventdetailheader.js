@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
-
+import { Link as RouterLink } from "react-router-dom";
 
 
 
@@ -36,9 +36,6 @@ const EventDetailHeader = (props) => {
     // const [upload, setUpload] = useState(false);
     const [attachment, setAttachment] = useState([])
     // const axiosPrivate = useAxiosPrivate();
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = (event, reason) => {
         setMessage("");
@@ -90,20 +87,20 @@ const EventDetailHeader = (props) => {
         }
     }
     const uploadCV = async () => {
-        try {
-            setMessage("");
-            const formData = new FormData();
-            formData.append("files", CV);
-            const response = await axios.post("/storage", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setAttachment(response.data);
-            setMessageUploadCVSuccess("Your CV is uploaded")
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     setMessage("");
+        //     const formData = new FormData();
+        //     formData.append("files", CV);
+        //     const response = await axios.post("/storage", formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     });
+        //     setAttachment(response.data);
+        //     setMessageUploadCVSuccess("Your CV is uploaded")
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
     console.log("Attatchment: ", attachment);
     console.log("Experience: ", experience);
@@ -122,42 +119,45 @@ const EventDetailHeader = (props) => {
                                 {item?.event_name}
                             </Typography>
                             <Grid container spacing={1}>
-                                <Grid item xs={5}>
+                                <Grid item xs={10}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* Title: {item?.title} */}25/10/2023
+                                        Ngày bắt đầu: {item?.event_start}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Ngày kết thúc: {item?.event_end}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* Title: {item?.title} */}Địa điểm: Hội trường A Đại Học FPT
+                                        Địa điểm: {item?.location_detail}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* Title: {item?.title} */}{item?.created_by}
+                                        Host Club: {item?.admin_name}
                                     </Typography>
                                 </Grid>
-
-
-                                {/* <Grid item xs={1}>
+                                <Grid item xs={5}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        |
+                                        Thể loại: {item?.category_name}
                                     </Typography>
-                                </Grid> */}
-
-                                <Grid item xs={7}>
+                                </Grid>
+                                 <Grid item xs={7}>
                                     <Typography color="textPrimary" gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* $ {item?.salary} */} Giá vé: 50000 VND
+                                        Giá vé: {item?.payment_fee}₫
                                     </Typography>
                                     
                                 </Grid>
                             </Grid>
                             <Typography color="textSecondary" gutterBottom variant="body1">
-                                {/* {item?.company?.name} */} Status: Online
+                                Status: {item.event_status ? 'Online' : 'Offline' }
                             </Typography>
                             
 
@@ -177,7 +177,8 @@ const EventDetailHeader = (props) => {
                             marginBottom: "0.2%",
                             fontSize: "larger"
                         }}
-                        onClick={handleClickOpen}
+                        component={RouterLink}
+                        to={`/user/paymentpage/${item?.event_id}`}
                     >Join In now</Button>
                 </CardActions>
 
