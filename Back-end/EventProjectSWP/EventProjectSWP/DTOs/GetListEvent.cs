@@ -1,11 +1,10 @@
-﻿using EventProjectSWP.Models;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 
 namespace EventProjectSWP.DTOs
 {
-    public class AddEvent
+    public class GetListEvent
     {
+        public int EventID { get; set; }
         public string EventName { get; set; }
         public string EventContent { get; set; }
         public DateTime EventStart { get; set; }
@@ -17,8 +16,6 @@ namespace EventProjectSWP.DTOs
         public string CategoryID { get; set; }
         public string LocationID { get; set; }
         public int AdminID { get; set; }
-        public IFormFile files { get; set; }
+        public bool CanFeedBack { get; set; }
     }
 }
-
-

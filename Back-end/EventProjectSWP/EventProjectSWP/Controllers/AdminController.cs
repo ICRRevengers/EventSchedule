@@ -94,7 +94,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPut("update-admin")]
-        public IActionResult Put(UpdateAdmin updateAdmin)
+        public IActionResult Put(UpdateAdmin updateAdmin, int adminId)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.AdminName);
                         myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.AdminPhone);
                         myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.AdminPassword);
-                        myCommand.Parameters.AddWithValue("@admin_id", updateAdmin.AdminID);
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -220,6 +220,7 @@ namespace EventProjectSWP.Controllers
 
             Admin admin = new Admin()
             {
+                AdminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
                 AdminEmail = table.Rows[0]["admin_email"].ToString(),
                 AdminName = table.Rows[0]["admin_name"].ToString(),
                 AdminRole = table.Rows[0]["admin_role"].ToString(),
@@ -282,7 +283,6 @@ namespace EventProjectSWP.Controllers
                         table.Load(myReader);
                         myReader.Close();
                         myCon.Close();
-
                     }
                 }
                 if (table.Rows.Count > 0)
