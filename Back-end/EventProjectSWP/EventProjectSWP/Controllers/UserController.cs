@@ -104,11 +104,11 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@users_name", user.UserName);
-                        myCommand.Parameters.AddWithValue("@users_phone", user.Phone);
-                        myCommand.Parameters.AddWithValue("@users_address", user.Address);
-                        myCommand.Parameters.AddWithValue("@users_email", user.Email);
-                        myCommand.Parameters.AddWithValue("@users_id", user.UserId);
+                        myCommand.Parameters.AddWithValue("@users_name", user.userName);
+                        myCommand.Parameters.AddWithValue("@users_phone", user.phone);
+                        myCommand.Parameters.AddWithValue("@users_address", user.address);
+                        myCommand.Parameters.AddWithValue("@users_email", user.email);
+                        myCommand.Parameters.AddWithValue("@users_id", user.userId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
