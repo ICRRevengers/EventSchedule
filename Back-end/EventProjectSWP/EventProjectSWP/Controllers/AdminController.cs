@@ -228,55 +228,6 @@ namespace EventProjectSWP.Controllers
             return Ok(new Response<string>(accessToken, null));
         }
 
-        /*[HttpPut("Check attend")]
-        public JsonResult CheckAttend(UserInfo user, int id)
-        {
-            string query = @"update dbo.tblUser set user_status = @user_status where users_id =@users_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myCommand.Parameters.AddWithValue("@user_status", user.user_status);                   
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
-
-                }
-            }
-            return new JsonResult("Check attend success");
-        }*/
-
-
-
-
-        /*  [HttpPut("Check attend")]
-          public JsonResult CheckAttend(EventParticipated user, bool status)
-          {
-              string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id, users_id = @users_id";
-              DataTable table = new DataTable();
-              string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-              SqlDataReader myReader;
-              using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-              {
-                  myCon.Open();
-                  using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                  {
-
-                      myCommand.Parameters.AddWithValue("@users_id", user.UserID);
-                      myCommand.Parameters.AddWithValue("@users_status", status);
-                      myReader = myCommand.ExecuteReader();
-                      myReader.Close();
-                      myCon.Close();
-
-                  }
-              }
-              return new JsonResult("Check attend success");
-          }*/
 
         [HttpPut("Check attend")]
         public IActionResult CheckAttend(bool status, CheckAttendance checkAttend)
@@ -306,9 +257,48 @@ namespace EventProjectSWP.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new Response<string>(ex.Message));
-            }
-            
+            }           
         }
+
+
+        [HttpGet("get-user-status")]
+        public IActionResult GetUserStatus(int eventId, int userId)
+        {
+            try
+            {
+                string query = @"select users_status from tblEventParticipated where users_id = @users_id  and event_id= @event_id";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@users_id", userId);
+                        myCommand.Parameters.AddWithValue("@event_id", eventId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+
+        }
+
+
 
     }
 }
