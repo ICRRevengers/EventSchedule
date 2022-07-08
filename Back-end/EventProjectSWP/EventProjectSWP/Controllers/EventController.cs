@@ -26,10 +26,15 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"SELECT tblEvent.*, tblLocation.* , tblPayment.payment_fee
-                           FROM tblEvent
-                           FULL JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
-                           FULL JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id";
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name
+       from tblEvent E
+       INNER JOIN tblLocation ON E.location_id = tblLocation.location_id
+       INNER JOIN tblPayment ON E.event_id = tblPayment.event_id
+       INNER JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       INNER JOIN tblCategory ON e.category_id = tblCategory.category_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -54,15 +59,15 @@ namespace EventProjectSWP.Controllers
                             EventID = Convert.ToInt32(table.Rows[i]["event_id"]),
                             EventName = table.Rows[i]["event_name"].ToString(),
                             EventContent = table.Rows[i]["event_content"].ToString(),
+                            EventStatus = (bool)table.Rows[i]["event_status"],
                             EventStart = Convert.ToDateTime(table.Rows[i]["event_start"]),
                             EventEnd = Convert.ToDateTime(table.Rows[i]["event_end"]),
-                            CreatedBy = table.Rows[i]["created_by"].ToString(),
-                            EventCode = table.Rows[i]["event_code"].ToString(),
-                            EventStatus = (bool)table.Rows[i]["event_status"],
-                            PaymentStatus = (bool)table.Rows[i]["payment_status"],
-                            CategoryID = table.Rows[i]["category_id"].ToString(),
-                            LocationID = table.Rows[i]["location_id"].ToString(),
-                            AdminID = Convert.ToInt32(table.Rows[i]["admin_id"]),
+                            LocationDetail = table.Rows[i]["location_detail"].ToString(),
+                            AdminId = Convert.ToInt32(table.Rows[i]["admin_id"]),
+                            AdminName = table.Rows[i]["admin_name"].ToString(),
+                            PaymentFee = Convert.ToInt32(table.Rows[i]["payment_fee"]),
+                            PaymentUrl = table.Rows[i]["payment_url"].ToString(),
+                            CategoryName = table.Rows[i]["category_name"].ToString(),
                             //sua so 1 thanh user id truyen vao
                             CanFeedBack = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), 1)
                         });
