@@ -4,8 +4,8 @@ namespace EventProjectSWP.DTOs
 {
     public class UpdateEventStatus
     {
-        public bool EventStatus { get; set; }
-        public DateTime EventEnd { get; set; }
+        public bool eventStatus { get; set; }
+        public DateTime eventEnd { get; set; }
 
     }
 }

@@ -62,8 +62,9 @@ namespace EventProjectSWP.Controllers
 
         [HttpPost("Add-image")]
         // Add image bằng cách browse hình ảnh(Trong quá trình tạo event)
-        public async Task<IActionResult> Post([FromForm] FileUploadcs objectFile, int eventid)
+        public async Task<IActionResult> Post([FromForm] MultipleFilesUpload objectFile, int eventid)
         {
+            
             string imgname;
             //int id;
             Boolean check;
@@ -71,87 +72,82 @@ namespace EventProjectSWP.Controllers
             DataTable table = new DataTable();
             try
             {
-                string path = Directory.GetCurrentDirectory() + "\\images\\";
-                var file = objectFile.files;
-                do
+                var files = objectFile.files;
+                foreach(var file in files)
                 {
-                    RandomRD rD = new RandomRD(_configuration);
-                    imgname = rD.Random_Name();
-                    check = rD.CheckRandom_ImageName(imgname);
-                } while (check);
-                /*
-                do
-                {
-                    Random rdid = new Random();
-                    RandomRD rD = new RandomRD(_configuration);
-                    id = rdid.Next(10000);
-                    check = rD.CheckRandom_ImageId(id);
-                } while (check);
-                */
-                if (file.Length > 0)
-                {
-
-                    if (!Directory.Exists(path))
+                    string path = Directory.GetCurrentDirectory() + "\\images\\";
+                    do
                     {
-                        Directory.CreateDirectory(path);
-                    }
-
-                    using (FileStream fileStream = System.IO.File.Create(path + file.FileName))
+                        RandomRD rD = new RandomRD(_configuration);
+                        imgname = rD.Random_Name();
+                        check = rD.CheckRandom_ImageName(imgname);
+                    } while (check);
+                    if (file.Length > 0)
                     {
-                        file.CopyTo(fileStream);
-                        fileStream.Flush();
-                    }
-                    ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
-                    var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
-                    var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
-                    var cancellation = new CancellationTokenSource();
 
-                    var task = new FirebaseStorage(
-                        Bucket,
-                        new FirebaseStorageOptions
+                        if (!Directory.Exists(path))
                         {
-                            AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                            ThrowOnCancel = true 
-                    })
-                        .Child("Images")
-                        .Child($"{imgname}")
-                        .PutAsync(ms, cancellation.Token);
-                    string link = await task;
-                    string query = @"insert into tblImage values (@image_url,@event_id,@image_name)";
-                    string checkquery = @"select * from tblImage where image_name = @image_name";
-                    table = new DataTable();
-                    string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-                    SqlDataReader myReader;
-                    using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-                    {
-                        myCon.Open();
-                        using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                        {
-                            //myCommand.Parameters.AddWithValue("@image_id", id);
-                            myCommand.Parameters.AddWithValue("@image_url", link);
-                            myCommand.Parameters.AddWithValue("@image_name", imgname);
-                            myCommand.Parameters.AddWithValue("@event_id", eventid);
-                            myReader = myCommand.ExecuteReader();
-                            myReader.Close();
+                            Directory.CreateDirectory(path);
                         }
-                        using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+
+                        using (FileStream fileStream = System.IO.File.Create(path + file.FileName))
                         {
-                            myCommand.Parameters.AddWithValue("@image_name", imgname);
-                            myReader = myCommand.ExecuteReader();
-                            table.Load(myReader);
-                            myReader.Close();
-                            myCon.Close();
+                            file.CopyTo(fileStream);
+                            fileStream.Flush();
                         }
+                        ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
+                        var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
+                        var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
+                        var cancellation = new CancellationTokenSource();
+
+                        var task = new FirebaseStorage(
+                            Bucket,
+                            new FirebaseStorageOptions
+                            {
+                                AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                                ThrowOnCancel = true
+                            })
+                            .Child("Images")
+                            .Child($"{imgname}")
+                            .PutAsync(ms, cancellation.Token);
+                        string link = await task;
+                        string query = @"insert into tblImage values (@image_url,@event_id,@image_name)";
+                        string checkquery = @"select * from tblImage where image_name = @image_name";
+                        table = new DataTable();
+                        string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                        SqlDataReader myReader;
+                        using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                        {
+                            myCon.Open();
+                            using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                            {
+                                //myCommand.Parameters.AddWithValue("@image_id", id);
+                                myCommand.Parameters.AddWithValue("@image_url", link);
+                                myCommand.Parameters.AddWithValue("@image_name", imgname);
+                                myCommand.Parameters.AddWithValue("@event_id", eventid);
+                                myReader = myCommand.ExecuteReader();
+                                myReader.Close();
+                            }
+                            using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+                            {
+                                myCommand.Parameters.AddWithValue("@image_name", imgname);
+                                myReader = myCommand.ExecuteReader();
+                                table.Load(myReader);
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                        }
+                        ms.Close();
+                        DirectoryInfo DI = new DirectoryInfo(path);
+                        foreach (FileInfo fileinfo in DI.GetFiles())
+                        {
+                            fileinfo.Delete();
+                        }
+                        Directory.Delete(path);
+
                     }
-                    ms.Close();
-                    DirectoryInfo DI = new DirectoryInfo(path);
-                    foreach (FileInfo fileinfo in DI.GetFiles())
-                    {
-                        fileinfo.Delete();
-                    }
-                    Directory.Delete(path);
-  
                 }
+               
                 if (table.Rows.Count > 0)
                 {
                     return Ok("Image uploaded successfully");
@@ -162,7 +158,10 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>("Something wrong when trying to add Image"));
             }
+            
+            return Ok();
         }
+
         [HttpPost("Delete-image")]
         // Delete image dựa vào Image
         public async Task<IActionResult> Delete(Image imageInfo)
@@ -178,7 +177,7 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(checkquery1, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.imageId);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -199,7 +198,7 @@ namespace EventProjectSWP.Controllers
                             ThrowOnCancel = true
                         })
                         .Child("Images")
-                        .Child($"{imageInfo.ImageName}")
+                        .Child($"{imageInfo.imageName}")
                         .DeleteAsync();
                     string query = @"delete from tblImage where image_id = @image_id";
                     string checkquery = @"select image_name from tblImage where image_id = @image_id";
@@ -209,13 +208,13 @@ namespace EventProjectSWP.Controllers
                         myCon.Open();
                         using (SqlCommand myCommand = new SqlCommand(query, myCon))
                         {
-                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.imageId);
                             myReader = myCommand.ExecuteReader();
                             myReader.Close();
                         }
                         using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
                         {
-                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.imageId);
                             myReader = myCommand.ExecuteReader();
                             table.Load(myReader);
                             myReader.Close();
@@ -239,9 +238,10 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>("Something wrong when trying to delete Image"));
             }
         }
+        
         [HttpPost("Update-image")]
         // Update image dựa vào tên của image, update bằng cách browse hình ảnh
-        public async Task<IActionResult> Update([FromForm] FileUploadcs objectFile, string ImageName)
+        public async Task<IActionResult> Update([FromForm] FileUpload objectFile, string ImageName)
         {
             FileStream ms;
             try
@@ -293,6 +293,7 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>("Something wrong when trying to delete Image"));
             }
         }
+        
     }
 }
    
