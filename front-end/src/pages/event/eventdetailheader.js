@@ -3,17 +3,30 @@ import {
     Button,
     Card,
     CardActions,
-    CardContent, Dialog, DialogActions, DialogTitle, Divider,
-    Grid, Modal, Typography
+    CardContent,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Divider,
+    Grid,
+    Typography,
 } from '@mui/material';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useUserEvents } from '../../recoil/user';
+import { useSnackbar } from '../../HOCs';
+import authAtom from '../../recoil/auth/atom';
+import { useRecoilValue } from 'recoil';
 
 const EventDetailHeader = (props) => {
     const history = useHistory();
     const { item } = props;
     const [openPopup, setOpenPopup] = useState(false);
-
+    const current = new Date();
+    const date = `${current.getFullYear()}/${current.getMonth()+1}/${current.getDate()}`;
+    const auth = useRecoilValue(authAtom);
+    const { joinInEvent } = useUserEvents();
+    const showSackbar = useSnackbar();
     const handleClose = () => setOpenPopup(false);
 
     const joinHandler = () => {
@@ -23,6 +36,23 @@ const EventDetailHeader = (props) => {
             history.push(`/user/paymentpage/${item?.event_id}`);
         }
     };
+
+    const joinEvent = () => {
+        joinInEvent(item.event_id, auth.userId, date)
+        .then((resposne) => {
+            showSackbar({
+                severity: 'success',
+                children: resposne.data,
+            });
+            setOpenPopup(false);
+        })
+        .catch((error) => {
+            showSackbar({
+                severity: 'error',
+                children: 'Something went wrong, please try again later.',
+            });
+        });
+    }
 
     return (
         <>
@@ -45,43 +75,73 @@ const EventDetailHeader = (props) => {
                             </Typography>
                             <Grid container spacing={1}>
                                 <Grid item xs={10}>
-                                    <Typography color="textPrimary"
-                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h5"
+                                        sx={{ fontWeight: 'normal' }}
+                                    >
                                         Ngày bắt đầu: {item?.event_start}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={10}>
-                                    <Typography color="textPrimary"
-                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h5"
+                                        sx={{ fontWeight: 'normal' }}
+                                    >
                                         Ngày kết thúc: {item?.event_end}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <Typography color="textPrimary"
-                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h5"
+                                        sx={{ fontWeight: 'normal' }}
+                                    >
                                         Địa điểm: {item?.location_detail}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <Typography color="textPrimary"
-                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h5"
+                                        sx={{ fontWeight: 'normal' }}
+                                    >
                                         Host Club: {item?.admin_name}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
-                                    <Typography color="textPrimary"
-                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h5"
+                                        sx={{ fontWeight: 'normal' }}
+                                    >
                                         Thể loại: {item?.category_name}
                                     </Typography>
                                 </Grid>
-                                 <Grid item xs={7}>
-                                    <Typography color="textPrimary" gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                <Grid item xs={7}>
+                                    <Typography
+                                        color="textPrimary"
+                                        gutterBottom
+                                        variant="h5"
+                                        sx={{ fontWeight: 'normal' }}
+                                    >
                                         Giá vé: {item?.payment_fee}₫
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Typography color="textSecondary" gutterBottom variant="body1">
-                                Status: {item.event_status ? 'Online' : 'Offline' }
+                            <Typography
+                                color="textSecondary"
+                                gutterBottom
+                                variant="body1"
+                            >
+                                Status:{' '}
+                                {item.event_status ? 'Online' : 'Offline'}
                             </Typography>
                         </Grid>
                     </Box>
@@ -111,11 +171,14 @@ const EventDetailHeader = (props) => {
                     aria-describedby="modal-modal-description"
                 >
                     <DialogTitle>
-                        {"Bấm xác nhận để chấp nhận tham gia sự kiện nhé!"}
+                        {'Bấm xác nhận để chấp nhận tham gia sự kiện nhé!'}
                     </DialogTitle>
                     <DialogActions>
                         <Button onClick={handleClose}>Thoát</Button>
-                        <Button onClick={handleClose} autoFocus>
+                        <Button
+                            onClick={joinEvent}
+                            autoFocus
+                        >
                             Xác nhận
                         </Button>
                     </DialogActions>

@@ -20,7 +20,6 @@ import { useEffect,useState } from 'react';
 
 const AdminStudentProfile = () => {
     const [payment, setPayment] = useState({});
-    const url = payment?.payment_url;
     const { id } = useParams();
     const { getPayment } = useUserEvents();
     const showSackbar = useSnackbar();
