@@ -1,5 +1,9 @@
 ﻿using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
+using EventProjectSWP.Settings;
+using Firebase.Auth;
+using Firebase.Storage;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EventProjectSWP.Controllers
 {
@@ -15,10 +22,16 @@ namespace EventProjectSWP.Controllers
     [ApiController]
     public class EventController : ControllerBase
     {
+        private static string ApiKey = "AIzaSyBD1WOLrBowJynUn__LBCxB8l1vWS9JI2k";
+        private static string Bucket = "testfirebase-a9644.appspot.com";
+        private static string AuthEmail = "duc123456789987654321@gmail.com";
+        private static string AuthPassword = "123456789987654321";
+        private readonly IHostingEnvironment _env;
         private readonly IConfiguration _configuration;
-        public EventController(IConfiguration configuration)
+        public EventController(IConfiguration configuration, IHostingEnvironment env)
         {
             _configuration = configuration;
+            _env = env;
         }
 
         [HttpGet("get-event-list")]
@@ -299,35 +312,135 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public IActionResult Post(AddEvent addEvent)
+        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, int adminID, string paymentUrl, int paymentFee)
         {
+            string imgname;
+            Boolean check;
+            FileStream ms;
             try
             {
-                string query = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
-values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
-
+                string queryAddEvent = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,event_status,category_id,location_id,admin_id) 
+values(@event_name,@event_content,@event_start,@event_end,@event_status,@category_id,@location_id,@admin_id) SELECT SCOPE_IDENTITY() as [event_id]";
+                string queryAddPayment = @"insert into dbo.tblPayment(payment_url,payment_fee,event_id)
+values(@payment_url,@payment_fee,@event_id)";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                DataTable table = new DataTable();
+                DataTable table2 = new DataTable();
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
-                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    using (SqlCommand myCommand = new SqlCommand(queryAddEvent, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_name", addEvent.eventName);
-                        myCommand.Parameters.AddWithValue("@event_content", addEvent.eventContent);
-                        myCommand.Parameters.AddWithValue("@event_start", addEvent.eventStart);
-                        myCommand.Parameters.AddWithValue("@event_end", addEvent.eventEnd);
-                        myCommand.Parameters.AddWithValue("@created_by", addEvent.createdBy);
-                        myCommand.Parameters.AddWithValue("@event_status", addEvent.eventStatus);
-                        myCommand.Parameters.AddWithValue("@category_id", addEvent.categoryID);
-                        myCommand.Parameters.AddWithValue("@location_id", addEvent.locationID);
-                        myCommand.Parameters.AddWithValue("@admin_id ", addEvent.adminID);
+                        myCommand.Parameters.AddWithValue("@event_name", eventName);
+                        myCommand.Parameters.AddWithValue("@event_content", eventCotent);
+                        myCommand.Parameters.AddWithValue("@event_start", eventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", eventEnd);
+                        myCommand.Parameters.AddWithValue("@event_status", eventStatus);
+                        myCommand.Parameters.AddWithValue("@category_id", categoryID);
+                        myCommand.Parameters.AddWithValue("@location_id", locationID);
+                        myCommand.Parameters.AddWithValue("@admin_id ", adminID);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+
+                    }
+                    using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
+                        myCommand.Parameters.AddWithValue("@payment_fee", paymentFee);
+                        foreach (DataRow data in table.Rows)
+                        {
+                            
+                            myCommand.Parameters.AddWithValue("@event_id", data["event_id"].ToString());
+                        }
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
-                        myCon.Close();
                     }
                 }
-                return Ok(new Response<string>(null, "Add Sucessfully"));
+                var files = objectFile.files;
+                if(files == null)
+                {
+                    return Ok(new Response<string>(null, "Add Event and Payment but no image"));
+                }
+                foreach (var file in files)
+                {
+                    string path = Directory.GetCurrentDirectory() + "\\images\\";
+                    do
+                    {
+                        RandomRD rD = new RandomRD(_configuration);
+                        imgname = rD.Random_Name();
+                        check = rD.CheckRandom_ImageName(imgname);
+                    } while (check);
+                    if (file.Length > 0)
+                    {
+
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        
+                        using (FileStream fileStream = System.IO.File.Create(path + file.FileName))
+                        {
+                            file.CopyTo(fileStream);
+                            fileStream.Flush();
+                        }
+                        ms = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
+                        var auth = new FirebaseAuthProvider(new FirebaseConfig(ApiKey));
+                        var a = await auth.SignInWithEmailAndPasswordAsync(AuthEmail, AuthPassword);
+                        var cancellation = new CancellationTokenSource();
+
+                        var task = new FirebaseStorage(
+                            Bucket,
+                            new FirebaseStorageOptions
+                            {
+                                AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                                ThrowOnCancel = true
+                            })
+                            .Child("Images")
+                            .Child($"{imgname}")
+                            .PutAsync(ms, cancellation.Token);
+                        string link = await task;
+                        string queryAddImage = @"insert into tblImage values (@image_url,@event_id,@image_name)";
+                        string checkquery = @"select * from tblImage where image_name = @image_name";
+                        table2 = new DataTable();
+                        using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                        {
+                            myCon.Open();
+                            using (SqlCommand myCommand = new SqlCommand(queryAddImage, myCon))
+                            {
+                                //myCommand.Parameters.AddWithValue("@image_id", id);
+                                myCommand.Parameters.AddWithValue("@image_url", link);
+                                myCommand.Parameters.AddWithValue("@image_name", imgname);
+                                foreach (DataRow data in table.Rows)
+                                {
+
+                                    myCommand.Parameters.AddWithValue("@event_id", data["event_id"].ToString());
+                                }
+                                myReader = myCommand.ExecuteReader();
+                                table2.Load(myReader);
+                                myReader.Close();
+                            }
+                            using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
+                            {
+                                myCommand.Parameters.AddWithValue("@image_name", imgname);
+                                myReader = myCommand.ExecuteReader();
+                                table2.Load(myReader);
+                                myReader.Close();
+                                myCon.Close();
+                            }
+                        }
+                        ms.Close();
+                        DirectoryInfo DI = new DirectoryInfo(path);
+                        foreach (FileInfo fileinfo in DI.GetFiles())
+                        {
+                            fileinfo.Delete();
+                        }
+                        Directory.Delete(path);
+
+                    }
+                }
+                    return Ok(new Response<string>(null ,"Add Sucessfully"));
             }
             catch (Exception e)
             {
@@ -336,18 +449,21 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         }
 
         [HttpPut("update-event")]
-        public IActionResult Put(Event Event)
+        public IActionResult Put(UpdateEvent Event)
         {
             try
             {
                 string query = @"update dbo.tblEvent 
                            set event_name = @event_name, event_content = @event_content, 
-                           event_start = @event_start,event_end = @event_end, created_by = @created_by,  
-                           event_code = @event_code, event_status = @event_status, 
-                           payment_status = @payment_status, category_id = @category_id, 
+                           event_start = @event_start,event_end = @event_end,  
+                            event_status = @event_status, 
+                           category_id = @category_id, 
                            location_id = @location_id, admin_id = @admin_id 
                            where event_id = @event_id";
-
+                string query2 = @"update dbo.tblPayment
+set payment_url = @payment_url,
+payment_fee = @payment_fee
+where event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -360,14 +476,19 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
                         myCommand.Parameters.AddWithValue("@event_content", Event.eventContent);
                         myCommand.Parameters.AddWithValue("@event_start", Event.eventStart);
                         myCommand.Parameters.AddWithValue("@event_end", Event.eventEnd);
-                        myCommand.Parameters.AddWithValue("@created_by", Event.createdBy);
-                        myCommand.Parameters.AddWithValue("@event_code", Event.eventCode);
                         myCommand.Parameters.AddWithValue("@event_status", Event.eventStatus);
-                        myCommand.Parameters.AddWithValue("@payment_status", Event.eventStatus);
                         myCommand.Parameters.AddWithValue("@category_id", Event.categoryID);
                         myCommand.Parameters.AddWithValue("@location_id", Event.locationID);
                         myCommand.Parameters.AddWithValue("@admin_id ", Event.adminID);
                         myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                    }
+                    using (SqlCommand myCommand = new SqlCommand(query2, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        myCommand.Parameters.AddWithValue("@payment_fee", Event.paymentFee);
+                            myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
