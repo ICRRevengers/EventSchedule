@@ -75,12 +75,26 @@ const Header = ({ children }) => {
                     ))}
                     <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
                         {auth.email ? (
-                            <Link
-                                onClick={logoutHandlder}
-                                className="md:ml-[25px] my-[10px]"
-                            >
-                                <LogoutIcon /> Đăng xuất
-                            </Link>
+                            <>
+                                <Link
+                                    to={`user/profile/${auth.userId}`}
+                                    className="md:ml-[25px] my-[10px]"
+                                >
+                                    Hồ sơ của bạn
+                                </Link>
+                                <Link
+                                    to={`/user/listparticipated/${auth.userId}`}
+                                    className="md:ml-[25px] my-[10px]"
+                                >
+                                    Sự kiện tham gia
+                                </Link>
+                                <Link
+                                    onClick={logoutHandlder}
+                                    className="md:ml-[25px] my-[10px]"
+                                >
+                                    <LogoutIcon /> Đăng xuất
+                                </Link>
+                            </>
                         ) : (
                             <Link
                                 to="/login"

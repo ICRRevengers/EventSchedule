@@ -94,7 +94,7 @@ const privateRoutes = [
         role: ['admin', 'club'],
     },
     {
-        path: '/user/profile',
+        path: '/user/profile/:id',
         component: lazy(() => import('../pages/user/profile/userprofile')),
         layout: 'user',
         name: 'user profile',
