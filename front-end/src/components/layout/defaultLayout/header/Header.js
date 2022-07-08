@@ -76,6 +76,7 @@ const Header = ({ children }) => {
                     <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
                         {auth.email ? (
                             <>
+
                                 {auth.role === 'user' ? (
                                     <>
                                         <Link
