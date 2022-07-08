@@ -44,64 +44,44 @@ const EventDetailHeader = (props) => {
                                 {item?.event_name}
                             </Typography>
                             <Grid container spacing={1}>
-                                <Grid item xs={5}>
-                                    <Typography
-                                        color="textPrimary"
-                                        gutterBottom
-                                        variant="h5"
-                                        sx={{ fontWeight: 'normal' }}
-                                    >
-                                        {/* Title: {item?.title} */}25/10/2023
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <Typography
-                                        color="textPrimary"
-                                        gutterBottom
-                                        variant="h5"
-                                        sx={{ fontWeight: 'normal' }}
-                                    >
-                                        {/* Title: {item?.title} */}Địa điểm:{' '}
-                                        {item?.location_detail}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <Typography
-                                        color="textPrimary"
-                                        gutterBottom
-                                        variant="h5"
-                                        sx={{ fontWeight: 'normal' }}
-                                    >
-                                        {/* Title: {item?.title} */}
-                                        {item?.created_by}
-                                    </Typography>
-                                </Grid>
-
-                                {/* <Grid item xs={1}>
+                                <Grid item xs={10}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        |
+                                        Ngày bắt đầu: {item?.event_start}
                                     </Typography>
-                                </Grid> */}
-
-                                <Grid item xs={7}>
-                                    <Typography
-                                        color="textPrimary"
-                                        gutterBottom
-                                        variant="h5"
-                                        sx={{ fontWeight: 'normal' }}
-                                    >
-                                        {/* $ {item?.salary} */} Price:{' '}
-                                        {item?.payment_fee}
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Ngày kết thúc: {item?.event_end}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Địa điểm: {item?.location_detail}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Host Club: {item?.admin_name}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Thể loại: {item?.category_name}
+                                    </Typography>
+                                </Grid>
+                                 <Grid item xs={7}>
+                                    <Typography color="textPrimary" gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Giá vé: {item?.payment_fee}₫
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Typography
-                                color="textSecondary"
-                                gutterBottom
-                                variant="body1"
-                            >
-                                {/* {item?.company?.name} */} Status: Online
+                            <Typography color="textSecondary" gutterBottom variant="body1">
+                                Status: {item.event_status ? 'Online' : 'Offline' }
                             </Typography>
                         </Grid>
                     </Box>

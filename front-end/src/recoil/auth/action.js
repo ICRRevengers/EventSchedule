@@ -10,8 +10,8 @@ const useAuthActions = () => {
 
     const login = (token) => {
         LocalStorageUtils.setUser(token);
-        const { email, name, exp, role } = jwtDecode(token);
-        setAuth({ email, name, exp, role, token });
+        const {userId, email, name, exp, role } = jwtDecode(token);
+        setAuth({userId, email, name, exp, role, token });
         if (role === 'user') {
             history.push('/');
         } else {
@@ -26,6 +26,7 @@ const useAuthActions = () => {
             const expireTime = user.exp * 1000 + Date.now();
             if (user?.exp && expireTime > Date.now()) {
                 setAuth({
+                    userId : user.userId,
                     email: user.email,
                     nmame: user.name,
                     exp: user.exp,
@@ -37,6 +38,7 @@ const useAuthActions = () => {
             }
         } else {
             setAuth({
+                userId: '',
                 token: null,
                 email: '',
                 name: '',
@@ -49,6 +51,7 @@ const useAuthActions = () => {
     const logout = () => {
         LocalStorageUtils.deleteUser();
         setAuth({
+            userId: '',
             token: null,
             email: '',
             name: '',

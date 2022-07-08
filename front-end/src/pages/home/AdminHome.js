@@ -91,8 +91,8 @@ const AdminHome = () => {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={1}>Online</MenuItem>
-                                <MenuItem value={0}>Offline</MenuItem>
+                                <MenuItem value={1}>Sắp diễn ra</MenuItem>
+                                <MenuItem value={0}>Đã diễn ra</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

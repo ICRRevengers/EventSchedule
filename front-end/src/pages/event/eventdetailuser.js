@@ -5,7 +5,6 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 // import Paper from "@mui/material";
-import axios from "axios";
 import EventDetailHeader from "./eventdetailheader";
 import EventDetailBottom from "./eventdetailbottom";
 import { useUserEvents } from '../../recoil/user';
@@ -42,12 +41,10 @@ const EventDetailUser = () => {
             >
                 <Grid container spacing={3}>
                     <Grid item lg={12} md={12} xs={12}>
-                        {/* <StudentJobDetailHeader item={job} /> */}
                         <EventDetailHeader item={eveDetails}/>
 
                     </Grid>
                     <Grid item lg={12} md={12} xs={12}>
-                        {/* <StudentJobDetailBottom item={job} /> */}
                         <EventDetailBottom item={eveDetails}/>
                     </Grid>
 
