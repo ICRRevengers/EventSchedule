@@ -1,2 +1,5 @@
 Ai upload file DB script làm ơn set tên theo format
 Tên(ngày upload), nhớ thông báo cho các thành viên khác để họ xóa DB cũ)
+Lưu ý: luôn luôn pull code mới nhất từ main về trước khi generate scrip, 
+vì có thể đó là bản cũ
+Ai làm sai chịu trách nhiệm

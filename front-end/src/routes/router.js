@@ -87,6 +87,13 @@ const privateRoutes = [
         role: ['admin', 'club'],
     },
     {
+        path: '/admin/eventdetail',
+        component: lazy(() => import('../pages/event/eventdetailadmin')),
+        layout: 'admin',
+        name: 'manage profile',
+        role: ['admin', 'club'],
+    },
+    {
         path: '/user/profile/:id',
         component: lazy(() => import('../pages/user/profile/userprofile')),
         layout: 'user',
@@ -101,12 +108,22 @@ const privateRoutes = [
         role: ['user'],
     },
     {
+
         path: '/user/listparticipated/:id',
         component: lazy(() => import('../pages/user/listparticipated/UserParticipatedList')),
         layout: 'user',
         name: 'event i joined',
         role: ['user'],
     },
+{
+        path: '/user/paymentpage/:id',
+        component: lazy(() => import('../pages/event/paymentpage')),
+        layout: 'user',
+        name: 'user profile',
+        role: ['user'],
+    },
+    
+
 ];
 
 const Routes = (

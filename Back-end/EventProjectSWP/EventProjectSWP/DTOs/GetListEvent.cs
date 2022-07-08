@@ -4,18 +4,18 @@ namespace EventProjectSWP.DTOs
 {
     public class GetListEvent
     {
-        public int EventID { get; set; }
-        public string EventName { get; set; }
-        public string EventContent { get; set; }
-        public bool EventStatus { get; set; }
-        public DateTime EventStart { get; set; }
-        public DateTime EventEnd { get; set; }
-        public string LocationDetail { get; set; }
-        public int AdminId { get; set; }
-        public string AdminName { get; set; }
-        public int PaymentFee { get; set; }
-        public string PaymentUrl { get; set; }
-        public string CategoryName { get; set; }
-        public bool CanFeedBack { get; set; }
+        public int eventID { get; set; }
+        public string eventName { get; set; }
+        public string eventContent { get; set; }
+        public bool eventStatus { get; set; }
+        public DateTime eventStart { get; set; }
+        public DateTime eventEnd { get; set; }
+        public string locationDetail { get; set; }
+        public int adminId { get; set; }
+        public string adminName { get; set; }
+        public int paymentFee { get; set; }
+        public string paymentUrl { get; set; }
+        public string categoryName { get; set; }
+        public bool canFeedBack { get; set; }
     }
 }

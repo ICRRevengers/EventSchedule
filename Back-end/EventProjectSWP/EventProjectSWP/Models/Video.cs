@@ -7,9 +7,9 @@ namespace EventProjectSWP.Models
 {
     public class Video
     {
-        public int VideoId { get; set; }
-        public string VideoUrl { get; set; }
-        public int EventId { get; set; }
-        public string VideoName { get; set; }
+        public int videoId { get; set; }
+        public string videoUrl { get; set; }
+        public int eventId { get; set; }
+        public string videoName { get; set; }
     }
 }
