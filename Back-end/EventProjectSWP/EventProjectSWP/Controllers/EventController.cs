@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -29,7 +30,7 @@ namespace EventProjectSWP.Controllers
                            FROM tblEvent
                            INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
                            INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id";
-                DataTable table = new DataTable();
+                DataTable table = new DataTable();                              
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -41,12 +42,32 @@ namespace EventProjectSWP.Controllers
                         table.Load(myReader);
                         myReader.Close();
                         myCon.Close();
-
                     }
                 }
                 if (table.Rows.Count > 0)
                 {
-                    return Ok(new Response<DataTable>(table));
+                    List<GetListEvent> listEvents = new List<GetListEvent>();
+                    for (int i = 0; i < table.Rows.Count; i++)
+                    {
+                        listEvents.Add(new GetListEvent()
+                        {
+                            EventID = Convert.ToInt32(table.Rows[i]["event_id"]),
+                            EventName = table.Rows[i]["event_name"].ToString(),
+                            EventContent = table.Rows[i]["event_content"].ToString(),
+                            EventStart = Convert.ToDateTime(table.Rows[i]["event_start"]),
+                            EventEnd = Convert.ToDateTime(table.Rows[i]["event_end"]),
+                            CreatedBy = table.Rows[i]["created_by"].ToString(),
+                            EventCode = table.Rows[i]["event_code"].ToString(),
+                            EventStatus = (bool)table.Rows[i]["event_status"],
+                            PaymentStatus = (bool)table.Rows[i]["payment_status"],
+                            CategoryID = table.Rows[i]["category_id"].ToString(),
+                            LocationID = table.Rows[i]["location_id"].ToString(),
+                            AdminID = Convert.ToInt32(table.Rows[i]["admin_id"]),
+                            //sua so 1 thanh user id truyen vao
+                            CanFeedBack = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), 1)
+                        });
+                    }
+                    return Ok(new Response<List<GetListEvent>>(listEvents));
                 }
                 return BadRequest(new Response<string>("No Data"));
 
@@ -286,7 +307,7 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
                         myCon.Close();
                     }
                 }
-                return Ok("Add Sucessfully");
+                return Ok(new Response<string>(null, "Add Sucessfully"));
             }
             catch (Exception e)
             {
@@ -438,8 +459,6 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
            
         }
 
-
-
         [HttpGet("get-event-by-id")]
         public IActionResult GetEventById(int id)
         {
@@ -555,7 +574,34 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
             
         }
 
-        
+        private bool CheckFeedBack(int eventId, int userId)
+        {
+            string query = @"SELECT *
+                           FROM tblEventParticipated
+                           where tblEventParticipated.event_id = @event_id and tblEventParticipated.users_id = @users_id";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@event_id", eventId);
+                    myCommand.Parameters.AddWithValue("@users_id", userId);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            if (table.Rows.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
 
     }
 }

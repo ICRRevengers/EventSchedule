@@ -220,6 +220,7 @@ namespace EventProjectSWP.Controllers
 
             Admin admin = new Admin()
             {
+                AdminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
                 AdminEmail = table.Rows[0]["admin_email"].ToString(),
                 AdminName = table.Rows[0]["admin_name"].ToString(),
                 AdminRole = table.Rows[0]["admin_role"].ToString(),
@@ -282,7 +283,6 @@ namespace EventProjectSWP.Controllers
                         table.Load(myReader);
                         myReader.Close();
                         myCon.Close();
-
                     }
                 }
                 if (table.Rows.Count > 0)
