@@ -76,18 +76,29 @@ const Header = ({ children }) => {
                     <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
                         {auth.email ? (
                             <>
-                                <Link
-                                    to={`user/profile/${auth.userId}`}
-                                    className="md:ml-[25px] my-[10px]"
-                                >
-                                    Hồ sơ của bạn
-                                </Link>
-                                <Link
-                                    to={`/user/listparticipated/${auth.userId}`}
-                                    className="md:ml-[25px] my-[10px]"
-                                >
-                                    Sự kiện tham gia
-                                </Link>
+                                {auth.role === 'user' ? (
+                                    <>
+                                        <Link
+                                            to={`/user/profile/${auth.userId}`}
+                                            className="md:ml-[25px] my-[10px]"
+                                        >
+                                            Hồ sơ của bạn
+                                        </Link>
+                                        <Link
+                                            to={`/user/listparticipated/${auth.userId}`}
+                                            className="md:ml-[25px] my-[10px]"
+                                        >
+                                            Sự kiện tham gia
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <Link
+                                        to={`/admin/manage/events`}
+                                        className="md:ml-[25px] my-[10px]"
+                                    >
+                                        Quản lý sự kiện
+                                    </Link>
+                                )}
                                 <Link
                                     onClick={logoutHandlder}
                                     className="md:ml-[25px] my-[10px]"
