@@ -20,3 +20,5 @@ namespace EventProjectSWP.DTOs
         public IFormFile files { get; set; }
     }
 }
+
+

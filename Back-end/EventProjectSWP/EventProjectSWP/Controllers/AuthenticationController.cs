@@ -14,6 +14,7 @@ using EventProjectSWP.Services;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System;
 
 namespace EventProjectSWP.Controllers
 {
@@ -72,17 +73,24 @@ namespace EventProjectSWP.Controllers
                             myCommand1.Parameters.AddWithValue("@users_name", userInfo.UserName);
                             myCommand1.Parameters.AddWithValue("@users_phone", "");
                             myCommand1.Parameters.AddWithValue("@users_address", "");
-                            myCommand1.Parameters.AddWithValue("@users_email", userInfo.Email);
-                            
+                            myCommand1.Parameters.AddWithValue("@users_email", userInfo.Email);                            
                             myReader1 = myCommand1.ExecuteReader();
                             myReader1.Close();
                         }
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
                     }
-            myReader.Close();
+                    myReader.Close();
                     myCon.Close();
                 }
             }
-            var accessToken = await _authentication.GenerateTokenUser(userInfo);
+            var user = new UserInfo()
+            {
+                UserId = Convert.ToInt32(table.Rows[0]["users_id"]),
+                UserName = table.Rows[0]["users_name"].ToString(),
+                Email = table.Rows[0]["users_email"].ToString(),
+            };
+            var accessToken = await _authentication.GenerateTokenUser(user);
             return Redirect($"http://localhost:3000/login?token={accessToken}");
         }
     }
