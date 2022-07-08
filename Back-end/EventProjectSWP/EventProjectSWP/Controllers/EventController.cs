@@ -29,12 +29,15 @@ namespace EventProjectSWP.Controllers
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       INNER JOIN tblLocation ON E.location_id = tblLocation.location_id
-       INNER JOIN tblPayment ON E.event_id = tblPayment.event_id
-       INNER JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       INNER JOIN tblCategory ON e.category_id = tblCategory.category_id";
+       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
+       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
+       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
+       inner JOIN tblImage ON e.event_id = tblImage.event_id
+       inner JOIN tblVideo ON e.event_id = tblVideo.event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -446,8 +449,19 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"select event_name,event_content,created_by,event_code,event_status,payment_status,category_id,admin_id 
-                              from dbo.tblEvent where event_name LIKE @event_name  ";
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
+       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
+       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
+       inner JOIN tblImage ON e.event_id = tblImage.event_id
+       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where event_name LIKE @event_name ";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -528,7 +542,18 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id  from tblEvent 
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
+       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
+       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
+       inner JOIN tblImage ON e.event_id = tblImage.event_id
+       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
                            where event_start between 
                             @d1 AND @d2";
                 DataTable table = new DataTable();
@@ -566,7 +591,18 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"select event_content,created_by,event_code,event_status,payment_status,category_id,admin_id  from tblEvent 
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
+       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
+       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
+       inner JOIN tblImage ON e.event_id = tblImage.event_id
+       inner JOIN tblVideo ON e.event_id = tblVideo.event_id 
                            where event_start = @event_start";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
