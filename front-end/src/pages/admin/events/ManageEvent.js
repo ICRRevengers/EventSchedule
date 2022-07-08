@@ -45,13 +45,11 @@ const ManageEvents = () => {
 
     const eventNameHandler = (event) => {
         setName(event.target.value);
-        console.log(name);
     };
 
     function searchEventlist(name) {
         searchEvent(name)
             .then((resposne) => {
-                console.log(resposne.data.data)
                 const data = resposne.data.data;
                 setEvents(data);
             })
@@ -60,7 +58,6 @@ const ManageEvents = () => {
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
                 });
-                console.log(error.resposne);
             });
     }
 

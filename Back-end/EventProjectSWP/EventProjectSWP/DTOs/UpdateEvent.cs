@@ -1,11 +1,13 @@
-﻿using EventProjectSWP.Models;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EventProjectSWP.DTOs
 {
-    public class AddEvent
+    public class UpdateEvent
     {
+        public int eventID { get; set; }
         public string eventName { get; set; }
         public string eventContent { get; set; }
         public DateTime eventStart { get; set; }
@@ -16,8 +18,5 @@ namespace EventProjectSWP.DTOs
         public int adminID { get; set; }
         public string paymentUrl { get; set; }
         public int paymentFee { get; set; }
-        //public IFormFile files { get; set; }
     }
 }
-
-

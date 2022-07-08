@@ -177,7 +177,7 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(checkquery1, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                        myCommand.Parameters.AddWithValue("@image_id", imageInfo.imageId);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -198,7 +198,7 @@ namespace EventProjectSWP.Controllers
                             ThrowOnCancel = true
                         })
                         .Child("Images")
-                        .Child($"{imageInfo.ImageName}")
+                        .Child($"{imageInfo.imageName}")
                         .DeleteAsync();
                     string query = @"delete from tblImage where image_id = @image_id";
                     string checkquery = @"select image_name from tblImage where image_id = @image_id";
@@ -208,13 +208,13 @@ namespace EventProjectSWP.Controllers
                         myCon.Open();
                         using (SqlCommand myCommand = new SqlCommand(query, myCon))
                         {
-                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.imageId);
                             myReader = myCommand.ExecuteReader();
                             myReader.Close();
                         }
                         using (SqlCommand myCommand = new SqlCommand(checkquery, myCon))
                         {
-                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.ImageId);
+                            myCommand.Parameters.AddWithValue("@image_id", imageInfo.imageId);
                             myReader = myCommand.ExecuteReader();
                             table.Load(myReader);
                             myReader.Close();

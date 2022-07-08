@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
-import {Typography } from '@mui/material';
-import {
+import 
+{
+    Typography,
     Table,
     TableBody,
     TableCell,

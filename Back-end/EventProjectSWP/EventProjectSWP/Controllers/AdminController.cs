@@ -74,11 +74,11 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@admin_name", addAdmin.AdminName);
-                        myCommand.Parameters.AddWithValue("@admin_phone", addAdmin.AdminPhone);
-                        myCommand.Parameters.AddWithValue("@admin_email", addAdmin.AdminEmail);
-                        myCommand.Parameters.AddWithValue("@admin_password", addAdmin.AdminPassword);
-                        myCommand.Parameters.AddWithValue("@admin_role", addAdmin.AdminRole);
+                        myCommand.Parameters.AddWithValue("@admin_name", addAdmin.adminName);
+                        myCommand.Parameters.AddWithValue("@admin_phone", addAdmin.adminPhone);
+                        myCommand.Parameters.AddWithValue("@admin_email", addAdmin.adminEmail);
+                        myCommand.Parameters.AddWithValue("@admin_password", addAdmin.adminPassword);
+                        myCommand.Parameters.AddWithValue("@admin_role", addAdmin.adminRole);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -94,7 +94,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPut("update-admin")]
-        public IActionResult Put(UpdateAdmin updateAdmin)
+        public IActionResult Put(UpdateAdmin updateAdmin, int adminId)
         {
             try
             {
@@ -106,10 +106,10 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.AdminName);
-                        myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.AdminPhone);
-                        myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.AdminPassword);
-                        myCommand.Parameters.AddWithValue("@admin_id", updateAdmin.AdminID);
+                        myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.adminName);
+                        myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.adminPhone);
+                        myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.adminPassword);
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -220,67 +220,18 @@ namespace EventProjectSWP.Controllers
 
             Admin admin = new Admin()
             {
-                AdminEmail = table.Rows[0]["admin_email"].ToString(),
-                AdminName = table.Rows[0]["admin_name"].ToString(),
-                AdminRole = table.Rows[0]["admin_role"].ToString(),
+                adminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
+                adminEmail = table.Rows[0]["admin_email"].ToString(),
+                adminName = table.Rows[0]["admin_name"].ToString(),
+                adminRole = table.Rows[0]["admin_role"].ToString(),
             };
             var accessToken = await _authentication.GenerateTokenAdmin(admin);
             return Ok(new Response<string>(accessToken, null));
         }
 
-        /*[HttpPut("Check attend")]
-        public JsonResult CheckAttend(UserInfo user, int id)
-        {
-            string query = @"update dbo.tblUser set user_status = @user_status where users_id =@users_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myCommand.Parameters.AddWithValue("@user_status", user.user_status);                   
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
-
-                }
-            }
-            return new JsonResult("Check attend success");
-        }*/
-
-
-
-
-        /*  [HttpPut("Check attend")]
-          public JsonResult CheckAttend(EventParticipated user, bool status)
-          {
-              string query = @"update tblEventParticipated set users_status = @users_status where event_id = @event_id, users_id = @users_id";
-              DataTable table = new DataTable();
-              string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-              SqlDataReader myReader;
-              using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-              {
-                  myCon.Open();
-                  using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                  {
-
-                      myCommand.Parameters.AddWithValue("@users_id", user.UserID);
-                      myCommand.Parameters.AddWithValue("@users_status", status);
-                      myReader = myCommand.ExecuteReader();
-                      myReader.Close();
-                      myCon.Close();
-
-                  }
-              }
-              return new JsonResult("Check attend success");
-          }*/
 
         [HttpPut("Check attend")]
-        public IActionResult CheckAttend(bool status, int user_id, int event_id)
-        //public JsonResult CheckAttend(EventParticipated ev)
+        public IActionResult CheckAttend(bool status, CheckAttendance checkAttend)
         {
             try
             {
@@ -293,12 +244,9 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_id", event_id);
-                        myCommand.Parameters.AddWithValue("@users_id", user_id);
+                        myCommand.Parameters.AddWithValue("@event_id", checkAttend.eventID);
+                        myCommand.Parameters.AddWithValue("@users_id", checkAttend.userID);
                         myCommand.Parameters.AddWithValue("@users_status", status);
-                        /*  myCommand.Parameters.AddWithValue("@event_id", ev.EventID);
-                          myCommand.Parameters.AddWithValue("@users_id", ev.UserID);
-                          myCommand.Parameters.AddWithValue("@users_status", ev.users_status);*/
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -310,9 +258,47 @@ namespace EventProjectSWP.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new Response<string>(ex.Message));
-            }
-            
+            }           
         }
+
+
+        [HttpGet("get-user-status")]
+        public IActionResult GetUserStatus(int eventId, int userId)
+        {
+            try
+            {
+                string query = @"select users_status from tblEventParticipated where users_id = @users_id  and event_id= @event_id";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@users_id", userId);
+                        myCommand.Parameters.AddWithValue("@event_id", eventId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+
+        }
+
+
 
     }
 }
