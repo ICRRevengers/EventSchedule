@@ -26,7 +26,7 @@ const useAuthActions = () => {
             const expireTime = user.exp * 1000 + Date.now();
             if (user?.exp && expireTime > Date.now()) {
                 setAuth({
-                    // userId : user.userId,
+                    userId : user.userId,
                     email: user.email,
                     nmame: user.name,
                     exp: user.exp,
