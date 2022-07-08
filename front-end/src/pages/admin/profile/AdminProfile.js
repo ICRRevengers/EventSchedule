@@ -15,9 +15,12 @@ import {
 import { useAdminInfo } from '../../../recoil/adminInfo';
 import { useSnackbar } from '../../../HOCs';
 import { useEffect } from 'react';
+import authAtom from '../../../recoil/auth/atom';
+import { useSetRecoilState } from 'recoil';
 
 const AdminProfile = () => {
-    const [id, setID] = useState(2);
+
+    const setAuth = useSetRecoilState(authAtom);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [adminPassword, setPassword] = useState('');

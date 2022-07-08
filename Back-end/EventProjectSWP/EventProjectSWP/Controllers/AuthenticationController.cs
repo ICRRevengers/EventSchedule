@@ -61,7 +61,7 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@users_email", userInfo.Email);
+                    myCommand.Parameters.AddWithValue("@users_email", userInfo.email);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     if (table.Rows.Count == 0)
@@ -70,10 +70,10 @@ namespace EventProjectSWP.Controllers
                         using (SqlCommand myCommand1 = new SqlCommand(addUser, myCon))
                         {
                             
-                            myCommand1.Parameters.AddWithValue("@users_name", userInfo.UserName);
+                            myCommand1.Parameters.AddWithValue("@users_name", userInfo.userName);
                             myCommand1.Parameters.AddWithValue("@users_phone", "");
                             myCommand1.Parameters.AddWithValue("@users_address", "");
-                            myCommand1.Parameters.AddWithValue("@users_email", userInfo.Email);                            
+                            myCommand1.Parameters.AddWithValue("@users_email", userInfo.email);                            
                             myReader1 = myCommand1.ExecuteReader();
                             myReader1.Close();
                         }
@@ -86,9 +86,9 @@ namespace EventProjectSWP.Controllers
             }
             var user = new UserInfo()
             {
-                UserId = Convert.ToInt32(table.Rows[0]["users_id"]),
-                UserName = table.Rows[0]["users_name"].ToString(),
-                Email = table.Rows[0]["users_email"].ToString(),
+                userId = Convert.ToInt32(table.Rows[0]["users_id"]),
+                userName = table.Rows[0]["users_name"].ToString(),
+                email = table.Rows[0]["users_email"].ToString(),
             };
             var accessToken = await _authentication.GenerateTokenUser(user);
             return Redirect($"http://localhost:3000/login?token={accessToken}");

@@ -4,10 +4,9 @@ namespace EventProjectSWP.DTOs
 {
     public class AddFeedback
     {
-        public string Comment { get; set; }
-        public string Rating { get; set; }
-        public DateTime CreatedTime { get; set; }
-        public string EventId { get; set; }
-        public string UserId { get; set; }
+        public string comment { get; set; }
+        public string rating { get; set; }
+        public string eventId { get; set; }
+        public string userId { get; set; }
     }
 }

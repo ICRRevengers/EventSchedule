@@ -74,11 +74,11 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@admin_name", addAdmin.AdminName);
-                        myCommand.Parameters.AddWithValue("@admin_phone", addAdmin.AdminPhone);
-                        myCommand.Parameters.AddWithValue("@admin_email", addAdmin.AdminEmail);
-                        myCommand.Parameters.AddWithValue("@admin_password", addAdmin.AdminPassword);
-                        myCommand.Parameters.AddWithValue("@admin_role", addAdmin.AdminRole);
+                        myCommand.Parameters.AddWithValue("@admin_name", addAdmin.adminName);
+                        myCommand.Parameters.AddWithValue("@admin_phone", addAdmin.adminPhone);
+                        myCommand.Parameters.AddWithValue("@admin_email", addAdmin.adminEmail);
+                        myCommand.Parameters.AddWithValue("@admin_password", addAdmin.adminPassword);
+                        myCommand.Parameters.AddWithValue("@admin_role", addAdmin.adminRole);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -106,9 +106,9 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.AdminName);
-                        myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.AdminPhone);
-                        myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.AdminPassword);
+                        myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.adminName);
+                        myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.adminPhone);
+                        myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.adminPassword);
                         myCommand.Parameters.AddWithValue("@admin_id", adminId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
@@ -220,10 +220,10 @@ namespace EventProjectSWP.Controllers
 
             Admin admin = new Admin()
             {
-                AdminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
-                AdminEmail = table.Rows[0]["admin_email"].ToString(),
-                AdminName = table.Rows[0]["admin_name"].ToString(),
-                AdminRole = table.Rows[0]["admin_role"].ToString(),
+                adminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
+                adminEmail = table.Rows[0]["admin_email"].ToString(),
+                adminName = table.Rows[0]["admin_name"].ToString(),
+                adminRole = table.Rows[0]["admin_role"].ToString(),
             };
             var accessToken = await _authentication.GenerateTokenAdmin(admin);
             return Ok(new Response<string>(accessToken, null));
@@ -244,8 +244,8 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_id", checkAttend.EventID);
-                        myCommand.Parameters.AddWithValue("@users_id", checkAttend.UserID);
+                        myCommand.Parameters.AddWithValue("@event_id", checkAttend.eventID);
+                        myCommand.Parameters.AddWithValue("@users_id", checkAttend.userID);
                         myCommand.Parameters.AddWithValue("@users_status", status);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();

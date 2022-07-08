@@ -71,17 +71,18 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@comment", Feedback.Comment);
-                        myCommand.Parameters.AddWithValue("@rating", Feedback.Rating);
-                        myCommand.Parameters.AddWithValue("@created_time", Feedback.CreatedTime);
-                        myCommand.Parameters.AddWithValue("@event_id", Feedback.EventId);
-                        myCommand.Parameters.AddWithValue("@users_id", Feedback.UserId);
+                        myCommand.Parameters.AddWithValue("@comment", Feedback.comment);
+                        myCommand.Parameters.AddWithValue("@rating", Feedback.rating);
+                        myCommand.Parameters.AddWithValue("@created_time", DateTime.Now);
+                        myCommand.Parameters.AddWithValue("@event_id", Feedback.eventId);
+                        myCommand.Parameters.AddWithValue("@users_id", Feedback.userId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
                     }
                 }
-                    return Ok("Feedback Successfully");
+                var ableToFeedback = true;
+                return Ok(new Response<bool>(ableToFeedback));
             }
             catch (Exception ex)
             {
