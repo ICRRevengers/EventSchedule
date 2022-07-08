@@ -5,10 +5,10 @@ namespace EventProjectSWP.Models
 {
     public class UserInfo
     {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
+        public int userId { get; set; }
+        public string userName { get; set; }
 
-        public string Email { get; set; }
+        public string email { get; set; }
        // public int user_status { get; set; }
         internal static UserInfo GetUserLoginInfo(ClaimsIdentity identity)
         {
