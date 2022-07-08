@@ -359,6 +359,10 @@ values(@payment_url,@payment_fee,@event_id)";
                     }
                 }
                 var files = objectFile.files;
+                if(files.Count == 0)
+                {
+                    return Ok(new Response<string>(null, "Add Event and Payment but no image"));
+                }
                 foreach (var file in files)
                 {
                     string path = Directory.GetCurrentDirectory() + "\\images\\";
@@ -440,8 +444,7 @@ values(@payment_url,@payment_fee,@event_id)";
             }
             catch (Exception e)
             {
-                throw;
-                //return BadRequest(new Response<string>(e.Message));
+                return BadRequest(new Response<string>(e.Message));
             }
         }
 
