@@ -16,39 +16,38 @@ import {
 } from '@mui/material';
 
 function UserParticipatedList() {
-    // const { id } = useParams();
-    // const [loading, setLoading] = useState(false);
-    // const [events, setEvents] = useState();
-    // const { getEventIjoined } = useUserEvents();
+    const { id } = useParams();
+    const [loading, setLoading] = useState(false);
+    const [events, setEvents] = useState([]);
+    const { getEventIJoined } = useUserEvents();
 
-    // useEffect(() => {
-    //     setLoading(true);
-    //     getEventIjoined(id)
-    //         .then((res) => {
-    //             const data = res.data
-    //             setEvents(data);
-    //             setTimeout(() => {
-    //                 setLoading(false);
-    //             }, 500);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error.response);
-    //             setTimeout(() => {
-    //                 setLoading(false);
-    //             }, 500);
-    //         });
-    // }, []);
+    useEffect(() => {
+        setLoading(true);
+        getEventIJoined(id)
+            .then((res) => {
+                const data = res.data.data
+                setEvents(data);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+            })
+            .catch((error) => {
+                console.log(error.response);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 500);
+            });
+    }, []);
 
-    return (
-        // loading ? (
-        //     <Loading />
-        // ) : (
-        //     <>
-        //     {events.length === 0 ? <Typography>
-        //         <h1 > Bạn chưa tham gia sự kiện nào </h1>
-        //     </Typography> : (
-        <TableContainer component={Paper} sx={{ maxWidth: 980 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="user list">
+    return loading ? (
+            <Loading />
+        ) : (
+            <>
+            {events.length === 0 ? <Typography>
+                <h1 > Bạn chưa tham gia sự kiện nào </h1>
+            </Typography> : (
+        <TableContainer component={Paper} >
+            <Table sx={{ minWidth: 650 }} aria-label="event list">
                 <TableHead>
                     <TableRow>
                         <TableCell align="center">Tên sự kiện</TableCell>
@@ -58,9 +57,8 @@ function UserParticipatedList() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {/* {events?.map((event) => ( */}
+                    {events?.map((event) => (
                     <TableRow
-                        // key={event?.users_id}
                         sx={{
                             '&:last-child td, &:last-child th': {
                                 border: 0,
@@ -68,22 +66,12 @@ function UserParticipatedList() {
                         }}
                     >
                         <TableCell align="center">
-                            {/* {event?.users_name} */}
-                            ádsdsd
+                            {event?.event_name}
                         </TableCell>
                         <TableCell align="center">
-                            {/* {event.users_email} */}
-                            adad
+                            Hehe
                         </TableCell>
                         <TableCell align="center">
-                            {/* {event.users_email} */}
-                            adad
-                        </TableCell>
-                        <TableCell align="center">
-                            <Button variant="contained">Feedback</Button>
-                        </TableCell>
-
-                        {/* <TableCell align="center">
                             {new Intl.DateTimeFormat('en-US', {
                                 year: 'numeric',
                                 month: 'short',
@@ -91,15 +79,18 @@ function UserParticipatedList() {
                             }).format(
                                 new Date(Date.parse(event.date_participated)),
                             )}
-                        </TableCell> */}
+                        </TableCell>
+                        <TableCell align="center">
+                            <Button variant="contained">Feedback</Button>
+                        </TableCell>                        
                     </TableRow>
-                    {/* ))} */}
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer>
 
-        // )}
-        // </>
+        )}
+        </>
     );
 }
 
