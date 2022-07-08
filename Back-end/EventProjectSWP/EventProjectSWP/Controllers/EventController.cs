@@ -211,10 +211,16 @@ Where E.event_id = I.event_id ";
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_start,event_end,
-                            created_by, created_by,event_status,payment_status,category_id,location_id
-                           ,admin_id From dbo.tblEvent A
-                           where A.event_start >= GETDATE()";
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name
+       from tblEvent E
+       FULL JOIN tblLocation ON E.location_id = tblLocation.location_id
+       FULL JOIN tblPayment ON E.event_id = tblPayment.event_id
+       FULL JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       FULL JOIN tblCategory ON e.category_id = tblCategory.category_id
+       where event_start >= GETDATE()";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -248,10 +254,16 @@ Where E.event_id = I.event_id ";
         {
             try
             {
-                string query = @"Select event_id, event_name, event_content, event_start,event_end,
-                            created_by, created_by,event_status,payment_status,category_id,location_id
-                           ,admin_id From dbo.tblEvent A
-                           where A.event_start < GETDATE()";
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name
+       from tblEvent E
+       FULL JOIN tblLocation ON E.location_id = tblLocation.location_id
+       FULL JOIN tblPayment ON E.event_id = tblPayment.event_id
+       FULL JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       FULL JOIN tblCategory ON e.category_id = tblCategory.category_id
+       where event_start < GETDATE()";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
