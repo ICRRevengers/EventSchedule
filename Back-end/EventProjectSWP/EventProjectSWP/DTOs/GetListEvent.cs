@@ -7,15 +7,15 @@ namespace EventProjectSWP.DTOs
         public int EventID { get; set; }
         public string EventName { get; set; }
         public string EventContent { get; set; }
+        public bool EventStatus { get; set; }
         public DateTime EventStart { get; set; }
         public DateTime EventEnd { get; set; }
-        public string CreatedBy { get; set; }
-        public string EventCode { get; set; }
-        public bool EventStatus { get; set; }
-        public bool PaymentStatus { get; set; }
-        public string CategoryID { get; set; }
-        public string LocationID { get; set; }
-        public int AdminID { get; set; }
+        public string LocationDetail { get; set; }
+        public int AdminId { get; set; }
+        public string AdminName { get; set; }
+        public int PaymentFee { get; set; }
+        public string PaymentUrl { get; set; }
+        public string CategoryName { get; set; }
         public bool CanFeedBack { get; set; }
     }
 }
