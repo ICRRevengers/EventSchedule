@@ -359,7 +359,7 @@ values(@payment_url,@payment_fee,@event_id)";
                     }
                 }
                 var files = objectFile.files;
-                if(files.Count == 0)
+                if(files == null)
                 {
                     return Ok(new Response<string>(null, "Add Event and Payment but no image"));
                 }
