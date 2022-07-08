@@ -2,9 +2,9 @@
 {
     public class UpdateAdmin
     {
-        public int AdminID { get; set; }
-        public string AdminName { get; set; }
-        public string AdminPhone { get; set; }
-        public string AdminPassword { get; set; }
+        //public int AdminID { get; set; }
+        public string adminName { get; set; }
+        public string adminPhone { get; set; }
+        public string adminPassword { get; set; }
     }
 }

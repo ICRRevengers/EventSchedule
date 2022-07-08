@@ -51,8 +51,8 @@ namespace EventProjectSWP.Services
 
             UserInfo userInfo = new UserInfo
             {
-                Email = email.Value,
-                UserName = name.Value,
+                email = email.Value,
+                userName = name.Value,
             };
 
             return userInfo;
@@ -77,10 +77,10 @@ namespace EventProjectSWP.Services
         {
             var claims = new List<Claim>
             {
-                new("email", userInfo.Email),
-                new("name", userInfo.UserName),
+                new("email", userInfo.email),
+                new("name", userInfo.userName),
                 new("role", "user"),
-                new("userId", userInfo.UserId.ToString()),
+                new("userId", userInfo.userId.ToString()),
             };
 
             return Task.FromResult(claims);
@@ -90,10 +90,10 @@ namespace EventProjectSWP.Services
         {
             var claims = new List<Claim>
             {
-                new("email", admin.AdminEmail),
-                new("name", admin.AdminName),
-                new("role", admin.AdminRole),
-                new("userId", admin.AdminID.ToString()),
+                new("email", admin.adminEmail),
+                new("name", admin.adminName),
+                new("role", admin.adminRole),
+                new("userId", admin.adminID.ToString()),
             };
             return Task.FromResult(claims);
         }

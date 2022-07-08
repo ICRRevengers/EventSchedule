@@ -18,6 +18,8 @@ import {
 import { useEffect, useState } from 'react';
 import { useAdminEvents } from '../../recoil/adminEvents';
 import { useSnackbar } from '../../HOCs';
+import { Link } from 'react-router-dom';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -94,8 +96,8 @@ const AdminHome = () => {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={1}>Online</MenuItem>
-                                <MenuItem value={0}>Offline</MenuItem>
+                                <MenuItem value={1}>Sắp diễn ra</MenuItem>
+                                <MenuItem value={0}>Đã diễn ra</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -136,12 +138,19 @@ const AdminHome = () => {
                                         variant="body2"
                                         color="text.secondary"
                                     >
-                                        {event.event_timeline}
+                                        {event.event_start} - {event.event_end}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">Share</Button>
-                                    <Button size="small">More detail</Button>
+                                    
+                                    
+                                    <Link
+                                        to={`/user/eventdetail/${event.event_id}`}
+                                    >
+                                        <Button size="small">More detail</Button>
+                                            
+                                    </Link>
                                 </CardActions>
                             </Card>
                         </Grid>

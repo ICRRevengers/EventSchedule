@@ -62,9 +62,9 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
-                             from tblEventParticipated EP, tblUser U
-                             where Ep.users_id = U.users_id and U.users_id = @users_id";
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id
+                             from tblEventParticipated EP, tblUser U, tblEvent E
+                             where Ep.users_id = U.users_id and E.event_id = EP.event_id and U.users_id =  @users_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -100,7 +100,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status,users_status 
                              from tblEventParticipated EP, tblUser U
                              where Ep.users_id = U.users_id and EP.event_id = @event_id";
                 DataTable table = new DataTable();
@@ -145,9 +145,9 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
-                        myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
-                        myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
+                        myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
+                        myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
+                        myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -175,9 +175,9 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_id", EventParticipated.EventID);
-                        myCommand.Parameters.AddWithValue("@users_id", EventParticipated.UserID);
-                        myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.DateParticipated);
+                        myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
+                        myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
+                        myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();

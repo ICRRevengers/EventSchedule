@@ -2,11 +2,11 @@
 {
     public class Payment
     {
-        public int PaymentId { get; set; }
-        public string PaymentUrl { get; set; }
-        public int PaymentFee { get; set; }
-        public string PaymentDetail { get; set; }
-        public int AdminId { get; set; }
+        public int paymentId { get; set; }
+        public string paymentUrl { get; set; }
+        public int paymentFee { get; set; }
+        public string paymentDetail { get; set; }
+        public int adminId { get; set; }
 
     }
 }

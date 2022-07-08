@@ -6,13 +6,13 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
+import { Link as RouterLink } from "react-router-dom";
 
 
 
-
-const EventDetailHeader = () => {
+const EventDetailHeader = (props) => {
     const [load, setLoad] = useState(false);
-    // const { item } = props;
+    const { item } = props;
     const [open, setOpen] = useState(false);
     const [CV, setCV] = useState();
     const [message, setMessage] = useState("");
@@ -36,9 +36,6 @@ const EventDetailHeader = () => {
     // const [upload, setUpload] = useState(false);
     const [attachment, setAttachment] = useState([])
     // const axiosPrivate = useAxiosPrivate();
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = (event, reason) => {
         setMessage("");
@@ -52,41 +49,7 @@ const EventDetailHeader = () => {
         setOpen(false);
 
     };
-    // const params = {
-    //     "experience": experience,
-    //     "jobId": item?.id,
-    //     "attachments": attachment
-    // }
-
-    // console.log(params);
-    // const apply = async () => {
-    //     try {
-    //         setLoad(true)
-    //         const response = await axiosPrivate.post("/applications/apply-for-a-position",
-
-    //             params
-
-    //         )
-    //         if (response.status === 200) {
-    //             setLoad(false)
-    //             // success apply message 
-    //             setMessageApply("Apply Successfully!")
-    //             setStatusApply(0)
-    //             handleClickModal();
-
-    //         }
-    //     } catch (error) {
-    //         setLoad(false)
-    //         console.log(error?.response?.data?.message);
-    //         setStatusApply(1)
-    //         if (error?.response?.data?.message) {
-    //             setMessageApply(error?.response?.data?.message);
-    //         } else {
-    //             setMessageApply("Cannot apply")
-    //         }
-    //         handleClickModal();
-    //     }
-    // }
+    
     const handleApply = (event, reason) => {
         if (attachment.length) {
             // apply();
@@ -124,20 +87,20 @@ const EventDetailHeader = () => {
         }
     }
     const uploadCV = async () => {
-        try {
-            setMessage("");
-            const formData = new FormData();
-            formData.append("files", CV);
-            const response = await axios.post("/storage", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setAttachment(response.data);
-            setMessageUploadCVSuccess("Your CV is uploaded")
-        } catch (error) {
-            console.log(error);
-        }
+        // try {
+        //     setMessage("");
+        //     const formData = new FormData();
+        //     formData.append("files", CV);
+        //     const response = await axios.post("/storage", formData, {
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     });
+        //     setAttachment(response.data);
+        //     setMessageUploadCVSuccess("Your CV is uploaded")
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
     console.log("Attatchment: ", attachment);
     console.log("Experience: ", experience);
@@ -153,32 +116,48 @@ const EventDetailHeader = () => {
                     >
                         <Grid>
                             <Typography color="textPrimary" gutterBottom variant="h2" sx={{ fontWeight: 'regular' }}>
-                                {/* {item?.name} */}Lễ hội âm nhạc lớn nhất mọi thời đại
+                                {item?.event_name}
                             </Typography>
                             <Grid container spacing={1}>
+                                <Grid item xs={10}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Ngày bắt đầu: {item?.event_start}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={10}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Ngày kết thúc: {item?.event_end}
+                                    </Typography>
+                                </Grid>
                                 <Grid item xs={5}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* Title: {item?.title} */}25/10/2023
+                                        Địa điểm: {item?.location_detail}
                                     </Typography>
                                 </Grid>
-
-                                {/* <Grid item xs={1}>
+                                <Grid item xs={5}>
                                     <Typography color="textPrimary"
                                         gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        |
+                                        Host Club: {item?.admin_name}
                                     </Typography>
-                                </Grid> */}
-
-                                <Grid item xs={7}>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <Typography color="textPrimary"
+                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
+                                        Thể loại: {item?.category_name}
+                                    </Typography>
+                                </Grid>
+                                 <Grid item xs={7}>
                                     <Typography color="textPrimary" gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                        {/* $ {item?.salary} */} Giá vé: 50000 VND
+                                        Giá vé: {item?.payment_fee}₫
                                     </Typography>
                                     
                                 </Grid>
                             </Grid>
                             <Typography color="textSecondary" gutterBottom variant="body1">
-                                {/* {item?.company?.name} */} FPT Event Club
+                                Status: {item.event_status ? 'Online' : 'Offline' }
                             </Typography>
                             
 
@@ -198,7 +177,8 @@ const EventDetailHeader = () => {
                             marginBottom: "0.2%",
                             fontSize: "larger"
                         }}
-                        onClick={handleClickOpen}
+                        component={RouterLink}
+                        to={`/user/paymentpage/${item?.event_id}`}
                     >Join In now</Button>
                 </CardActions>
 
@@ -215,7 +195,7 @@ const EventDetailHeader = () => {
             >
                 <DialogTitle>
                     <Typography color="textPrimary" gutterBottom variant="h3" sx={{ fontWeight: 'regular' }}>
-                        {/* {item?.name} */} Name
+                        {/* {item?.name} */}
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
@@ -307,4 +287,3 @@ const EventDetailHeader = () => {
 
 
 export default EventDetailHeader;
-
