@@ -1,8 +1,10 @@
-﻿using EventProjectSWP.Models;
+﻿using EventProjectSWP.DTOs;
+using EventProjectSWP.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
@@ -78,12 +80,27 @@ namespace EventProjectSWP.Controllers
                         table.Load(myReader);
                         myReader.Close();
                         myCon.Close();
-
                     }
                 }
                 if (table.Rows.Count > 0)
                 {
-                    return Ok(new Response<DataTable>(table));
+                    List<GetEventJoined> listEventJoined = new List<GetEventJoined>();
+                    for (int i = 0; i < table.Rows.Count; i++)
+                    {
+                        listEventJoined.Add(new GetEventJoined()
+                        {
+                            date_participated = table.Rows[i]["date_participated"].ToString(),
+                            event_id = table.Rows[i]["event_id"].ToString(),
+                            event_name = table.Rows[i]["event_name"].ToString(),
+                            users_address = table.Rows[i]["users_address"].ToString(),
+                            users_email = table.Rows[i]["users_email"].ToString(),
+                            users_name = table.Rows[i]["users_name"].ToString(),
+                            users_phone = table.Rows[i]["users_phone"].ToString(),
+                            users_id = Convert.ToInt32(table.Rows[0]["users_id"]),
+                            is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
+                        });
+                    }
+                    return Ok(new Response<List<GetEventJoined>>(listEventJoined));
                 }
                 return BadRequest(new Response<string>("No Data"));
             }
@@ -190,6 +207,35 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>(ex.Message));
             }
 
+        }
+
+        private bool CheckFeedBack(int eventId, int userId)
+        {
+            string query = @"SELECT *
+                           FROM tblFeedback
+                           where tblFeedBack.event_id = @event_id and tblFeedback.users_id = @users_id";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@event_id", eventId);
+                    myCommand.Parameters.AddWithValue("@users_id", userId);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+
+                }
+            }
+            if (table.Rows.Count > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

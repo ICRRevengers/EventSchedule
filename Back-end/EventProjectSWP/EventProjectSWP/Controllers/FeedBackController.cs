@@ -73,7 +73,7 @@ namespace EventProjectSWP.Controllers
                     {
                         myCommand.Parameters.AddWithValue("@comment", Feedback.comment);
                         myCommand.Parameters.AddWithValue("@rating", Feedback.rating);
-                        myCommand.Parameters.AddWithValue("@created_time", Feedback.createdTime);
+                        myCommand.Parameters.AddWithValue("@created_time", DateTime.Now);
                         myCommand.Parameters.AddWithValue("@event_id", Feedback.eventId);
                         myCommand.Parameters.AddWithValue("@users_id", Feedback.userId);
                         myReader = myCommand.ExecuteReader();
@@ -81,7 +81,8 @@ namespace EventProjectSWP.Controllers
                         myCon.Close();
                     }
                 }
-                    return Ok("Feedback Successfully");
+                var ableToFeedback = true;
+                return Ok(new Response<bool>(ableToFeedback));
             }
             catch (Exception ex)
             {
