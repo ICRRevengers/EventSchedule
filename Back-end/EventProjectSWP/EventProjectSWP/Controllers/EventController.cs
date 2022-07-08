@@ -481,13 +481,19 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         {
             try
             {
-                string query = @"SELECT tblEvent.*,tblLocation.location_detail,tblLocation.location_status , tblPayment.payment_fee,tblImage.image_url,tblVideo.video_url
-                           FROM tblEvent
-                           INNER JOIN tblLocation ON tblEvent.location_id = tblLocation.location_id
-                           INNER JOIN tblPayment ON tblEvent.event_id = tblPayment.event_id
-						   INNER JOIN tblImage ON tblEvent.event_id = tblImage.event_id 
-						   INNER JOIN tblVideo ON tblEvent.event_id = tblVideo.event_id 
-                           where tblEvent.event_id =@event_id";
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       INNER JOIN tblLocation ON E.location_id = tblLocation.location_id
+       INNER JOIN tblPayment ON E.event_id = tblPayment.event_id
+       INNER JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       INNER JOIN tblCategory ON e.category_id = tblCategory.category_id
+       INNER JOIN tblImage ON e.event_id = tblImage.event_id
+       INNER JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where E.event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
