@@ -222,7 +222,7 @@ const AdminStudentProfile = () => {
                                             height: 60,
                                         }}
                                         component={Link}
-                                        href="https://www.google.com.vn/"
+                                        href={payment?.payment_url}
                                     >
                                         <Typography
                                             sx={{
