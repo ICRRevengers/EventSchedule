@@ -303,31 +303,46 @@ Where E.event_id = I.event_id ";
         {
             try
             {
-                string query = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,created_by,event_code,event_status,payment_status,category_id,location_id,admin_id) 
-values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_code,@event_status,@payment_status,@category_id,@location_id,@admin_id)";
-
+                string queryAddEvent = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,event_status,category_id,location_id,admin_id) 
+values(@event_name,@event_content,@event_start,@event_end,@event_status,@category_id,@location_id,@admin_id) SELECT SCOPE_IDENTITY() as [event_id]";
+                string queryAddPayment = @"insert into dbo.tblPayment(payment_url,payment_fee,event_id)
+values(@payment_url,@payment_fee,@event_id)";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                DataTable table = new DataTable();
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
-                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    using (SqlCommand myCommand = new SqlCommand(queryAddEvent, myCon))
                     {
                         myCommand.Parameters.AddWithValue("@event_name", addEvent.eventName);
                         myCommand.Parameters.AddWithValue("@event_content", addEvent.eventContent);
                         myCommand.Parameters.AddWithValue("@event_start", addEvent.eventStart);
                         myCommand.Parameters.AddWithValue("@event_end", addEvent.eventEnd);
-                        myCommand.Parameters.AddWithValue("@created_by", addEvent.createdBy);
                         myCommand.Parameters.AddWithValue("@event_status", addEvent.eventStatus);
                         myCommand.Parameters.AddWithValue("@category_id", addEvent.categoryID);
                         myCommand.Parameters.AddWithValue("@location_id", addEvent.locationID);
                         myCommand.Parameters.AddWithValue("@admin_id ", addEvent.adminID);
                         myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+
+                    }
+                    using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@payment_url", addEvent.paymentUrl);
+                        myCommand.Parameters.AddWithValue("@payment_fee", addEvent.paymentFee);
+                        foreach (DataRow data in table.Rows)
+                        {
+                            
+                            myCommand.Parameters.AddWithValue("@event_id", data["event_id"].ToString());
+                        }
+                        myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
                     }
                 }
-                return Ok(new Response<string>(null, "Add Sucessfully"));
+                return Ok(new Response<string>(null ,"Add Sucessfully"));
             }
             catch (Exception e)
             {
@@ -336,18 +351,21 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
         }
 
         [HttpPut("update-event")]
-        public IActionResult Put(Event Event)
+        public IActionResult Put(UpdateEvent Event)
         {
             try
             {
                 string query = @"update dbo.tblEvent 
                            set event_name = @event_name, event_content = @event_content, 
-                           event_start = @event_start,event_end = @event_end, created_by = @created_by,  
-                           event_code = @event_code, event_status = @event_status, 
-                           payment_status = @payment_status, category_id = @category_id, 
+                           event_start = @event_start,event_end = @event_end,  
+                            event_status = @event_status, 
+                           category_id = @category_id, 
                            location_id = @location_id, admin_id = @admin_id 
                            where event_id = @event_id";
-
+                string query2 = @"update dbo.tblPayment
+set payment_url = @payment_url,
+payment_fee = @payment_fee
+where event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -360,14 +378,19 @@ values (@event_name,@event_content,@event_start,@event_end,@created_by,@event_co
                         myCommand.Parameters.AddWithValue("@event_content", Event.eventContent);
                         myCommand.Parameters.AddWithValue("@event_start", Event.eventStart);
                         myCommand.Parameters.AddWithValue("@event_end", Event.eventEnd);
-                        myCommand.Parameters.AddWithValue("@created_by", Event.createdBy);
-                        myCommand.Parameters.AddWithValue("@event_code", Event.eventCode);
                         myCommand.Parameters.AddWithValue("@event_status", Event.eventStatus);
-                        myCommand.Parameters.AddWithValue("@payment_status", Event.eventStatus);
                         myCommand.Parameters.AddWithValue("@category_id", Event.categoryID);
                         myCommand.Parameters.AddWithValue("@location_id", Event.locationID);
                         myCommand.Parameters.AddWithValue("@admin_id ", Event.adminID);
                         myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                    }
+                    using (SqlCommand myCommand = new SqlCommand(query2, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        myCommand.Parameters.AddWithValue("@payment_fee", Event.paymentFee);
+                            myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
