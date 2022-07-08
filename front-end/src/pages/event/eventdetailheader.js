@@ -131,7 +131,7 @@ const EventDetailHeader = (props) => {
                                         variant="h5"
                                         sx={{ fontWeight: 'normal' }}
                                     >
-                                        Giá vé: {item?.payment_fee}₫
+                                        Giá vé: {item?.payment_fee === 0 ? "Free" : item?.payment_fee + " ₫"}
                                     </Typography>
                                 </Grid>
                             </Grid>
