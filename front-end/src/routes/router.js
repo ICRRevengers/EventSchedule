@@ -101,6 +101,13 @@ const privateRoutes = [
         role: ['admin'],
     },
     {
+        path: '/admin/manage/add-new-admin',
+        component: lazy(() => import('../pages/admin/clubs/AddClub')),
+        layout: 'admin',
+        name: 'admin home',
+        role: ['admin'],
+    },
+    {
         path: '/user/profile/:id',
         component: lazy(() => import('../pages/user/profile/userprofile')),
         layout: 'user',

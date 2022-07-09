@@ -25,17 +25,24 @@ const Sidebar = () => {
                         Đăng sự kiện mới
                     </h1>
                 </Link>
-                <Link to={`/admin/manage/profile/${auth.id}`}>
+                <Link to={`/admin/manage/profile/${auth.userId}`}>
                     <h1 className="border-b border-[#ffffff86] mb-[10px] p-[10px]">
                         Hồ sơ
                     </h1>
                 </Link>
                 {auth.role === 'admin' ? (
-                    <Link to={`/admin/manage/club`}>
-                        <h1 className="border-b border-[#ffffff86] mb-[10px] p-[10px]">
-                            Quản lý câu lạc bộ
-                        </h1>
-                    </Link>
+                    <>
+                        <Link to={`/admin/manage/club`}>
+                            <h1 className="border-b border-[#ffffff86] mb-[10px] p-[10px]">
+                                Quản lý câu lạc bộ
+                            </h1>
+                        </Link>
+                        <Link to={`/admin/manage/add-new-admin`}>
+                            <h1 className="border-b border-[#ffffff86] mb-[10px] p-[10px]">
+                                Tạo tài khoản mới
+                            </h1>
+                        </Link>
+                    </>
                 ) : (
                     <></>
                 )}

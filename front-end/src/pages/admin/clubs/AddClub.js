@@ -1,23 +1,29 @@
-import { useEffect, useState } from 'react';
-import {
-    Button, FormControl, Grid, Input,
-    InputLabel,
-    Paper, Typography
-} from '@mui/material';
-import React from "react";
+import React, { useState } from 'react';
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
-import { useAdminInfo } from '../../../recoil/adminInfo';
+import {
+    FormControl,
+    Input,
+    InputLabel,
+    Paper,
+    MenuItem,
+    Grid,
+    Button,
+    Typography,
+    Select,
+    TextareaAutosize,
+} from '@mui/material';
 import { useSnackbar } from '../../../HOCs';
-import { useRecoilValue } from 'recoil';
-import authAtom from '../../../recoil/auth/atom';
+import useAdminClubs from '../../../recoil/manageClubs/action';
 
-const AdminProfile = () => {
-    const showSackbar = useSnackbar();
-    const { getAdmin, updateProfile } = useAdminInfo();
-    const auth = useRecoilValue(authAtom);
+const AddClub = () => {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-    const [adminPassword, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [role, setRole] = useState('club');
+    const { addClub } = useAdminClubs();
+
+    const showSackbar = useSnackbar();
 
     const nameHandle = (event) => {
         setName(event.target.value);
@@ -27,28 +33,21 @@ const AdminProfile = () => {
         setPhone(event.target.value);
     };
 
-    const passwordHandle = (event) => {
+    const emailHandle = (event) => {
+        setEmail(event.target.value);
+    };
+
+    const passHandle = (event) => {
         setPassword(event.target.value);
     };
 
-    useEffect(() => {
-        getAdmin(auth.userId)
-            .then((resposne) => {
-                const data = resposne.data.data;
-                console.log(data);
-                setName(data[0].admin_name)
-                setPhone(data[0].admin_phone)
-            })
-            .catch(() => {
-                showSackbar({
-                    severity: 'error',
-                    children: 'Something went wrong, please try again later.',
-                });
-            });
-    }, []);
+    const roleHandle = (event) => {
+        setRole(event.target.value);
+    };
 
-    function updateAdmin() {
-        updateProfile(auth.userId, name, phone, adminPassword )
+   
+    function createNew() {
+        addClub(name, phone, email, password, role)
             .then((resposne) => {
                 showSackbar({
                     severity: 'success',
@@ -62,6 +61,7 @@ const AdminProfile = () => {
                 });
             });
     }
+
     return (
         <div className="flex">
             <Sidebar />
@@ -82,12 +82,11 @@ const AdminProfile = () => {
                         }}
                     >
                         <Typography variant="headline" gutterBottom>
-                            Hồ sơ của bạn
+                            Quản trị viên mới
                         </Typography>
                         <FormControl fullWidth margin="normal">
-                            <InputLabel>Tên</InputLabel>
+                            <InputLabel>Tên *</InputLabel>
                             <Input
-                                name="adminName"
                                 fullWidth
                                 required
                                 value={name}
@@ -95,36 +94,50 @@ const AdminProfile = () => {
                             />
                         </FormControl>
                         <FormControl fullWidth margin="normal">
-                            <InputLabel>Số điện thoại</InputLabel>
+                            <InputLabel>Số điện thoại *</InputLabel>
                             <Input
-                                name="adminPhone"
-                                type="tel"
-                                fullWidth
-                                required
                                 value={phone}
                                 onChange={phoneHandle}
+                                fullWidth
+                                required
                             />
                         </FormControl>
                         <FormControl fullWidth margin="normal">
-                            <InputLabel>Mật khẩu</InputLabel>
+                            <InputLabel>Email *</InputLabel>
                             <Input
-                                type='password'
-                                name="adminPassword"
+                                onChange={emailHandle}
+                                value={email}
                                 fullWidth
                                 required
-                                value={adminPassword}
-                                onChange={passwordHandle}
                             />
                         </FormControl>
-
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Password *</InputLabel>
+                            <Input
+                                onChange={passHandle}
+                                value={password}
+                                fullWidth
+                                required
+                            />
+                        </FormControl>
+                        <FormControl fullWidth margin="normal">
+                            <Select
+                                onChange={roleHandle}
+                                value={role}
+                            >
+                                <MenuItem value="club">Câu lạc bộ</MenuItem>
+                                <MenuItem value="admin">Quản trị viên</MenuItem>
+                            </Select>
+                        </FormControl>
+                        
                         <FormControl fullWidth margin="normal">
                             <Button
                                 variant="extendedFab"
                                 color="primary"
                                 type="submit"
-                                onClick={updateAdmin}
+                                onClick={createNew}
                             >
-                                Cập nhật
+                                Tạo mới
                             </Button>
                         </FormControl>
                     </Paper>
@@ -133,4 +146,4 @@ const AdminProfile = () => {
         </div>
     );
 };
-export default AdminProfile;
+export default AddClub;

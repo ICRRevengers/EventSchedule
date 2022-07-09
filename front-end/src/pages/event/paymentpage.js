@@ -11,32 +11,53 @@ import {
     Avatar,
     Button,
     IconButton,
-    Link
+    Link,
 } from '@mui/material';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { useUserEvents } from '../../recoil/user';
 import { useSnackbar } from '../../HOCs';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
+import authAtom from '../../recoil/auth/atom';
+import { useRecoilValue } from 'recoil';
 
 const AdminStudentProfile = () => {
     const [payment, setPayment] = useState({});
     const { id } = useParams();
-    const { getPayment } = useUserEvents();
+    const { getPayment, joinInEvent } = useUserEvents();
     const showSackbar = useSnackbar();
+    const auth = useRecoilValue(authAtom);
+    const current = new Date();
+    const date = `${current.getFullYear()}/${current.getMonth()+1}/${current.getDate()}`;
     useEffect(() => {
         getPayment(id)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                // console.log(data);
+                setPayment(data[0]);
+            })
+            .catch(() => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }, []);
+
+    const joinEvent = () => {
+        joinInEvent(id, auth.userId, date)
         .then((resposne) => {
-            const data = resposne.data.data
-            // console.log(data);
-            setPayment(data[0]);
+            showSackbar({
+                severity: 'success',
+                children: resposne.data,
+            });
         })
-        .catch(() => {
+        .catch((error) => {
             showSackbar({
                 severity: 'error',
                 children: 'Something went wrong, please try again later.',
             });
         });
-    },[])
+    }
 
     return (
         <Box sx={{ mb: 20 }}>
@@ -83,7 +104,7 @@ const AdminStudentProfile = () => {
                             justifyContent="center"
                             alignItems="center"
                         >
-                            <Grid sx={{mt: 6, mb: 4.5}}>
+                            <Grid sx={{ mt: 6, mb: 4.5 }}>
                                 <Avatar
                                     src="https://coin68.com/wp-content/uploads/2019/04/momo-la-gi.png"
                                     sx={{
@@ -94,14 +115,29 @@ const AdminStudentProfile = () => {
                                     variant="square"
                                 />
                             </Grid>
-                            <Grid sx={{ p: 2, border: '2px dashed orange', backgroundColor: "rgba(255, 244, 222)" }}>
-                                    <Typography
-                                            variant="h5"
-                                            sx={{ fontWeight: 400, fontSize: 20}}
-                                            color="red"
-                                        >
-                                            Hãy thanh toán trước khi sự kiện diễn ra bạn nhé!
-                                    </Typography>
+                            <Grid
+                                sx={{
+                                    p: 2,
+                                    border: '2px dashed orange',
+                                    backgroundColor: 'rgba(255, 244, 222)',
+                                }}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    sx={{ fontWeight: 400, fontSize: 18 }}
+                                    color="red"
+                                    textAlign={'center'}
+                                >
+                                    <Link
+                                        href={payment?.payment_url}
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        color="inherit"
+                                        underline="hover"
+                                    >
+                                        {payment?.payment_url}
+                                    </Link>
+                                </Typography>
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -163,7 +199,6 @@ const AdminStudentProfile = () => {
                                             sx={{ fontWeight: 300 }}
                                         >
                                             {payment?.payment_detail}
-                                            
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -195,12 +230,12 @@ const AdminStudentProfile = () => {
                                             gutterBottom
                                             sx={{ fontWeight: 300 }}
                                         >
-                                           $ {payment?.payment_fee}
+                                            $ {payment?.payment_fee}
                                         </Typography>
                                     </Grid>
                                 </Grid>
 
-                                <Grid lg={12} md={12} xs={12} sx={{ mb: 10 }}>
+                                <Grid lg={12} md={12} xs={12} sx={{ mb: 7 }}>
                                     <Divider />
                                 </Grid>
 
@@ -208,7 +243,7 @@ const AdminStudentProfile = () => {
                                     container
                                     item
                                     xs={12}
-                                    sx={{ mb: 5 }}
+                                    sx={{ mb: 8 }}
                                     direction="row"
                                     justifyContent="center"
                                     alignItems="center"
@@ -218,11 +253,12 @@ const AdminStudentProfile = () => {
                                         color="primary"
                                         type="submit"
                                         sx={{
-                                            width: '35%',
-                                            height: 60,
+                                            width: '65%',
+                                            height: 70,
                                         }}
-                                        component={Link}
-                                        href={payment?.payment_url}
+                                        // component={Link}
+                                        // href={payment?.payment_url}
+                                        onClick={joinEvent}
                                     >
                                         <Typography
                                             sx={{
@@ -230,7 +266,7 @@ const AdminStudentProfile = () => {
                                                 fontSize: 20,
                                             }}
                                         >
-                                            THANH TOÁN
+                                            XÁC NHẬN ĐÃ THANH TOÁN
                                         </Typography>
                                     </Button>
                                 </Grid>
