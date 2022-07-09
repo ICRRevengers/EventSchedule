@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -19,30 +20,33 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpPut("update-payment")]
-        public IActionResult Put(bool status, int id, int event_id)
+        public IActionResult Put(bool status, int userId, int eventId)
         {
-            string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id and event_id = @event_id";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            try
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                string query = @"update tblEventParticipated set payment_status = @payment_status where users_id =@users_id and event_id = @event_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
-                    myCommand.Parameters.AddWithValue("@payment_status", status);
-                    myCommand.Parameters.AddWithValue("@users_id", id);
-                    myCommand.Parameters.AddWithValue("@event_id", event_id);
-                    myReader = myCommand.ExecuteReader();
-                    myReader.Close();
-                    myCon.Close();
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@payment_status", status);
+                        myCommand.Parameters.AddWithValue("@users_id", userId);
+                        myCommand.Parameters.AddWithValue("@event_id", eventId);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
                 }
+                return Ok(new Response<DataTable>("Update Successfuly"));
             }
-            if (table.Rows.Count > 0)
+            catch (Exception ex)
             {
-                return Ok(new Response<DataTable>(table));
+                return BadRequest(new Response<string>(ex.Message));
             }
-            return BadRequest(new Response<string>("No Data"));
         }
 
         [HttpGet("get-Payment")]
