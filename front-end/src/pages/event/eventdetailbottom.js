@@ -9,6 +9,8 @@ import {
     CardMedia
 } from '@mui/material';
 
+import ReactPlayer from 'react-player';
+
 const EventDetailBottom = (props) => {
     const { item } = props;
     return (
