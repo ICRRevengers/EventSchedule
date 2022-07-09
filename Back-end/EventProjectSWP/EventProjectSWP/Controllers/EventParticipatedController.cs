@@ -146,11 +146,11 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPost("add-user-join-event")]
-        public IActionResult Post(AddUserJoinEvent EventParticipated, bool payStatus, bool userStatus)
+        public IActionResult Post(AddUserJoinEvent EventParticipated, bool paymentStatus, bool userStatus)
         {
             try
             {
-                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated, payment_status, users_status) values(@event_id,@users_id,@date_participated, @payment_status, @users_status)";
+                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated, payment_status, users_status) values(@event_id,@users_id,@date_participated, @payment_status, @users_status)";        
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -161,7 +161,7 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
                         myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
                         myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
-                        myCommand.Parameters.AddWithValue("@payment_status", payStatus);
+                        myCommand.Parameters.AddWithValue("@payment_status", paymentStatus);
                         myCommand.Parameters.AddWithValue("@users_status", userStatus);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
