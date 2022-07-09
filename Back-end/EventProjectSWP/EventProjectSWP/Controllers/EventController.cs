@@ -347,7 +347,14 @@ values(@payment_url,@payment_fee,@event_id)";
                     }
                     using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
+                        if(paymentUrl == null || paymentFee == 0)
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", "No payment");
+                        }
+                        else
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
+                        }
                         myCommand.Parameters.AddWithValue("@payment_fee", paymentFee);
                         foreach (DataRow data in table.Rows)
                         {
