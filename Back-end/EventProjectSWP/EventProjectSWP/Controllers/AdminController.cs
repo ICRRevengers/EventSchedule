@@ -119,7 +119,35 @@ namespace EventProjectSWP.Controllers
             }
             catch(Exception ex)
             {
-                return Ok(new Response<DataTable>(ex.Message));
+                return BadRequest(new Response<DataTable>(ex.Message));
+            }
+        }
+
+        [HttpDelete("Delete-admin-by-id")]
+
+        public IActionResult DeleteAdminById(int id)
+        {
+            try
+            {
+                string query = @"delete from tblAdmin where admin_id = @admin_id";
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                 return Ok(new Response<DataTable>("Delete successfully"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<DataTable>(ex.Message));
             }
         }
 
