@@ -5,7 +5,7 @@ const useAdminClubs = () => {
 
     const deleteClub = (id) =>
         remove({
-            endpoint: `?id=${id}`,
+            endpoint: `/api/Admin/Delete-admin-by-id?id=${id}`,
         })
 
     const searchClubs = (name) => 

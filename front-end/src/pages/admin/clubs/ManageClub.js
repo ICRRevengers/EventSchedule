@@ -1,7 +1,6 @@
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
 import '../../../App.scss';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
     InputLabel,
     Table,
@@ -27,12 +26,12 @@ const ManageClubs = () => {
         deleteClub(id)
             .then((resposne) => {
                 const deletedArray = clubs.filter(
-                    (event) => event.event_id !== id,
+                    (club) => club.admin_id !== id,
                 );
                 setClubs(deletedArray);
                 showSackbar({
                     severity: 'success',
-                    children: resposne.data,
+                    children: resposne.message,
                 });
             })
             .catch(() => {
