@@ -26,7 +26,7 @@ const CreateFeedback = ({ open, onClose, eventId, userId, setAbleToFeedback}) =>
                 severity: 'success',
                 children: 'Thanks for your feedback. we appriciate it!',
             });
-            setAbleToFeedback(true)
+            setAbleToFeedback(false)
         }).catch(() => {
             showSnackbar({
                 severity: 'error',

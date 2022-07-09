@@ -20,7 +20,6 @@ import { useAdminEvents } from '../../recoil/adminEvents';
 import { useSnackbar } from '../../HOCs';
 import { Link } from 'react-router-dom';
 
-
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -87,8 +86,8 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={4} padding={{ sm: 2 }} >
-                        <FormControl fullWidth variant="standard" >
+                    <Grid xs={4} padding={{ sm: 2 }}>
+                        <FormControl fullWidth variant="standard">
                             <Select
                                 id="searchStatus"
                                 onChange={handleChange}
@@ -114,8 +113,8 @@ const AdminHome = () => {
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image="/assets/images/campus.jpg"
-                                    alt="green iguana"
+                                    image={event?.img_url}
+                                    alt={event.event_name}
                                 />
                                 <CardContent>
                                     <Typography
@@ -134,13 +133,13 @@ const AdminHome = () => {
                                 </CardContent>
                                 <CardActions>
                                     <Button size="small">Share</Button>
-                                    
-                                    
+
                                     <Link
                                         to={`/user/eventdetail/${event.event_id}`}
                                     >
-                                        <Button size="small">More detail</Button>
-                                            
+                                        <Button size="small">
+                                            More detail
+                                        </Button>
                                     </Link>
                                 </CardActions>
                             </Card>

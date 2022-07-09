@@ -101,6 +101,59 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>(e.Message));
             }
         }
+
+
+        [HttpGet("get-event-club-admin-own")]
+        public IActionResult GêtventClubAdminOwn(int adminId)
+        {
+            try
+            {
+                
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
+       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
+       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
+       inner JOIN tblImage ON e.event_id = tblImage.event_id
+       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where tblAdmin.admin_id = @admin_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+
+
+
         [HttpGet("get-event-with-image")]
         public IActionResult GetEventWithImage()
         {
@@ -312,8 +365,31 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, int adminID, string paymentUrl, int paymentFee)
+        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, string adminID, string paymentUrl, int paymentFee)
         {
+            Dictionary<string, string> list = new Dictionary<string, string>();
+            List<string> errorlist = new List<string>();
+            list.Add("eventName", eventName);list.Add("eventCotent", eventCotent);list.Add("categoryID", categoryID);list.Add("locationID", locationID);list.Add("adminID", adminID);
+            
+            foreach (var checkNul in list)
+            {
+                if(checkNul.Value == null)
+                {
+                    errorlist.Add(checkNul.Key + " is empty");
+                }
+            }
+            if (eventStart ==  DateTime.MinValue)
+            {
+                errorlist.Add(nameof(eventStart) + " is empty");
+            }
+            if (eventEnd == DateTime.MinValue)
+            {
+                errorlist.Add(nameof(eventEnd) + " is empty");
+            }
+            if(errorlist.Count > 0)
+            {
+                return BadRequest(new Response<List<string>>(errorlist));
+            }
             string imgname;
             Boolean check;
             FileStream ms;
@@ -347,7 +423,14 @@ values(@payment_url,@payment_fee,@event_id)";
                     }
                     using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
+                        if(paymentUrl == null || paymentFee == 0)
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", "No payment");
+                        }
+                        else
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
+                        }
                         myCommand.Parameters.AddWithValue("@payment_fee", paymentFee);
                         foreach (DataRow data in table.Rows)
                         {
@@ -446,6 +529,7 @@ values(@payment_url,@payment_fee,@event_id)";
             {
                 return BadRequest(new Response<string>(e.Message));
             }
+            
         }
 
         [HttpPut("update-event")]
