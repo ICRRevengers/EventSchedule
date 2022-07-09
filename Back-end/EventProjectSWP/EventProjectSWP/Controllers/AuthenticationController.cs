@@ -66,7 +66,7 @@ namespace EventProjectSWP.Controllers
                     table.Load(myReader);
                     if (table.Rows.Count == 0)
                     {
-                        string addUser = @"insert into tblUser (users_name,users_phone,users_address,users_email) values (@users_name,@users_email)";
+                        string addUser = @"insert into tblUser (users_name,users_email) values (@users_name,@users_email)";
                         using (SqlCommand myCommand1 = new SqlCommand(addUser, myCon))
                         {
                             
