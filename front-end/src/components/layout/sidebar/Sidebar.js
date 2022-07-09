@@ -14,6 +14,7 @@ const pages = [
         title: 'Hồ sơ',
         href: '/admin/manage/profile',
     },
+   
 ];
 
 const Sidebar = () => {

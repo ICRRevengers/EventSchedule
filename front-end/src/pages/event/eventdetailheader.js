@@ -17,6 +17,7 @@ import { useUserEvents } from '../../recoil/user';
 import { useSnackbar } from '../../HOCs';
 import authAtom from '../../recoil/auth/atom';
 import { useRecoilValue } from 'recoil';
+import { EventSlider } from '../../components/eventslider/EventSlider'
 
 const EventDetailHeader = (props) => {
     const history = useHistory();

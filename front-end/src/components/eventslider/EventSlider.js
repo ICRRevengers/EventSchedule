@@ -1,5 +1,5 @@
 import { Carousel } from 'react-carousel-minimal';
-
+import EventDetailHeader from '../../pages/event/eventdetailheader';
 function EventSlider() {
  const data = [
     {
@@ -50,6 +50,7 @@ function EventSlider() {
   }
   return (
     <>
+    <EventDetailHeader/>
       <div style={{ textAlign: "center" }}>
         <div style={{
           margin: "0 0 10%",
