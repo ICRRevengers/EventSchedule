@@ -2,14 +2,37 @@ import { Send } from '@mui/icons-material';
 import { Box, Button, FormControl, Modal, Rating, TextField, Typography } from '@mui/material';
 import { blueGrey, grey } from '@mui/material/colors';
 import React, { useState } from 'react';
+import { useSnackbar } from '../../../../HOCs';
+import { useFeedback } from '../../../../recoil/feedback';
 
-const CreateFeedback = ({ open, onClose}) => {
-
+const CreateFeedback = ({ open, onClose, eventId, userId, setAbleToFeedback}) => {
+    const showSnackbar = useSnackbar()
+    const { addFeedback } = useFeedback()
     const [ratingValue, setRatingValue] = useState(0)
+    const [content, setContent] = useState("")
+
+    const feedbackChangeHandler = (event) => {
+        setContent(event.target.value)
+    }
 
     const ratingChangeHandler = (newValue) => {
-        console.log(newValue);
         setRatingValue(newValue)
+    }
+
+    const feedbackHandler = () => {
+        addFeedback({comment: content, rating: ratingValue, eventId, userId: userId }).then(res => {
+            onClose()
+            showSnackbar({
+                severity: 'success',
+                children: 'Thanks for your feedback. we appriciate it!',
+            });
+            setAbleToFeedback(true)
+        }).catch(() => {
+            showSnackbar({
+                severity: 'error',
+                children: 'Something went wrong',
+            });
+        })
     }
 
     return (
@@ -65,12 +88,12 @@ const CreateFeedback = ({ open, onClose}) => {
                         </Typography>
                         <FormControl fullWidth>
                             <TextField
-                                // value={feedbackContent.value}
+                                value={content}
                                 multiline
                                 minRows={3}
-                                maxRows={10}
+                                maxRows={100}
                                 placeholder="Feedback here"
-                                // onChange={feedbackChangeHandler}
+                                onChange={feedbackChangeHandler}
                             />
                         </FormControl>
                     </Box>
@@ -91,6 +114,7 @@ const CreateFeedback = ({ open, onClose}) => {
                             endIcon={<Send />}
                             sx={{ ml: 2 }}
                             type="submit"
+                            onClick={feedbackHandler}
                         >
                             Send feedback
                         </Button>

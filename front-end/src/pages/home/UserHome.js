@@ -64,9 +64,9 @@ const AdminHome = () => {
                 <Grid
                     container
                     padding={{ xs: 2, md: 5 }}
-                    columns={{ xs: 3, sm: 12 }}
+                    columns={{ xs: 4, sm: 12 }}
                 >
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
@@ -77,35 +77,26 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
-                                onChange={handleChange}
+                                // onChange={eventTimeStart}
                                 name="searchEvent"
                                 id="searchEventTime"
                                 type="date"
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }} >
+                    <Grid xs={4} padding={{ sm: 2 }} >
                         <FormControl fullWidth variant="standard" >
                             <Select
                                 id="searchStatus"
                                 onChange={handleChange}
+                                // defaultValue={EventStatus}
                             >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={1}>Sắp diễn ra</MenuItem>
-                                <MenuItem value={0}>Đã diễn ra</MenuItem>
+                                <MenuItem value={true}>Sắp diễn ra</MenuItem>
+                                <MenuItem value={false}>Đã diễn ra</MenuItem>
                             </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }}>
-                        <FormControl fullWidth>
-                            <Button variant="contained" onChange={handleChange}>
-                                Tìm kiếm
-                            </Button>
                         </FormControl>
                     </Grid>
                 </Grid>

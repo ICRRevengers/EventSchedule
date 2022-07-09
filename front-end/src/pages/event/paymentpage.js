@@ -11,7 +11,7 @@ import {
     Avatar,
     Button,
     IconButton,
-    Link,
+    Link
 } from '@mui/material';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import { useUserEvents } from '../../recoil/user';
@@ -83,7 +83,7 @@ const AdminStudentProfile = () => {
                             justifyContent="center"
                             alignItems="center"
                         >
-                            <Grid sx={{mt: 6, mb: 7}}>
+                            <Grid sx={{mt: 6, mb: 4.5}}>
                                 <Avatar
                                     src="https://coin68.com/wp-content/uploads/2019/04/momo-la-gi.png"
                                     sx={{
@@ -94,9 +94,15 @@ const AdminStudentProfile = () => {
                                     variant="square"
                                 />
                             </Grid>
-                            {/* <Grid sx={{ p: 2, border: '1px dashed grey' }}>
-                                <Link href="google.com">Link</Link>
-                            </Grid> */}
+                            <Grid sx={{ p: 2, border: '2px dashed orange', backgroundColor: "rgba(255, 244, 222)" }}>
+                                    <Typography
+                                            variant="h5"
+                                            sx={{ fontWeight: 400, fontSize: 20}}
+                                            color="red"
+                                        >
+                                            Hãy thanh toán trước khi sự kiện diễn ra bạn nhé!
+                                    </Typography>
+                            </Grid>
                         </Grid>
                     </CardContent>
 
@@ -215,6 +221,8 @@ const AdminStudentProfile = () => {
                                             width: '35%',
                                             height: 60,
                                         }}
+                                        component={Link}
+                                        href={payment?.payment_url}
                                     >
                                         <Typography
                                             sx={{
