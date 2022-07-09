@@ -117,7 +117,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name,users_email,event_id,date_participated,payment_status,users_status 
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,event_id,date_participated,payment_status,users_status 
                              from tblEventParticipated EP, tblUser U
                              where Ep.users_id = U.users_id and EP.event_id = @event_id";
                 DataTable table = new DataTable();
@@ -150,11 +150,11 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPost("add-user-join-event")]
-        public IActionResult Post(AddUserJoinEvent EventParticipated, bool payStatus, bool userStatus)
+        public IActionResult Post(EventParticipated EventParticipated)
         {
             try
             {
-                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated, payment_status, users_status) values(@event_id,@users_id,@date_participated, @payment_status, @users_status)";
+                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";        
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -165,8 +165,6 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
                         myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
                         myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
-                        myCommand.Parameters.AddWithValue("@payment_status", payStatus);
-                        myCommand.Parameters.AddWithValue("@users_status", userStatus);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
