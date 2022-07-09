@@ -39,7 +39,7 @@ const EventDetailHeader = (props) => {
     };
 
     const joinEvent = () => {
-        joinInEvent(item.event_id, auth.userId, date)
+        joinInEvent(item.event_id, auth.userId, date, true, false)
         .then((resposne) => {
             showSackbar({
                 severity: 'success',
