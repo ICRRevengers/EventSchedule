@@ -1,34 +1,23 @@
-import React, { useState } from 'react';
-import Sidebar from '../../../components/layout/sidebar/Sidebar';
+import { useEffect, useState } from 'react';
 import {
-    FormControl,
-    Input,
+    Button, FormControl, Grid, Input,
     InputLabel,
-    Paper,
-    MenuItem,
-    Grid,
-    Button,
-    Typography,
-    Select,
-    TextareaAutosize,
+    Paper, Typography
 } from '@mui/material';
+import React from "react";
+import Sidebar from '../../../components/layout/sidebar/Sidebar';
 import { useAdminInfo } from '../../../recoil/adminInfo';
 import { useSnackbar } from '../../../HOCs';
-import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import authAtom from '../../../recoil/auth/atom';
-import { useSetRecoilState } from 'recoil';
 
 const AdminProfile = () => {
-
-    const setAuth = useSetRecoilState(authAtom);
+    const showSackbar = useSnackbar();
+    const { getAdmin, updateProfile } = useAdminInfo();
+    const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [adminPassword, setPassword] = useState('');
-    const { updateInfo, getInfo } = useAdminInfo();
-
-    const [admins, setAdmin] = useState();
-
-    const showSackbar = useSnackbar();
 
     const nameHandle = (event) => {
         setName(event.target.value);
@@ -42,36 +31,37 @@ const AdminProfile = () => {
         setPassword(event.target.value);
     };
 
-    // function updateAdmin() {
-    //     updateInfo(id, name, phone, adminPassword )
-    //         .then((resposne) => {
-    //             showSackbar({
-    //                 severity: 'error',
-    //                 children: resposne.data,
-    //             });
-    //         })
-    //         .catch((error) => {
-    //             showSackbar({
-    //                 severity: 'error',
-    //                 children: 'Something went wrong, please try again later.',
-    //             });
-    //         });
-    // }
+    useEffect(() => {
+        getAdmin(auth.userId)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setName(data[0].admin_name)
+                setPhone(data[0].admin_phone)
+            })
+            .catch(() => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }, []);
 
-    // useEffect(() => {
-    //     getInfo()
-    //         .then((resposne) => {
-    //             const data = resposne.data.data;
-    //             setAdmin(data);
-    //         })
-    //         .catch(() => {
-    //             showSackbar({
-    //                 severity: 'error',
-    //                 children: 'Something went wrong, please try again later.',
-    //             });
-    //         });
-    // }, []);
-
+    function updateAdmin() {
+        updateProfile(auth.userId, name, phone, adminPassword )
+            .then((resposne) => {
+                showSackbar({
+                    severity: 'success',
+                    children: resposne.data,
+                });
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
     return (
         <div className="flex">
             <Sidebar />
@@ -132,7 +122,7 @@ const AdminProfile = () => {
                                 variant="extendedFab"
                                 color="primary"
                                 type="submit"
-                                // onClick={updateAdmin}
+                                onClick={updateAdmin}
                             >
                                 Cập nhật
                             </Button>
