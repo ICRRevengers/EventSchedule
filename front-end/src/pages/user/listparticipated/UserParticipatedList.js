@@ -115,7 +115,7 @@ function UserParticipatedList() {
                                                         event.event_id,
                                                     )
                                                 }
-                                                disabled={event.is_feedback || ableToFeedback}
+                                                disabled={event.is_feedback || !ableToFeedback}
                                                 sx={{
                                                     opacity: 0.5,
                                                 }}
@@ -133,7 +133,7 @@ function UserParticipatedList() {
                                                 sx={{
                                                     opacity: 1,
                                                 }}
-                                                disabled={event.is_feedback || ableToFeedback}
+                                                disabled={event.is_feedback || !ableToFeedback}
                                             >
                                                 Feedback
                                             </Button>
