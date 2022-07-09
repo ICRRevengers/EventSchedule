@@ -365,8 +365,31 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, int adminID, string paymentUrl, int paymentFee)
+        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, string adminID, string paymentUrl, int paymentFee)
         {
+            Dictionary<string, string> list = new Dictionary<string, string>();
+            List<string> errorlist = new List<string>();
+            list.Add("eventName", eventName);list.Add("eventCotent", eventCotent);list.Add("categoryID", categoryID);list.Add("locationID", locationID);list.Add("adminID", adminID);
+            
+            foreach (var checkNul in list)
+            {
+                if(checkNul.Value == null)
+                {
+                    errorlist.Add(checkNul.Key + " is empty");
+                }
+            }
+            if (eventStart ==  DateTime.MinValue)
+            {
+                errorlist.Add(nameof(eventStart) + " is empty");
+            }
+            if (eventEnd == DateTime.MinValue)
+            {
+                errorlist.Add(nameof(eventEnd) + " is empty");
+            }
+            if(errorlist.Count > 0)
+            {
+                return BadRequest(new Response<List<string>>(errorlist));
+            }
             string imgname;
             Boolean check;
             FileStream ms;
@@ -506,6 +529,7 @@ values(@payment_url,@payment_fee,@event_id)";
             {
                 return BadRequest(new Response<string>(e.Message));
             }
+            
         }
 
         [HttpPut("update-event")]
