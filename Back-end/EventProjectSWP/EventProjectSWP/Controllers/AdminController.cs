@@ -33,7 +33,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_password, admin_role from dbo.tblAdmin";
+                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role from dbo.tblAdmin";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -163,7 +163,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select admin_name, admin_phone , admin_email from dbo.tblAdmin where admin_name like concat (@admin_name, '%')";
+                string query = @"select admin_id, admin_name, admin_phone , admin_email, admin_role from dbo.tblAdmin where admin_name like @admin_name";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -172,7 +172,7 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@admin_name", name);
+                        myCommand.Parameters.AddWithValue("@admin_name", "%" + name + "%");
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();

@@ -118,7 +118,7 @@ const AdminHome = () => {
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image="/assets/images/campus.jpg"
+                                    image={event?.img_url}
                                     alt="green iguana"
                                 />
                                 <CardContent>
