@@ -5,7 +5,7 @@ const useAdminEvents = () => {
 
     const getStudentsFromEvent = (id) =>
         get({
-            endpoint: `/api/EventParticipated/get-user-list-from-event?id=${id}`,
+            endpoint: `/api/EventParticipated/get-user-list-from-an-event?id=${id}`,
         })
     
     const deleteEvent = (id) =>
