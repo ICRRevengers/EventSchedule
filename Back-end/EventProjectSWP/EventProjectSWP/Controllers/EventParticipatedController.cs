@@ -64,7 +64,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id
+                string query = @"select U.users_id, date_participated, E.event_name, E.event_id
                              from tblEventParticipated EP, tblUser U, tblEvent E
                              where Ep.users_id = U.users_id and E.event_id = EP.event_id and U.users_id =  @users_id";
                 DataTable table = new DataTable();
@@ -91,11 +91,7 @@ namespace EventProjectSWP.Controllers
                         {
                             date_participated = table.Rows[i]["date_participated"].ToString(),
                             event_id = table.Rows[i]["event_id"].ToString(),
-                            event_name = table.Rows[i]["event_name"].ToString(),
-                            users_address = table.Rows[i]["users_address"].ToString(),
-                            users_email = table.Rows[i]["users_email"].ToString(),
-                            users_name = table.Rows[i]["users_name"].ToString(),
-                            users_phone = table.Rows[i]["users_phone"].ToString(),
+                            event_name = table.Rows[i]["event_name"].ToString()
                             users_id = Convert.ToInt32(table.Rows[0]["users_id"]),
                             is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
                         });
