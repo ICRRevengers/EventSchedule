@@ -57,7 +57,7 @@ const Create = () => {
         createEvent(name, content, eventStart, eventEnd, eventStatus)
             .then((resposne) => {
                 showSackbar({
-                    severity: 'error',
+                    severity: 'success',
                     children: resposne.data,
                 });
             })

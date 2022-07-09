@@ -27,7 +27,8 @@ function ParticipatedList() {
         setLoading(true);
         getStudentsFromEvent(id)
             .then((res) => {
-                const data = res.data
+                const data = res.data.data
+                console.log(data)
                 setStudents(data);
                 setTimeout(() => {
                     setLoading(false);
