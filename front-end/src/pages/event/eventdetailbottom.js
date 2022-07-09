@@ -51,11 +51,12 @@ const EventDetailBottom = (props) => {
                                 variant="h6"
                                 sx={{ fontWeight: 'normal' }}
                             >
-                                <CardMedia
+                                {/* <CardMedia
                                     component="video"
                                     // src={item?.video_url}
                                     src='https://www.youtube.com/watch?v=BrG_e1v7qtk'
-                                />
+                                /> */}
+                                <ReactPlayer url={item?.video_url} />
                             </Typography>
                         </Grid>
                     </Grid>

@@ -25,7 +25,7 @@ function UserProfile() {
             });
         });
     },[])
-
+    console.log(profile);
     return (
         <Grid
             item
@@ -99,20 +99,14 @@ function UserProfile() {
                         YOUR FULL NAME
                     </Typography>
 
-                    {/* <TextField
+                    <TextField
                         id="outlined-read-only-input"
                         style={{ width: '50%' }}
-                        Value={profile.users_name}
+                        value={profile?.users_name}
                         InputProps={{
                             readOnly: true,
                         }}
-                    /> */}
-                    <Grid item xs={10}>
-                                    <Typography color="textPrimary"
-                                        gutterBottom variant="h5" sx={{ fontWeight: 'normal' }}>
-                                      Họ và tên: {profile?.users_name}
-                                    </Typography>
-                                </Grid>
+                    />
                 </Grid>
 
                 <Grid
@@ -137,7 +131,7 @@ function UserProfile() {
                     <TextField
                         id="outlined-read-only-input"
                         style={{ width: '50%' }}
-                        defaultValue={profile.users_email}
+                        value={profile.users_email}
                         InputProps={{
                             readOnly: true,
                         }}
