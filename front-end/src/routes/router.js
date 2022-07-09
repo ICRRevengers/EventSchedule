@@ -87,7 +87,7 @@ const privateRoutes = [
         role: ['admin', 'club'],
     },
     {
-        path: '/admin/eventdetail',
+        path: '/admin/eventdetail/:id',
         component: lazy(() => import('../pages/event/eventdetailadmin')),
         layout: 'admin',
         name: 'manage profile',

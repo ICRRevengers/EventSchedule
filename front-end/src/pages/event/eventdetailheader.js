@@ -17,6 +17,7 @@ import { useUserEvents } from '../../recoil/user';
 import { useSnackbar } from '../../HOCs';
 import authAtom from '../../recoil/auth/atom';
 import { useRecoilValue } from 'recoil';
+import { EventSlider } from '../../components/eventslider/EventSlider'
 
 const EventDetailHeader = (props) => {
     const history = useHistory();
@@ -131,7 +132,7 @@ const EventDetailHeader = (props) => {
                                         variant="h5"
                                         sx={{ fontWeight: 'normal' }}
                                     >
-                                        Giá vé: {item?.payment_fee}₫
+                                        Giá vé: {item?.payment_fee === 0 ? "Free" : item?.payment_fee + " ₫"}
                                     </Typography>
                                 </Grid>
                             </Grid>
