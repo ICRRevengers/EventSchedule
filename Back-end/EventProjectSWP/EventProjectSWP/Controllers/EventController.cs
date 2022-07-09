@@ -535,7 +535,7 @@ values(@payment_url,@payment_fee,@event_id)";
             {
                 return BadRequest(new Response<string>(e.Message));
             }
-            
+           
         }
 
         [HttpPut("update-event")]

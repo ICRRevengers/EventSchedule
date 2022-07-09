@@ -12,6 +12,7 @@ namespace EventProjectSWP.Models
         {
             isSuccess = true;
             this.data = data;
+            this.message = message;
         }
 
         public Response(string message)
