@@ -45,12 +45,12 @@ namespace EventProjectSWP.Controllers
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id";
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -115,12 +115,12 @@ namespace EventProjectSWP.Controllers
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where tblAdmin.admin_id = @admin_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -285,12 +285,15 @@ Where E.event_id = I.event_id ";
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       FULL JOIN tblLocation ON E.location_id = tblLocation.location_id
-       FULL JOIN tblPayment ON E.event_id = tblPayment.event_id
-       FULL JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       FULL JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where event_start >= GETDATE()";
 
                 DataTable table = new DataTable();
@@ -328,12 +331,15 @@ Where E.event_id = I.event_id ";
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       FULL JOIN tblLocation ON E.location_id = tblLocation.location_id
-       FULL JOIN tblPayment ON E.event_id = tblPayment.event_id
-       FULL JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       FULL JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where event_start < GETDATE()";
 
                 DataTable table = new DataTable();
@@ -660,12 +666,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where event_name LIKE @event_name ";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -706,12 +712,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       INNER JOIN tblLocation ON E.location_id = tblLocation.location_id
-       INNER JOIN tblPayment ON E.event_id = tblPayment.event_id
-       INNER JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       INNER JOIN tblCategory ON e.category_id = tblCategory.category_id
-       INNER JOIN tblImage ON e.event_id = tblImage.event_id
-       INNER JOIN tblVideo ON e.event_id = tblVideo.event_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where E.event_id = @event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -753,12 +759,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
                            where event_start between 
                             @d1 AND @d2";
                 DataTable table = new DataTable();
@@ -802,12 +808,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id 
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id 
                            where event_start = @event_start";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
