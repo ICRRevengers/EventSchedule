@@ -41,7 +41,7 @@ namespace EventProjectSWP.Controllers
                         myCon.Close();
                     }
                 }
-                return Ok(new Response<DataTable>("Update Successfuly"));
+                return Ok(new Response<string>(null,"Update successfuly"));
             }
             catch (Exception ex)
             {
