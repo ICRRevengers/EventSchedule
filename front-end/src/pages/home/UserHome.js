@@ -132,13 +132,11 @@ const AdminHome = () => {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Share</Button>
-
                                     <Link
                                         to={`/user/eventdetail/${event.event_id}`}
                                     >
                                         <Button size="small">
-                                            More detail
+                                            Chi tiết
                                         </Button>
                                     </Link>
                                 </CardActions>

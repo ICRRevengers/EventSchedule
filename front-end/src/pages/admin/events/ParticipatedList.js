@@ -56,7 +56,6 @@ function ParticipatedList() {
                         <TableRow>
                             <TableCell >MSSV</TableCell>
                             <TableCell align="center">Họ tên</TableCell>
-                            <TableCell align="center">Số điện thoại</TableCell>
                             <TableCell align="center">Email</TableCell>
                             <TableCell align="center">Thanh toán</TableCell>
                             <TableCell align="center">Ngày tham gia</TableCell>
@@ -74,7 +73,6 @@ function ParticipatedList() {
                             >
                                 <TableCell component="th" scope="row">{student?.users_id}</TableCell>
                                 <TableCell align="center">{student?.users_name}</TableCell>
-                                <TableCell align="center">{student.users_phone}</TableCell>
                                 <TableCell align="center">{student.users_email}</TableCell>                                
                                 <TableCell align="center">
                                     <FormControlLabel control={<Switch checked={student.payment_status} value={student.payment_status} />} label='Thanh toán'/>
