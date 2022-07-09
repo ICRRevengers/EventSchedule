@@ -873,5 +873,39 @@ where event_id = @event_id";
             return false;
         }
 
+        [HttpGet("Get-Location-Open")]
+        public IActionResult GetLocationOpen()
+        {
+            try
+            {
+                string query = @"select location_id, location_detail ,location_status from tblLocation 
+                                 where location_status = 'open' or location_status = 'Open'";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+        }
+
     }
 }
