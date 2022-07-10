@@ -1,4 +1,4 @@
-import { post } from '../../utils/ApiCaller';
+import { get, post } from '../../utils/ApiCaller';
 
 const useFeedback = () => {
     const addFeedback = (feedback) =>
@@ -6,8 +6,10 @@ const useFeedback = () => {
             endpoint: '/api/FeedBack/add-feedback-to-event',
             body: feedback,
         });
+    
+    const getAllFeedback = (eventId) => get({ endpoint: `/api/FeedBack/get-event-feedback?id=${eventId}` })
 
-    return { addFeedback }
+    return { addFeedback, getAllFeedback }
 };
 
 export default useFeedback
