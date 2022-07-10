@@ -64,7 +64,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id,EP.payment_status,EP.users_status
                              from tblEventParticipated EP, tblUser U, tblEvent E
                              where Ep.users_id = U.users_id and E.event_id = EP.event_id and U.users_id =  @users_id";
                 DataTable table = new DataTable();
@@ -98,6 +98,8 @@ namespace EventProjectSWP.Controllers
                             users_phone = table.Rows[i]["users_phone"].ToString(),
                             users_id = Convert.ToInt32(table.Rows[0]["users_id"]),
                             is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
+                            payment_status = bool.Parse(table.Rows[i]["payment_status"].ToString()),
+                            users_status = bool.Parse(table.Rows[i]["users_status"].ToString()),
                         });
                     }
                     return Ok(new Response<List<GetEventJoined>>(listEventJoined));
