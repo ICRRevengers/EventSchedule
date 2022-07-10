@@ -1,4 +1,4 @@
-import { get, remove, post } from '../../utils/ApiCaller';
+import { get, remove, post, put } from '../../utils/ApiCaller';
 
 const useAdminEvents = () => {
     const getEvents = () => get({ endpoint: '/api/Event/get-event-list' });
@@ -60,6 +60,16 @@ const useAdminEvents = () => {
             endpoint: `/api/Event/add-event?eventName=${name}&eventContent=${content}&eventStart=${eventStart}&eventEnd=${eventEnd}&eventStatus=${status}&categoryID=${categoryID}&locationID=${locationID}&adminID=${id}&paymentFee=${paymentFee}`,
             body: {},
         });
+    const updatePayment = (status, userId, eventId) =>
+        put({
+            endpoint: "/api/Payment/update-payment",
+            params:{
+                status: status,
+                userId: userId,
+                eventId: eventId
+            },
+        });
+
     return {
         getEvents,
         getStudentsFromEvent,
@@ -68,7 +78,8 @@ const useAdminEvents = () => {
         getLocations,
         getCategories,
         createEventWithPayment,
-        createEventWithoutPayment
+        createEventWithoutPayment,
+        updatePayment
     };
 };
 export default useAdminEvents;
