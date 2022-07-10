@@ -100,9 +100,6 @@ function ParticipatedList() {
                             <TableRow>
                                 <TableCell>MSSV</TableCell>
                                 <TableCell align="center">Họ tên</TableCell>
-                                <TableCell align="center">
-                                    Số điện thoại
-                                </TableCell>
                                 <TableCell align="center">Email</TableCell>
                                 <TableCell align="center">Thanh toán</TableCell>
                                 <TableCell align="center">
@@ -125,9 +122,6 @@ function ParticipatedList() {
                                     </TableCell>
                                     <TableCell align="center">
                                         {student?.users_name}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        {student.users_phone}
                                     </TableCell>
                                     <TableCell align="center">
                                         {student.users_email}
