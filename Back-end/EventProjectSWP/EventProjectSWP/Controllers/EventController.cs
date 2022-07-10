@@ -372,9 +372,10 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile, AddEvent eventcs)
+        public IActionResult PostAsync(AddEvent eventcs)
         {
             /*
+             [FromForm] MultipleFilesUpload objectFile
             CheckEvent CheckEvent = new CheckEvent();
            List<string> errorList = CheckEvent.checkAddEventNull(eventName, eventCotent, eventStart, eventEnd, categoryID, locationID, adminID);
            if (errorList.Count > 0)
@@ -442,6 +443,7 @@ values(@payment_url,@payment_fee,@event_id)";
                         myReader.Close();
                     }
                 }
+                /*
                 var files = objectFile.files;
                 if(files == null)
                 {
@@ -485,7 +487,10 @@ values(@payment_url,@payment_fee,@event_id)";
                             .Child($"{imgname}")
                             .PutAsync(ms, cancellation.Token);
                         string link = await task;
-                        string queryAddImage = @"insert into tblImage values (@image_url,@event_id,@image_name)";
+                */
+                RandomRD rD = new RandomRD(_configuration);
+                imgname = rD.Random_Name();
+                string queryAddImage = @"insert into tblImage values (@image_url,@event_id,@image_name)";
                         string checkquery = @"select * from tblImage where image_name = @image_name";
                         table2 = new DataTable();
                         using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -494,7 +499,7 @@ values(@payment_url,@payment_fee,@event_id)";
                             using (SqlCommand myCommand = new SqlCommand(queryAddImage, myCon))
                             {
                                 //myCommand.Parameters.AddWithValue("@image_id", id);
-                                myCommand.Parameters.AddWithValue("@image_url", link);
+                                myCommand.Parameters.AddWithValue("@image_url", eventcs.imageUrl);
                                 myCommand.Parameters.AddWithValue("@image_name", imgname);
                                 foreach (DataRow data in table.Rows)
                                 {
@@ -514,6 +519,7 @@ values(@payment_url,@payment_fee,@event_id)";
                                 myCon.Close();
                             }
                         }
+                        /*
                         ms.Close();
                         DirectoryInfo DI = new DirectoryInfo(path);
                         foreach (FileInfo fileinfo in DI.GetFiles())
@@ -521,9 +527,9 @@ values(@payment_url,@payment_fee,@event_id)";
                             fileinfo.Delete();
                         }
                         Directory.Delete(path);
-
-                    }
-                }
+                        */
+                    //}
+                //}
                     return Ok(new Response<string>(null ,"Add Sucessfully"));
             }
             catch (Exception e)
