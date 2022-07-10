@@ -1,4 +1,4 @@
-﻿using EventProjectSWP.Models;
+using EventProjectSWP.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 

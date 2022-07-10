@@ -398,9 +398,9 @@ Where E.event_id = I.event_id ";
             try
             {
                 string queryAddEvent = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,event_status,category_id,location_id,admin_id) 
-values(@event_name,@event_content,@event_start,@event_end,@event_status,@category_id,@location_id,@admin_id) SELECT SCOPE_IDENTITY() as [event_id]";
+                                         values(@event_name,@event_content,@event_start,@event_end,@event_status,@category_id,@location_id,@admin_id) SELECT SCOPE_IDENTITY() as [event_id]";
                 string queryAddPayment = @"insert into dbo.tblPayment(payment_url,payment_fee,event_id)
-values(@payment_url,@payment_fee,@event_id)";
+                                         values(@payment_url,@payment_fee,@event_id)";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 DataTable table = new DataTable();
                 DataTable table2 = new DataTable();
@@ -421,7 +421,6 @@ values(@payment_url,@payment_fee,@event_id)";
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
-
                     }
                     using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
                     {
@@ -535,8 +534,7 @@ values(@payment_url,@payment_fee,@event_id)";
             catch (Exception e)
             {
                 return BadRequest(new Response<string>(e.Message));
-            }
-           
+            }          
         }
 
         [HttpPut("update-event")]
@@ -545,16 +543,17 @@ values(@payment_url,@payment_fee,@event_id)";
             try
             {
                 string query = @"update dbo.tblEvent 
-                           set event_name = @event_name, event_content = @event_content, 
-                           event_start = @event_start,event_end = @event_end,  
-                            event_status = @event_status, 
-                           category_id = @category_id, 
-                           location_id = @location_id, admin_id = @admin_id 
-                           where event_id = @event_id";
+                              set event_name = @event_name, event_content = @event_content, 
+                              event_start = @event_start,event_end = @event_end,  
+                              event_status = @event_status, 
+                              category_id = @category_id, 
+                              location_id = @location_id, admin_id = @admin_id 
+                              where event_id = @event_id";
                 string query2 = @"update dbo.tblPayment
-set payment_url = @payment_url,
-payment_fee = @payment_fee
-where event_id = @event_id";
+                                set payment_url = @payment_url,
+                                payment_fee = @payment_fee
+                                where event_id = @event_id";
+                string query3 = @"update tblImage set image_url=  @image_url where event_id =@event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -577,9 +576,24 @@ where event_id = @event_id";
                     }
                     using (SqlCommand myCommand = new SqlCommand(query2, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        if (Event.paymentUrl == null || Event.paymentFee == 0)
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", "No fee");
+                        }
+                        else
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        }
                         myCommand.Parameters.AddWithValue("@payment_fee", Event.paymentFee);
-                            myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                    }
+
+                    using (SqlCommand myCommand = new SqlCommand(query3, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@image_url", Event.imageUrl);
+                        myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
