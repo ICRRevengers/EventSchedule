@@ -148,7 +148,7 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPost("add-user-join-event")]
-        public IActionResult Post(AddUserJoinEvent EventParticipated, bool paymentStatus, bool userStatus)
+        public IActionResult Post(AddUserJoinEvent EventParticipated)
         {
             try
             {
