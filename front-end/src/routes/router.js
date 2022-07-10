@@ -1,6 +1,6 @@
 import Error from '../pages/error/Error';
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import HeaderFooter from '../components/layout/defaultLayout/header-footer/HeaderFooter';
 import AdminLayout from '../components/layout/adminLayout';
 import PublicRoute from './PublicRoute';
@@ -15,6 +15,12 @@ const publicRoutes = [
         path: '/login',
         component: lazy(() => import('../pages/login/Login')),
         name: 'login',
+        layout: false,
+    },
+    {
+        path: '/error',
+        component: lazy(() => import('../pages/error/Error')),
+        name: 'error',
         layout: false,
     },
 ];
@@ -198,10 +204,11 @@ const Routes = (
                                         />
                                     ),
                             )}
-                            <Route path="/*" component={<Error />} />
+                             <Redirect to="/error" />
                         </Switch>
                     </Suspense>
                 </AdminLayout>
+                <Route path="/*" component={Error} />
             </Route>
             <Route>
                 <HeaderFooter>
@@ -237,7 +244,7 @@ const Routes = (
                                         />
                                     ),
                             )}
-                            <Route path="/*" component={<Error />} />
+                             <Redirect to="/error" />
                         </Switch>
                     </Suspense>
                 </HeaderFooter>

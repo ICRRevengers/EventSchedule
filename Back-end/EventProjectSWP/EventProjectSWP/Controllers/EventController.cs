@@ -519,7 +519,7 @@ values(@payment_url,@payment_fee,@event_id)";
             {
                 return BadRequest(new Response<string>(e.Message));
             }
-            
+           
         }
 
         [HttpPut("update-event")]
@@ -855,6 +855,73 @@ where event_id = @event_id";
                 return true;
             }
             return false;
+        }
+
+        [HttpGet("Get-Location-Open")]
+        public IActionResult GetLocationOpen()
+        {
+            try
+            {
+                string query = @"select location_id, location_detail ,location_status from tblLocation 
+                                 where location_status = 'open' or location_status = 'Open'";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+        }
+
+        [HttpGet("get-category-list")]
+        public IActionResult GetCategorylist()
+        {
+            try
+            {
+                string query = @"select category_id, category_name from tblCategory ";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
         }
 
     }

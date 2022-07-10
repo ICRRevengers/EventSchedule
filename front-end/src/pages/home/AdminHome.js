@@ -35,6 +35,7 @@ const AdminHome = () => {
         getEvents()
             .then((resposne) => {
                 const data = resposne.data.data;
+                console.log(data);
                 setEvents(data);
             })
             .catch(() => {
@@ -64,7 +65,7 @@ const AdminHome = () => {
                     padding={{ xs: 2, md: 5 }}
                     columns={{ xs: 3, sm: 12 }}
                 >
-                    <Grid item xs={3} padding={{ sm: 2 }} >
+                    <Grid item xs={3} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
@@ -116,10 +117,10 @@ const AdminHome = () => {
                         <Grid item xs={2} sm={4} md={4} key={event?.event_id}>
                             <Card>
                                 <CardMedia
-                                    component="img"
+                                    component="image"
                                     height="140"
-                                    image={event?.img_url}
-                                    alt="green iguana"
+                                    src={event?.image_url}
+                                    alt={event.event_name}
                                 />
                                 <CardContent>
                                     <Typography
@@ -133,12 +134,11 @@ const AdminHome = () => {
                                         variant="body2"
                                         color="text.secondary"
                                     >
-                                        {event.event_timeline}
+                                        {event.event_start} - {event.event_end}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Share</Button>
-                                    <Button size="small">More detail</Button>
+                                    <Button size="small">Chi tiết</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
