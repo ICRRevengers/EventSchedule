@@ -31,7 +31,7 @@ const EventDetailHeader = (props) => {
     const handleClose = () => setOpenPopup(false);
 
     const joinHandler = () => {
-        if (item.payment_fee === 0) {
+        if (item.payment_fee === null) {
             setOpenPopup(true);
         } else {
             history.push(`/user/paymentpage/${item?.event_id}`);
@@ -132,7 +132,7 @@ const EventDetailHeader = (props) => {
                                         variant="h5"
                                         sx={{ fontWeight: 'normal' }}
                                     >
-                                        Giá vé: {item?.payment_fee === 0 ? "Free" : item?.payment_fee + " ₫"}
+                                        Giá vé: {item?.payment_fee === null ? "Free" : item?.payment_fee + " ₫"}
                                     </Typography>
                                 </Grid>
                             </Grid>

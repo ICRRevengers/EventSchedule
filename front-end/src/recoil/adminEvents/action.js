@@ -1,4 +1,4 @@
-import { get, remove, post } from '../../utils/ApiCaller';
+import { get, remove, post, put } from '../../utils/ApiCaller';
 
 const useAdminEvents = () => {
     const getEvents = () => get({ endpoint: '/api/Event/get-event-list' })
@@ -35,12 +35,24 @@ const useAdminEvents = () => {
                 adminID: 1
               }
         })
+
+    const updatePayment = (status, userId, eventId) =>
+        put({
+            endpoint: "/api/Payment/update-payment",
+            params:{
+                status: status,
+                userId: userId,
+                eventId: eventId
+            },
+        });
+
     return {
         getEvents,
         getStudentsFromEvent,
         deleteEvent,
         searchEvent,
-        createEvent
+        createEvent,
+        updatePayment
     };
 };
 export default useAdminEvents;

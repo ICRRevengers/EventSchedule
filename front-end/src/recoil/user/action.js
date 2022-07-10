@@ -10,15 +10,17 @@ const useUserEvents = () => {
             endpoint: `/api/Event/get-event-by-id?id=${id}`,
         });
   
-    const joinInEvent = (eventID, userID, dateParticipated,paymentStatus, usersStatus) =>
+    const joinInEvent = (eventID, userID, data, paymentStatus, usersStatus) =>
         post({
             endpoint: "/api/EventParticipated/add-user-join-event",
+            params:{
+                paymentStatus: paymentStatus,
+                userStatus: usersStatus
+            },
             body: {
                 eventID: eventID,
                 userID: userID,
-                dateParticipated: dateParticipated,
-                paymentStatus: paymentStatus,
-                users_status: usersStatus,
+                dateParticipated: data,
             }
         })
   
