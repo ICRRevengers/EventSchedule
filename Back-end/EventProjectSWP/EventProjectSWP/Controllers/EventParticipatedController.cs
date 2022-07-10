@@ -148,7 +148,7 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPost("add-user-join-event")]
-        public IActionResult Post(AddUserJoinEvent EventParticipated, bool paymentStatus, bool userStatus)
+        public IActionResult Post(AddUserJoinEvent EventParticipated)
         {
             try
             {
@@ -163,8 +163,8 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
                         myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
                         myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
-                        myCommand.Parameters.AddWithValue("@payment_status", paymentStatus);
-                        myCommand.Parameters.AddWithValue("@users_status", userStatus);
+                        myCommand.Parameters.AddWithValue("@payment_status",EventParticipated.payment_status);
+                        myCommand.Parameters.AddWithValue("@users_status", EventParticipated.users_status);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
