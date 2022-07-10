@@ -9,6 +9,11 @@ namespace EventProjectSWP.Models
         public DateTime dateParticipated { get; set; }
         public bool paymentStatus { get; set; }
         public bool users_status { get; set; }
+         public EventParticipated()
+        {
+            paymentStatus = false;
+            users_status = false;
+        }
 
     }
 }
