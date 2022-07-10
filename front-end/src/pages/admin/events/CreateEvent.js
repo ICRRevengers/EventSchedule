@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
 import {
     FormControl,
@@ -14,22 +14,31 @@ import {
 } from '@mui/material';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
+import { useRecoilValue } from 'recoil';
+import authAtom from '../../../recoil/auth/atom';
 
 const Create = () => {
-    const today = new Date(),
-        date =
-            today.getFullYear() +
-            '-' +
-            (today.getMonth() + 1) +
-            '-' +
-            today.getDate();
 
+    const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
     const [eventStart, setEventStart] = useState('2022-01-01T10:30');
     const [eventEnd, setEventEnd] = useState('2022-01-01T10:30');
     const [eventStatus, setEventStatus] = useState(false);
-    const { createEvent } = useAdminEvents();
+    const [categoryID, setCategoryID] = useState('');
+    const [locationID, setLocationID] = useState('');
+    const [paymentFee, setFee] = useState('0');
+    const [paymentUrl, setPaymentUrl] = useState('');
+
+    const {
+        getCategories,
+        getLocations,
+        createEventWithPayment,
+        createEventWithoutPayment,
+    } = useAdminEvents();
+
+    const [locations, setLocation] = useState([]);
+    const [categories, setCategory] = useState([]);
 
     const showSackbar = useSnackbar();
 
@@ -53,21 +62,98 @@ const Create = () => {
         setEventStatus(event.target.value);
     };
 
+    const locationHandle = (event) => {
+        setLocationID(event.target.value);
+    };
+
+    const categoryHandle = (event) => {
+        setCategoryID(event.target.value);
+    };
+
+    const FeeHandle = (event) => {
+        setFee(event.target.value);
+    };
+
+    const paymentUrlHandle = (event) => {
+        setPaymentUrl(event.target.value);
+    };
+
     function createNew() {
-        createEvent(name, content, eventStart, eventEnd, eventStatus)
-            .then((resposne) => {
-                showSackbar({
-                    severity: 'error',
-                    children: resposne.data,
-                });
-            })
-            .catch((error) => {
-                showSackbar({
-                    severity: 'error',
-                    children: 'Something went wrong, please try again later.',
-                });
-            });
+        return paymentUrl === null
+            ? (createEventWithoutPayment(
+                  name,
+                  content,
+                  eventStart,
+                  eventEnd,
+                  eventStatus,
+                  categoryID,
+                  locationID,
+                  auth.userId,
+                  paymentFee,
+              )
+                  .then((resposne) => {
+                      showSackbar({
+                          severity: 'success',
+                          children: resposne.data,
+                      });
+                  })
+                  .catch((error) => {
+                      showSackbar({
+                          severity: 'error',
+                          children:
+                              'Something went wrong, please try again later.',
+                      });
+                  }))
+                
+            : (createEventWithPayment(
+                  name,
+                  content,
+                  eventStart,
+                  eventEnd,
+                  eventStatus,
+                  categoryID,
+                  locationID,
+                  auth.userId,
+                  paymentUrl,
+                  paymentFee,
+              )
+                  .then((resposne) => {
+                      showSackbar({
+                          severity: 'success',
+                          children: resposne.data,
+                      });
+                  })
+                  .catch((error) => {
+                      showSackbar({
+                          severity: 'error',
+                          children:
+                              'Something went wrong, please try again later.',
+                      });
+                  }))
     }
+
+    function getLocationlist() {
+        return getLocations().then((resposne) => {
+            const data = resposne.data.data;
+            setLocation(data);
+        });
+    }
+
+    function getCategorylist() {
+        return getCategories().then((resposne) => {
+            const data = resposne.data.data;
+            setCategory(data);
+        });
+    }
+
+    useEffect(() => {
+        Promise.all([getLocationlist(), getCategorylist()]).catch(() => {
+            showSackbar({
+                severity: 'error',
+                children: 'Something went wrong, please try again later.',
+            });
+        });
+    }, []);
 
     return (
         <div className="flex">
@@ -129,21 +215,47 @@ const Create = () => {
                                 name="eventstatus"
                                 onChange={eventStatusHandle}
                                 value={eventStatus}
+                                required
                             >
                                 <MenuItem value="true">Online</MenuItem>
                                 <MenuItem value="false">Offline</MenuItem>
                             </Select>
                         </FormControl>
+
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Địa điểm tổ chức</InputLabel>
-                            <Select displayEmpty name="location">
-                                <MenuItem value="HTA">Hội trường A</MenuItem>
-                                <MenuItem value="advance">Advance</MenuItem>
-                                <MenuItem value="enterprise">
-                                    Enterprise
-                                </MenuItem>
+                            <Select
+                                displayEmpty
+                                name="location"
+                                onChange={locationHandle}
+                                value={locationID}
+                                required
+                            >
+                                {locations?.map((location) => (
+                                    <MenuItem value={location.location_id}>
+                                        {location.location_detail}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
+
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Thể loại</InputLabel>
+                            <Select
+                                displayEmpty
+                                name="category"
+                                onChange={categoryHandle}
+                                value={categoryID}
+                                required
+                            >
+                                {categories?.map((category) => (
+                                    <MenuItem value={category.category_id}>
+                                        {category.category_name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
                         <FormControl fullWidth margin="normal">
                             <TextareaAutosize
                                 name="eventcontent"
@@ -156,9 +268,32 @@ const Create = () => {
                             />
                         </FormControl>
                         <FormControl fullWidth margin="normal">
-                            <InputLabel>Link thanh toán (momo)</InputLabel>
-                            <Input name="paymenturl" fullWidth />
+                            <InputLabel>Chi phí tham gia sự kiện </InputLabel>
+                            <Input
+                                name="paymentfee"
+                                type="number"
+                                value={paymentFee}
+                                onChange={FeeHandle}
+                                required
+                                fullWidth
+                            />
                         </FormControl>
+                        {paymentFee !== 0 ? (
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Link thanh toán (momo)</InputLabel>
+                                <Input
+                                    name="paymenturl"
+                                    type="url"
+                                    defaultValue={paymentUrl}
+                                    onChange={paymentUrlHandle}
+                                    required
+                                    fullWidth
+                                />
+                            </FormControl>
+                        ) : (
+                            <></>
+                        )}
+
                         <FormControl fullWidth margin="normal">
                             <Input name="eventimage1" type="file" />
                             <Input name="eventimage2" type="file" />
@@ -173,7 +308,7 @@ const Create = () => {
                                 type="submit"
                                 onClick={createNew}
                             >
-                                Đăng bài
+                                Đăng sự kiện
                             </Button>
                         </FormControl>
                     </Paper>

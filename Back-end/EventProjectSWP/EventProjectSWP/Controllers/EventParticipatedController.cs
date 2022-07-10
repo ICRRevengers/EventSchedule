@@ -64,7 +64,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id
+                string query = @"select U.users_id, date_participated, E.event_name, E.event_id
                              from tblEventParticipated EP, tblUser U, tblEvent E
                              where Ep.users_id = U.users_id and E.event_id = EP.event_id and U.users_id =  @users_id";
                 DataTable table = new DataTable();
@@ -92,10 +92,6 @@ namespace EventProjectSWP.Controllers
                             date_participated = table.Rows[i]["date_participated"].ToString(),
                             event_id = table.Rows[i]["event_id"].ToString(),
                             event_name = table.Rows[i]["event_name"].ToString(),
-                            users_address = table.Rows[i]["users_address"].ToString(),
-                            users_email = table.Rows[i]["users_email"].ToString(),
-                            users_name = table.Rows[i]["users_name"].ToString(),
-                            users_phone = table.Rows[i]["users_phone"].ToString(),
                             users_id = Convert.ToInt32(table.Rows[0]["users_id"]),
                             is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
                         });
@@ -150,11 +146,11 @@ namespace EventProjectSWP.Controllers
 
 
         [HttpPost("add-user-join-event")]
-        public IActionResult Post(EventParticipated EventParticipated)
+        public IActionResult Post(AddUserJoinEvent EventParticipated, bool paymentStatus, bool userStatus)
         {
             try
             {
-                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";        
+                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated, payment_status, users_status) values(@event_id,@users_id,@date_participated, @payment_status, @users_status)";        
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -165,6 +161,8 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
                         myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
                         myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
+                        myCommand.Parameters.AddWithValue("@payment_status", paymentStatus);
+                        myCommand.Parameters.AddWithValue("@users_status", userStatus);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
