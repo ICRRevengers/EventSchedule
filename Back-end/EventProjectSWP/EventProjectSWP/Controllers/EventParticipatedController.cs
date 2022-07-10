@@ -91,7 +91,7 @@ namespace EventProjectSWP.Controllers
                         {
                             date_participated = table.Rows[i]["date_participated"].ToString(),
                             event_id = table.Rows[i]["event_id"].ToString(),
-                            event_name = table.Rows[i]["event_name"].ToString()
+                            event_name = table.Rows[i]["event_name"].ToString(),
                             users_id = Convert.ToInt32(table.Rows[0]["users_id"]),
                             is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
                         });
