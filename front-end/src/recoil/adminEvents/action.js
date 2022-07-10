@@ -78,7 +78,7 @@ const useAdminEvents = () => {
         getLocations,
         getCategories,
         createEventWithPayment,
-        createEventWithoutPayment
+        createEventWithoutPayment,
         updatePayment
     };
 };
