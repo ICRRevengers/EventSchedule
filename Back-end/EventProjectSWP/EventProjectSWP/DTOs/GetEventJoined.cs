@@ -11,5 +11,7 @@
         public string event_name { get; set; }
         public string event_id { get; set; }
         public bool is_feedback { get; set; }
+        public bool payment_status { get; set; }
+        public bool users_status { get; set; }
     }
 }

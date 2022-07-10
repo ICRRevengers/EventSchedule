@@ -35,6 +35,7 @@ const AdminHome = () => {
         getEvents()
             .then((resposne) => {
                 const data = resposne.data.data;
+                console.log(data);
                 setEvents(data);
             })
             .catch(() => {
@@ -118,7 +119,7 @@ const AdminHome = () => {
                                 <CardMedia
                                     component="image"
                                     height="140"
-                                    src={event?.img_url}
+                                    src={event?.image_url}
                                     alt={event.event_name}
                                 />
                                 <CardContent>

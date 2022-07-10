@@ -8,25 +8,24 @@ import {
     Typography,
     Box,
     Grid,
-    Paper,
     FormControl,
     Input,
     Select,
     MenuItem,
-    experimentalStyled as styled,
-} from '@mui/material/';
+    // experimentalStyled as styled,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAdminEvents } from '../../recoil/adminEvents';
 import { useSnackbar } from '../../HOCs';
 import { Link } from 'react-router-dom';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
+// const Item = styled(Paper)(({ theme }) => ({
+//     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//     ...theme.typography.body2,
+//     padding: theme.spacing(2),
+//     textAlign: 'center',
+//     color: theme.palette.text.secondary,
+// }));
 
 const AdminHome = () => {
     const [events, setEvents] = useState([]);
@@ -36,6 +35,7 @@ const AdminHome = () => {
         getEvents()
             .then((resposne) => {
                 const data = resposne.data.data;
+                console.log(data);
                 setEvents(data);
             })
             .catch(() => {
@@ -44,18 +44,19 @@ const AdminHome = () => {
                     children: 'Something went wrong, please try again later.',
                 });
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [values, setValues] = useState();
+    // const [values, setValues] = useState();
 
     const handleChange = (event) => {
         this.setState({ value: event.target.value });
     };
 
-    const handleSubmit = (event) => {
-        alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
-    };
+    // const handleSubmit = (event) => {
+    //     alert('A name was submitted: ' + this.state.value);
+    //     event.preventDefault();
+    // };
 
     return (
         <>
@@ -113,7 +114,7 @@ const AdminHome = () => {
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image={event?.img_url}
+                                    image={event?.image_url}
                                     alt={event.event_name}
                                 />
                                 <CardContent>
@@ -135,9 +136,7 @@ const AdminHome = () => {
                                     <Link
                                         to={`/user/eventdetail/${event.event_id}`}
                                     >
-                                        <Button size="small">
-                                            Chi tiết
-                                        </Button>
+                                        <Button size="small">Chi tiết</Button>
                                     </Link>
                                 </CardActions>
                             </Card>
