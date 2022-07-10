@@ -576,9 +576,16 @@ Where E.event_id = I.event_id ";
                     }
                     using (SqlCommand myCommand = new SqlCommand(query2, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        if (Event.paymentUrl == null || Event.paymentFee == 0)
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", "No fee");
+                        }
+                        else
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        }
                         myCommand.Parameters.AddWithValue("@payment_fee", Event.paymentFee);
-                            myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                     }
