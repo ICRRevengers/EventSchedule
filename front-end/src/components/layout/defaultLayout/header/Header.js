@@ -8,6 +8,7 @@ import { useRecoilValue } from 'recoil';
 import useAuthActions from '../../../../recoil/auth/action';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
+import { Typography } from '@mui/material';
 
 const pages = [
     {
@@ -73,7 +74,7 @@ const Header = ({ children }) => {
                             {page.title}
                         </Link>
                     ))}
-                    <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
+                    <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end" style={{alignItems: 'center'}}>
                         {auth.email ? (
                             <>
 
@@ -100,12 +101,13 @@ const Header = ({ children }) => {
                                         Quản lý sự kiện
                                     </Link>
                                 )}
-                                <Link
+                                <Typography
                                     onClick={logoutHandlder}
                                     className="md:ml-[25px] my-[10px]"
+                                    sx={{ml: 2.5}}
                                 >
                                     <LogoutIcon /> Đăng xuất
-                                </Link>
+                                </Typography>
                             </>
                         ) : (
                             <Link

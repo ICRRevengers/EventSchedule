@@ -44,7 +44,7 @@ const AdminStudentProfile = () => {
     }, []);
 
     const joinEvent = () => {
-        joinInEvent(id, auth.userId, date)
+        joinInEvent(id, auth.userId, date, false, false)
         .then((resposne) => {
             showSackbar({
                 severity: 'success',

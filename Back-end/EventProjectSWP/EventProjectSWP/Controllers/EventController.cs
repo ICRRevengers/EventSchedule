@@ -1,5 +1,6 @@
 ﻿using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
+using EventProjectSWP.Services;
 using EventProjectSWP.Settings;
 using Firebase.Auth;
 using Firebase.Storage;
@@ -373,28 +374,11 @@ Where E.event_id = I.event_id ";
         [HttpPost("add-event")]
         public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, string adminID, string paymentUrl, int paymentFee)
         {
-            Dictionary<string, string> list = new Dictionary<string, string>();
-            List<string> errorlist = new List<string>();
-            list.Add("eventName", eventName);list.Add("eventCotent", eventCotent);list.Add("categoryID", categoryID);list.Add("locationID", locationID);list.Add("adminID", adminID);
-            
-            foreach (var checkNul in list)
+            CheckEvent CheckEvent = new CheckEvent();
+            List<string> errorList = CheckEvent.checkAddEventNull(eventName, eventCotent, eventStart, eventEnd, categoryID, locationID, adminID);
+            if (errorList.Count > 0)
             {
-                if(checkNul.Value == null)
-                {
-                    errorlist.Add(checkNul.Key + " is empty");
-                }
-            }
-            if (eventStart ==  DateTime.MinValue)
-            {
-                errorlist.Add(nameof(eventStart) + " is empty");
-            }
-            if (eventEnd == DateTime.MinValue)
-            {
-                errorlist.Add(nameof(eventEnd) + " is empty");
-            }
-            if(errorlist.Count > 0)
-            {
-                return BadRequest(new Response<List<string>>(errorlist));
+                return BadRequest(new Response<List<string>>(errorList));
             }
             string imgname;
             Boolean check;
@@ -431,7 +415,7 @@ values(@payment_url,@payment_fee,@event_id)";
                     {
                         if(paymentUrl == null || paymentFee == 0)
                         {
-                            myCommand.Parameters.AddWithValue("@payment_url", "No payment");
+                            myCommand.Parameters.AddWithValue("@payment_url", "No fee");
                         }
                         else
                         {
