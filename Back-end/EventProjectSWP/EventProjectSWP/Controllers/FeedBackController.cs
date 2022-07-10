@@ -47,7 +47,7 @@ namespace EventProjectSWP.Controllers
                 {
                     return Ok(new Response<DataTable>(table));
                 }
-                return BadRequest(new Response<string>("No Data"));
+                return Ok(new Response<string>(null, "No Data"));
             }
             catch (Exception ex)
             {
