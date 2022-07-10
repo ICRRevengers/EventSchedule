@@ -372,14 +372,25 @@ Where E.event_id = I.event_id ";
         }
 
         [HttpPost("add-event")]
-        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, string adminID, string paymentUrl, int paymentFee)
+        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile, AddEvent eventcs)
         {
+            /*
             CheckEvent CheckEvent = new CheckEvent();
-            List<string> errorList = CheckEvent.checkAddEventNull(eventName, eventCotent, eventStart, eventEnd, categoryID, locationID, adminID);
-            if (errorList.Count > 0)
-            {
-                return BadRequest(new Response<List<string>>(errorList));
-            }
+           List<string> errorList = CheckEvent.checkAddEventNull(eventName, eventCotent, eventStart, eventEnd, categoryID, locationID, adminID);
+           if (errorList.Count > 0)
+           {
+               return BadRequest(new Response<List<string>>(errorList));
+           }
+           string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, string adminID, string paymentUrl, int paymentFee
+             myCommand.Parameters.AddWithValue("@event_name", eventName);
+                        myCommand.Parameters.AddWithValue("@event_content", eventCotent);
+                        myCommand.Parameters.AddWithValue("@event_start", eventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", eventEnd);
+                        myCommand.Parameters.AddWithValue("@event_status", eventStatus);
+                        myCommand.Parameters.AddWithValue("@category_id", categoryID);
+                        myCommand.Parameters.AddWithValue("@location_id", locationID);
+                        myCommand.Parameters.AddWithValue("@admin_id ", adminID);
+           */
             string imgname;
             Boolean check;
             FileStream ms;
@@ -398,14 +409,14 @@ values(@payment_url,@payment_fee,@event_id)";
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(queryAddEvent, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_name", eventName);
-                        myCommand.Parameters.AddWithValue("@event_content", eventCotent);
-                        myCommand.Parameters.AddWithValue("@event_start", eventStart);
-                        myCommand.Parameters.AddWithValue("@event_end", eventEnd);
-                        myCommand.Parameters.AddWithValue("@event_status", eventStatus);
-                        myCommand.Parameters.AddWithValue("@category_id", categoryID);
-                        myCommand.Parameters.AddWithValue("@location_id", locationID);
-                        myCommand.Parameters.AddWithValue("@admin_id ", adminID);
+                        myCommand.Parameters.AddWithValue("@event_name", eventcs.eventName);
+                        myCommand.Parameters.AddWithValue("@event_content", eventcs.eventContent);
+                        myCommand.Parameters.AddWithValue("@event_start", eventcs.eventStart);
+                        myCommand.Parameters.AddWithValue("@event_end", eventcs.eventEnd);
+                        myCommand.Parameters.AddWithValue("@event_status", eventcs.eventStatus);
+                        myCommand.Parameters.AddWithValue("@category_id", eventcs.categoryID);
+                        myCommand.Parameters.AddWithValue("@location_id", eventcs.locationID);
+                        myCommand.Parameters.AddWithValue("@admin_id ", eventcs.adminID);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -413,15 +424,15 @@ values(@payment_url,@payment_fee,@event_id)";
                     }
                     using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
                     {
-                        if(paymentUrl == null || paymentFee == 0)
+                        if(eventcs.paymentUrl == null || eventcs.paymentFee == 0)
                         {
                             myCommand.Parameters.AddWithValue("@payment_url", "No fee");
                         }
                         else
                         {
-                            myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
+                            myCommand.Parameters.AddWithValue("@payment_url", eventcs.paymentUrl);
                         }
-                        myCommand.Parameters.AddWithValue("@payment_fee", paymentFee);
+                        myCommand.Parameters.AddWithValue("@payment_fee", eventcs.paymentFee);
                         foreach (DataRow data in table.Rows)
                         {
                             
