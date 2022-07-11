@@ -34,20 +34,28 @@ const ViewListFeedback = ({ open, onClose, getFeedbacksOfEvent, eventId }) => {
         setIsLoading(true);
         getFeedbacksOfEvent(eventId)
             .then((response) => {
-                const feedbacksData = response.data.data;
-                const rating =
-                    feedbacksData.length > 0
-                        ? feedbacksData.reduce(
-                              (total, ratingValue) => total + ratingValue.rating,
-                              0,
-                          ) / feedbacksData.length
-                        : 0;
-                setFeedbacks(feedbacksData);
-                setAverageRating(rating.toFixed(2));
-                setFirstLoading(false);
-                setIsLoading(false);
+                console.log(response.data.data === null);
+                if (response.data.data !== null) {
+                    const feedbacksData = response.data.data;
+                    const rating =
+                        feedbacksData.length > 0
+                            ? feedbacksData.reduce(
+                                  (total, ratingValue) =>
+                                      total + ratingValue.rating,
+                                  0,
+                              ) / feedbacksData.length
+                            : 0;
+                    setFeedbacks(feedbacksData);
+                    setAverageRating(rating.toFixed(2));
+                    setFirstLoading(false);
+                    setIsLoading(false);
+                }else{
+                    setFirstLoading(false);
+                    setIsLoading(false);
+                }
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error);
                 showSnackBar({
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
@@ -57,7 +65,7 @@ const ViewListFeedback = ({ open, onClose, getFeedbacksOfEvent, eventId }) => {
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+console.log(feedbacks)
     return (
         <Dialog scroll={'paper'} open={open} onBackdropClick={onClose}>
             <DialogTitle>View Feedbacks</DialogTitle>

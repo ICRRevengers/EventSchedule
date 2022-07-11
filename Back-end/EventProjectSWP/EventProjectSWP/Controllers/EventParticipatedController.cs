@@ -59,8 +59,7 @@ namespace EventProjectSWP.Controllers
         }
 
         [HttpGet("get-all-event-i-joined")]
-        // Lấy tất cả event mà 1 user tham gia (users_status để check xem user có tham gia event chưa để dc feed back)
-        // isFeedback để check xem người dùng đã feedback chưa
+        // Lấy tất cả event mà 1 user tham gia 
         public IActionResult GetUserEvent(string id)
         {
             try
@@ -93,10 +92,14 @@ namespace EventProjectSWP.Controllers
                             date_participated = table.Rows[i]["date_participated"].ToString(),
                             event_id = table.Rows[i]["event_id"].ToString(),
                             event_name = table.Rows[i]["event_name"].ToString(),
+                            users_address = table.Rows[i]["users_address"].ToString(),
+                            users_email = table.Rows[i]["users_email"].ToString(),
+                            users_name = table.Rows[i]["users_name"].ToString(),
+                            users_phone = table.Rows[i]["users_phone"].ToString(),
                             users_id = Convert.ToInt32(table.Rows[0]["users_id"]),
+                            is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
                             payment_status = bool.Parse(table.Rows[i]["payment_status"].ToString()),
                             users_status = bool.Parse(table.Rows[i]["users_status"].ToString()),
-                            is_feedback = CheckFeedBack(Convert.ToInt32(table.Rows[i]["event_id"]), Convert.ToInt32(table.Rows[i]["users_id"])),
                         });
                     }
                     return Ok(new Response<List<GetEventJoined>>(listEventJoined));
@@ -107,7 +110,6 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>(ex.Message));
             }
-           
         }
 
         [HttpGet("get-user-list-from-an-event")]
@@ -144,16 +146,15 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>(ex.Message));
             }
-      
         }
 
 
         [HttpPost("add-user-join-event")]
-        public IActionResult Post(AddUserJoinEvent EventParticipated, bool paymentStatus, bool userStatus)
+        public IActionResult Post(AddUserJoinEvent EventParticipated)
         {
             try
             {
-                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated) values(@event_id,@users_id,@date_participated)";        
+                string query = @"insert into tblEventParticipated(event_id,users_id,date_participated, payment_status, users_status) values(@event_id,@users_id,@date_participated, @payment_status, @users_status)";        
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -164,6 +165,8 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@event_id", EventParticipated.eventID);
                         myCommand.Parameters.AddWithValue("@users_id", EventParticipated.userID);
                         myCommand.Parameters.AddWithValue("@date_participated", EventParticipated.dateParticipated);
+                        myCommand.Parameters.AddWithValue("@payment_status",EventParticipated.payment_status);
+                        myCommand.Parameters.AddWithValue("@users_status", EventParticipated.users_status);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -205,7 +208,6 @@ namespace EventProjectSWP.Controllers
             {
                 return BadRequest(new Response<string>(ex.Message));
             }
-
         }
 
         private bool CheckFeedBack(int eventId, int userId)
@@ -236,5 +238,5 @@ namespace EventProjectSWP.Controllers
             }
             return false;
         }
-    }
+    }   
 }
