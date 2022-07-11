@@ -98,7 +98,7 @@ where Ep.users_id = U.users_id and EP.event_id = @event_id
         }
 
 
-
+        //thêm thông tin người tham gia event vào list người tham gia event(Event participate list)
         [HttpPost("add-user-join-event")]
         public JsonResult Post(EventParticipated EventParticipated)
         {

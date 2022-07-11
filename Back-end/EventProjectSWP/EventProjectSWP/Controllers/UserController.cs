@@ -17,7 +17,7 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-        
+        //Lấy thông tin người dùng
 
         [HttpGet("get-list-user")]
         public JsonResult Get()
@@ -41,7 +41,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-
+        //Thêm mới người dùng
         [HttpPost("add-user")]
         public JsonResult Post(UserInfo user)
         {
@@ -69,7 +69,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
+        //update thông tin người dùng
         [HttpPut("update-user")]
         public JsonResult Put(UserInfo user)
         {
@@ -120,7 +120,7 @@ namespace EventProjectSWP.Controllers
              }
              return new JsonResult("Succeesful");
          }*/
-
+        //tìm người dùng dựa vào id
         [HttpGet("get-user-by-id")]
         public JsonResult GetUserByID(string id)
         {
@@ -146,7 +146,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-
+        //tìm người dùng dựa vào tên
         [HttpGet("get-user-by-name")]
         public JsonResult GetUserByName(string name)
         {

@@ -16,7 +16,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-
+        //update tình trạng thanh toán của user(đã thanh toán-chưa thanh toán)
         [HttpPut("update-payment")]
         public JsonResult Put(bool status, int id, int event_id)
         {
@@ -39,7 +39,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult("Succeesful");
         }
-
+        //lấy thông tin thanh toán
         [HttpGet("get-Payment")]
         public JsonResult Get(int id)
         {

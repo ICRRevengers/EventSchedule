@@ -18,7 +18,7 @@ namespace EventProjectSWP.Controllers
             _configuration = configuration;
         }
 
-
+        //lấy danh sách event 
         [HttpGet("get-event-list")]
         public IActionResult Get()
         {
@@ -48,7 +48,7 @@ namespace EventProjectSWP.Controllers
             }
             return BadRequest(new Response<string>("No Data"));
         }
-
+        //hiển thị các event sắp tới so với thời gian thực
         [HttpGet("show-upcoming-event")]
         public JsonResult Show_upcoming_event()
         {
@@ -76,7 +76,7 @@ namespace EventProjectSWP.Controllers
         }
 
 
-
+        //hiển thị các event đã qua so với thời gian thực
         [HttpGet("show-past-event")]
         public JsonResult Show_past_event()
         {
@@ -103,11 +103,7 @@ namespace EventProjectSWP.Controllers
             return new JsonResult(table);
         }
 
-
-
-
-
-
+        //Thêm mới events
         [HttpPost("add-event")]
         public JsonResult Post(Event Event)
         {
@@ -142,7 +138,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult("Succeesful");
         }
 
-
+        //update thông tin event 
         [HttpPut("update-event")]
         public JsonResult Put(Event Event)
         {
@@ -181,7 +177,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             }
             return new JsonResult("Succeesful");
         }
-
+        //xóa event
         [HttpDelete("delete-event")]
         public JsonResult Delete(string id)
         {
@@ -204,7 +200,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             }
             return new JsonResult("Succeesful");
         }
-
+        //tìm event bằng tên
         [HttpGet("get-event-by-name")]
         public JsonResult GetEventByName(string name)
         {
@@ -228,6 +224,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             }
             return new JsonResult(table);
         }
+        //Tìm event dựa vào 1 mốc thời gian cụ thể
         [HttpGet("get-event-by-timne")]
         public JsonResult GetEventByTime(string start_time, string end_time)
         {
@@ -255,7 +252,7 @@ values (@event_id,@event_name,@event_content,@event_timeline,@created_by,@event_
             return new JsonResult(table);
         }
 
-
+        //Tìm event dựa vào 1 khoảng thời gian từ A đến B
         [HttpGet("get-event-by-timne-specific")]
         public JsonResult GetEventByTimeSpecific(string event_time)
         {

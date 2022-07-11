@@ -17,7 +17,7 @@ namespace EventProjectSWP.Controllers
         {
             this.mailService = mailService;
         }
-
+        //Gửi mail
         [HttpPost("send")]
         public async Task<IActionResult> SendMail([FromForm] MailRequest request)
         {

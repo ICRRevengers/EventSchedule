@@ -59,6 +59,7 @@ namespace EventProjectSWP.Controllers
             return new JsonResult("Succeesful");
         }
         */
+        //Lấy hình ảnh
         [HttpGet("get-image")]
         public JsonResult Get()
         {
@@ -82,7 +83,7 @@ namespace EventProjectSWP.Controllers
 
             return new JsonResult(table);
         }
-
+        //Thêm mới hình ảnh 
         [HttpPost("Add-image")]
         public async Task<JsonResult> Post([FromForm] FileUploadcs objectFile, int eventid)
         {

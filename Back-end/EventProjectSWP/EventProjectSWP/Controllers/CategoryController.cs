@@ -15,7 +15,7 @@ namespace EventProjectSWP.Controllers
         {
             _configuration = configuration;
         }
-
+        //lấy các event bằng category dựa vào categoryid
         [HttpGet("Get-category-by-id")]
         public JsonResult GetCategoryById(string id)
         {
@@ -38,7 +38,7 @@ namespace EventProjectSWP.Controllers
             }
             return new JsonResult(table);
         }
-
+        //lấy các event dựa vào category 
         [HttpGet("Get-category")]
         public JsonResult GetCategory()
         {
