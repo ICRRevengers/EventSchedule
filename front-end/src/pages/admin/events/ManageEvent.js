@@ -3,26 +3,68 @@ import '../../../App.scss';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+    InputLabel,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    TextField,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
 
-const ManagerEvents = () => {
+const ManageEvents = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
-    const { getEvents } = useAdminEvents()
+    const { getEvents, deleteEvent, searchEvent } = useAdminEvents();
+    const [name, setName] = useState('');
+
+    function deleteItem(id) {
+        deleteEvent(id)
+            .then((resposne) => {
+                const deletedArray = events.filter(
+                    (event) => event.event_id !== id,
+                );
+                setEvents(deletedArray);
+                showSackbar({
+                    severity: 'success',
+                    children: resposne.data,
+                });
+            })
+            .catch(() => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
+
+    const eventNameHandler = (event) => {
+        setName(event.target.value);
+    };
+
+    function searchEventlist(name) {
+        searchEvent(name)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
+
     useEffect(() => {
         getEvents()
             .then((resposne) => {
-                const data = resposne.data;
+                const data = resposne.data.data;
                 setEvents(data);
             })
             .catch(() => {
@@ -37,7 +79,28 @@ const ManagerEvents = () => {
         <div className="flex">
             <Sidebar />
             <TableContainer component={Paper} sx={{ maxWidth: 980 }}>
-                <Table sx={{ minWidth: 650 }} aria-label="event list">
+                <InputLabel
+                    sx={{ paddingLeft: 2, paddingTop: 2 }}
+                    className="adminLabel"
+                >
+                    Nhập tên sự kiện cần tìm ở đây ...
+                </InputLabel>
+                <TextField
+                    sx={{ padding: 2 }}
+                    id="filled-basic"
+                    variant="filled"
+                    onChange={eventNameHandler}
+                    onKeyPress={(event) => {
+                        if (event.key === 'Enter') {
+                            searchEventlist(name);
+                        }
+                    }}
+                    fullWidth
+                />
+                <Table
+                    sx={{ minWidth: 650, marginTop: 2 }}
+                    aria-label="event list"
+                >
                     <TableHead>
                         <TableRow>
                             <TableCell>Mã số</TableCell>
@@ -74,12 +137,11 @@ const ManagerEvents = () => {
                                     </Link>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Button
-                                        variant="contained"
-                                        href="/admin/manage/eventdetail"
+                                    <Link
+                                        to={`/admin/manage/eventdetail/${event.event_id}`}
                                     >
-                                        Xem
-                                    </Button>
+                                        <Button variant="contained">Xem</Button>
+                                    </Link>
                                 </TableCell>
                                 <TableCell align="center">
                                     <Link to={`/admin/manage/update`}>
@@ -89,7 +151,14 @@ const ManagerEvents = () => {
                                     </Link>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Button variant="contained">Xóa</Button>
+                                    <Button
+                                        onClick={(e) =>
+                                            deleteItem(event.event_id)
+                                        }
+                                        variant="contained"
+                                    >
+                                        Xóa
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -100,4 +169,4 @@ const ManagerEvents = () => {
     );
 };
 
-export default ManagerEvents;
+export default ManageEvents;

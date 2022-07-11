@@ -22,10 +22,19 @@ namespace EventProjectSWP.Services
             _configuration = configuration;
         }
 
-        public async Task<string> GenerateToken(UserInfo userInfo)
+        public async Task<string> GenerateTokenUser(UserInfo userInfo)
         {
             var signinCredentials = GetSigninCredentials();
-            var claims = await GetClaims(userInfo);
+            var claims = await GetClaimsUser(userInfo);
+            var tokenOptions = GenerateTokenOptions(signinCredentials, claims);
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+
+        public async Task<string> GenerateTokenAdmin(Admin admin)
+        {
+            var signinCredentials = GetSigninCredentials();
+            var claims = await GetClaimsAdmin(admin);
             var tokenOptions = GenerateTokenOptions(signinCredentials, claims);
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
@@ -42,19 +51,19 @@ namespace EventProjectSWP.Services
 
             UserInfo userInfo = new UserInfo
             {
-                Email = email.Value,
-                UserName = name.Value,
+                email = email.Value,
+                userName = name.Value,
             };
 
             return userInfo;
         }
 
-        public JwtSecurityToken DecodeToken(string token)
-        {
-            var parsedToken = token.Replace("Bearer ", string.Empty);
-            var handler = new JwtSecurityTokenHandler();
-            return handler.ReadJwtToken(parsedToken);
-        }
+        //public JwtSecurityToken DecodeToken(string token)
+        //{
+        //    var parsedToken = token.Replace("Bearer ", string.Empty);
+        //    var handler = new JwtSecurityTokenHandler();
+        //    return handler.ReadJwtToken(parsedToken);
+        //}
 
         private SigningCredentials GetSigninCredentials()
         {
@@ -64,15 +73,28 @@ namespace EventProjectSWP.Services
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        private Task<List<Claim>> GetClaims(UserInfo userInfo)
+        private Task<List<Claim>> GetClaimsUser(UserInfo userInfo)
         {
             var claims = new List<Claim>
             {
-                new("email", userInfo.Email),
-                new("name", userInfo.UserName),
+                new("email", userInfo.email),
+                new("name", userInfo.userName),
                 new("role", "user"),
+                new("userId", userInfo.userId.ToString()),
             };
 
+            return Task.FromResult(claims);
+        }
+
+        private Task<List<Claim>> GetClaimsAdmin(Admin admin)
+        {
+            var claims = new List<Claim>
+            {
+                new("email", admin.adminEmail),
+                new("name", admin.adminName),
+                new("role", admin.adminRole),
+                new("userId", admin.adminID.ToString()),
+            };
             return Task.FromResult(claims);
         }
 

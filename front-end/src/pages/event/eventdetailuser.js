@@ -5,63 +5,33 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 // import Paper from "@mui/material";
-import axios from "axios";
 import EventDetailHeader from "./eventdetailheader";
 import EventDetailBottom from "./eventdetailbottom";
+import { useUserEvents } from '../../recoil/user';
+import { useSnackbar } from '../../HOCs';
+
 
 const EventDetailUser = () => {
-    // const { id } = useParams(); // get id job
+    const [eveDetails, setEventDetail] = useState({});
+    const { id } = useParams();
+    const { getDetailFromEvent } = useUserEvents();
+    const showSackbar = useSnackbar();
+    useEffect(() => {
+        getDetailFromEvent(id)
+        .then((resposne) => {
+            const data = resposne.data.data
+            console.log(data);
+            setEventDetail(data[0]);
+        })
+        .catch(() => {
+            showSackbar({
+                severity: 'error',
+                children: 'Something went wrong, please try again later.',
+            });
+        });
+    
+    },[])
 
-    // const [job, setJob] = useState({});
-
-    // console.log("id", id);
-
-    // const [loading, setLoading] = useState(false);
-
-    // const LoadingComponent = () => (
-    //     <Box
-    //         sx={{
-    //             width: "100%",
-    //             height: "100vh",
-    //             display: "flex",
-    //             justifyContent: "center",
-    //             alignItems: "center",
-    //         }}
-    //     >
-    //         <CircularProgress color="success" size={60} />
-
-    //     </Box>
-    // );
-
-
-    // useEffect(() => {
-    //     let isMounted = true;
-    //     const getJob = async () => {
-    //         try {
-
-    //             const response = await axios.get(`/jobs/${id}`);
-
-    //             setLoading(false);
-    //             if (isMounted)
-    //                 setJob(response.data);
-
-    //         } catch (error) {
-    //             console.error(error);
-    //             setLoading(true);
-
-    //             // navigate('/login', { state: { from: location }, replace: true });
-    //         }
-    //     };
-    //     getJob()
-    //     return () => {
-    //         isMounted = false;
-    //     };
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [])
-    // if (loading) {
-    //     return <LoadingComponent />;
-    // }
-    // console.log("Job: ", job);
     return (
         <Box sx={{ m: 20 }}>
             <Container
@@ -71,15 +41,11 @@ const EventDetailUser = () => {
             >
                 <Grid container spacing={3}>
                     <Grid item lg={12} md={12} xs={12}>
-                        {/* <StudentJobDetailHeader item={job} /> */}
-                        <EventDetailHeader />
-
-
+                        <EventDetailHeader item={eveDetails}/>
 
                     </Grid>
                     <Grid item lg={12} md={12} xs={12}>
-                        {/* <StudentJobDetailBottom item={job} /> */}
-                        <EventDetailBottom />
+                        <EventDetailBottom item={eveDetails}/>
                     </Grid>
 
                 </Grid>

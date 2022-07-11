@@ -1,24 +1,45 @@
-import Sidebar from '../../../components/layout/sidebar/Sidebar';
-import { Table } from 'reactstrap';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
-import { useStudentfromEvent } from '../../../recoil/adminEvents'
+import { useUserEvents } from '../../../recoil/user';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    Paper,
+    Button,
+} from '@mui/material';
+import CreateFeedBack from '../feedback/CreateFeedback';
 
 function UserParticipatedList() {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
-    const [students, setStudents] = useState();
-    const { getStudents } = useStudentfromEvent();
+    const [events, setEvents] = useState([]);
+    const { getEventIJoined } = useUserEvents();
+    const [openFeedback, setOpenFeedBack] = useState(false);
+    const [isClickableFeedback, setIsClickableFeedback] = useState(null);
+    const [ableToFeedback, setAbleToFeedback] = useState(false)
+
+    const feedbackOpenHandler = (eventId) => {
+        setOpenFeedBack(true);
+        setIsClickableFeedback(eventId);
+    };
+    const feedbackCloseHandler = () => {
+        setOpenFeedBack(false);
+    };
 
     useEffect(() => {
         setLoading(true);
-        getStudents(id)
+        getEventIJoined(id)
             .then((res) => {
-                const data = res.data
-                setStudents(data);
+                const data = res.data.data;
+                console.log(data);
+                setEvents(data);
                 setTimeout(() => {
                     setLoading(false);
                 }, 500);
@@ -34,37 +55,106 @@ function UserParticipatedList() {
     return loading ? (
         <Loading />
     ) : (
-        <div className="flex">
-            <Sidebar />
-            <Table className="m-[20px] w-[900px]">
-                <thead>
-                    <tr>
-                        <th>MSSV</th>
-                        <th>Tên sinh viên</th>
-                        <th>Ngày đăng kí</th>
-                        <th>Thanh toán</th>
-                        <th>Đã tham gia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {students?.map((student) => {
-                        return (
-                            <tr className="hover:bg-[#f99779]">
-                                <td>{student?.users_id}</td>
-                                <td>asjbdsj</td>
-                                <td>{student.date_participated}</td>
-                                <td>
-                                    <input type="checkbox" value="true" />
-                                </td>
-                                <td>
-                                    <input type="checkbox" value="true" />
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </Table>
-        </div>
+        <React.Fragment>
+            {events.length === 0 ? (
+                <Typography>
+                    <h1> Bạn chưa tham gia sự kiện nào </h1>
+                </Typography>
+            ) : (
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="event list">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="center">
+                                    Tên sự kiện
+                                </TableCell>
+                                <TableCell align="center">
+                                    Tổ chức bởi
+                                </TableCell>
+                                <TableCell align="center">
+                                    Ngày tham gia
+                                </TableCell>
+                                <TableCell align="center">Feedback</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {events?.map((event) => (
+                                <TableRow
+                                    key={event.event_id}
+                                    sx={{
+                                        '&:last-child td, &:last-child th': {
+                                            border: 0,
+                                        },
+                                    }}
+                                >
+                                    <TableCell align="center">
+                                        {event?.event_name}
+                                    </TableCell>
+                                    <TableCell align="center">Hehe</TableCell>
+                                    <TableCell align="center">
+                                        {new Intl.DateTimeFormat('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: '2-digit',
+                                        }).format(
+                                            new Date(
+                                                Date.parse(
+                                                    event.date_participated,
+                                                ),
+                                            ),
+                                        )}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        {(event.event_id ===
+                                            isClickableFeedback &&
+                                            openFeedback) === true ? (
+                                            <Button
+                                                variant="contained"
+                                                onClick={() =>
+                                                    feedbackOpenHandler(
+                                                        event.event_id,
+                                                    )
+                                                }
+                                                disabled={event.is_feedback || ableToFeedback}
+                                                sx={{
+                                                    opacity: 0.5,
+                                                }}
+                                            >
+                                                Feedback
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant="contained"
+                                                onClick={() =>
+                                                    feedbackOpenHandler(
+                                                        event.event_id,
+                                                    )
+                                                }
+                                                sx={{
+                                                    opacity: 1,
+                                                }}
+                                                disabled={event.is_feedback || ableToFeedback}
+                                            >
+                                                Feedback
+                                            </Button>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}
+            {openFeedback && (
+                <CreateFeedBack
+                    open={openFeedback}
+                    onClose={feedbackCloseHandler}
+                    eventId={isClickableFeedback}
+                    userId={id}
+                    setAbleToFeedback={setAbleToFeedback}
+                />
+            )}
+        </React.Fragment>
     );
 }
 

@@ -14,6 +14,7 @@ using EventProjectSWP.Services;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System;
 
 namespace EventProjectSWP.Controllers
 {
@@ -61,29 +62,36 @@ namespace EventProjectSWP.Controllers
                 myCon.Open();
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
-                    myCommand.Parameters.AddWithValue("@users_email", userInfo.Email);
+                    myCommand.Parameters.AddWithValue("@users_email", userInfo.email);
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     if (table.Rows.Count == 0)
                     {
-                        string addUser = @"insert into tblUser (users_id,users_name,users_phone,users_address,users_email) values (@users_id,@users_name,@users_phone,@users_address,@users_email)";
+                        string addUser = @"insert into tblUser (users_name,users_phone,users_address,users_email) values (@users_name,@users_phone,@users_address,@users_email)";
                         using (SqlCommand myCommand1 = new SqlCommand(addUser, myCon))
                         {
-                            myCommand1.Parameters.AddWithValue("@users_id", "");
-                            myCommand1.Parameters.AddWithValue("@users_name", userInfo.UserName);
+                            
+                            myCommand1.Parameters.AddWithValue("@users_name", userInfo.userName);
                             myCommand1.Parameters.AddWithValue("@users_phone", "");
                             myCommand1.Parameters.AddWithValue("@users_address", "");
-                            myCommand1.Parameters.AddWithValue("@users_email", userInfo.Email);
-                            
+                            myCommand1.Parameters.AddWithValue("@users_email", userInfo.email);                            
                             myReader1 = myCommand1.ExecuteReader();
                             myReader1.Close();
                         }
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
                     }
-            myReader.Close();
+                    myReader.Close();
                     myCon.Close();
                 }
             }
-            var accessToken = await _authentication.GenerateToken(userInfo);
+            var user = new UserInfo()
+            {
+                userId = Convert.ToInt32(table.Rows[0]["users_id"]),
+                userName = table.Rows[0]["users_name"].ToString(),
+                email = table.Rows[0]["users_email"].ToString(),
+            };
+            var accessToken = await _authentication.GenerateTokenUser(user);
             return Redirect($"http://localhost:3000/login?token={accessToken}");
         }
     }

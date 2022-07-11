@@ -1,10 +1,15 @@
-﻿namespace EventProjectSWP.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace EventProjectSWP.Models
 {
     public class Video
     {
-        public int VideoId { get; set; }
-        public string VideoUrl { get; set; }
-        public int EventId { get; set; }
-
+        public int videoId { get; set; }
+        public string videoUrl { get; set; }
+        public int eventId { get; set; }
+        public string videoName { get; set; }
     }
 }

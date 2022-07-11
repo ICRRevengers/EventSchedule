@@ -5,11 +5,12 @@ namespace EventProjectSWP.Models
 {
     public class UserInfo
     {
-        public string UserId { get; set; }
-        public string UserName { get; set; }
+        public int userId { get; set; }
+        public string userName { get; set; }
         public int Phone { get; set; }
         public string Address { get; set; }
-        public string Email { get; set; }
+
+        public string email { get; set; }
        // public int user_status { get; set; }
         internal static UserInfo GetUserLoginInfo(ClaimsIdentity identity)
         {
@@ -19,8 +20,8 @@ namespace EventProjectSWP.Models
             }
             return new UserInfo
             {
-                Email = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value,
-                UserName = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value
+                email = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value,
+                userName = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value
             };
 
         }

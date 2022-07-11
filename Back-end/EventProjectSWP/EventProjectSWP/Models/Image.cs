@@ -5,11 +5,10 @@ namespace EventProjectSWP.Models
 {
     public class Image
     {
-        
-        public int ImageId { get; set; }
-        public string ImageUrl { get; set; }
-        public string ImageName { get; set; }
-        public int EventId { get; set; }
+        public int imageId { get; set; }
+        public string imageUrl { get; set; }
+        public string imageName { get; set; }
+        public int eventId { get; set; }
 
     }
 }

@@ -2,7 +2,7 @@
 {
     public class CheckAttendance
     {
-        public string EventID { get; set; }
-        public string UserID { get; set; }
+        public int eventID { get; set; }
+        public int userID { get; set; }
     }
 }

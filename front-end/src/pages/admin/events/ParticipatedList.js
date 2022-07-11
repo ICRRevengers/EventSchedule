@@ -1,11 +1,11 @@
 import Sidebar from '../../../components/layout/sidebar/Sidebar';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import '../../../App.scss';
 import { useParams } from 'react-router-dom';
 import Loading from '../../../components/loading/loading';
-import {Typography } from '@mui/material';
-import {
+import 
+{
+    Typography,
     Table,
     TableBody,
     TableCell,
@@ -15,19 +15,17 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import {FormControlLabel, Switch} from '@mui/material';
+import { useAdminEvents } from '../../../recoil/adminEvents';
 
 function ParticipatedList() {
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [students, setStudents] = useState([]);
-
+    const { getStudentsFromEvent } = useAdminEvents();
 
     useEffect(() => {
         setLoading(true);
-        axios
-            .get(
-                `http://localhost:5000/api/EventParticipated/get-user-list-from-an-event?id=${id}`,
-            )
+        getStudentsFromEvent(id)
             .then((res) => {
                 const data = res.data
                 setStudents(data);
