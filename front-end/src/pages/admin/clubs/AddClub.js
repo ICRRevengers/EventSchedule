@@ -114,6 +114,7 @@ const AddClub = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Password *</InputLabel>
                             <Input
+                                type='password'
                                 onChange={passHandle}
                                 value={password}
                                 fullWidth

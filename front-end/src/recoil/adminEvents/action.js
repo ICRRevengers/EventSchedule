@@ -28,7 +28,7 @@ const useAdminEvents = () => {
             endpoint: `/api/Event/get-category-list`,
         });
 
-    const createEventWithPayment = (
+    const createEvent = (
         name,
         content,
         eventStart,
@@ -41,32 +41,30 @@ const useAdminEvents = () => {
         paymentFee,
     ) =>
         post({
-            endpoint: `/api/Event/add-event?eventName=${name}&eventContent=${content}&eventStart=${eventStart}&eventEnd=${eventEnd}&eventStatus=${status}&categoryID=${categoryID}&locationID=${locationID}&adminID=${id}&paymentUrl=${paymentUrl}&paymentFee=${paymentFee}`,
-            body: {},
+            endpoint: `/api/Event/add-event`,
+            body: {
+                eventName: name,
+                eventContent: content,
+                eventStart: eventStart,
+                eventEnd: eventEnd,
+                eventStatus: status,
+                categoryID: categoryID,
+                locationID: locationID,
+                adminID: id,
+                paymentUrl: paymentUrl,
+                paymentFee: paymentFee,
+                imageUrl:
+                    'https://firebasestorage.googleapis.com/v0/b/event-schedule-system-4284a.appspot.com/o/chatlieudangian.jpg?alt=media&token=01cf7a8b-6a50-4977-98f1-dc7ffeaf5d27',
+            },
         });
 
-    const createEventWithoutPayment = (
-        name,
-        content,
-        eventStart,
-        eventEnd,
-        status,
-        categoryID,
-        locationID,
-        id,
-        paymentFee,
-    ) =>
-        post({
-            endpoint: `/api/Event/add-event?eventName=${name}&eventContent=${content}&eventStart=${eventStart}&eventEnd=${eventEnd}&eventStatus=${status}&categoryID=${categoryID}&locationID=${locationID}&adminID=${id}&paymentFee=${paymentFee}`,
-            body: {},
-        });
     const updatePayment = (status, userId, eventId) =>
         put({
-            endpoint: "/api/Payment/update-payment",
-            params:{
+            endpoint: '/api/Payment/update-payment',
+            params: {
                 status: status,
                 userId: userId,
-                eventId: eventId
+                eventId: eventId,
             },
         });
 
@@ -77,9 +75,8 @@ const useAdminEvents = () => {
         searchEvent,
         getLocations,
         getCategories,
-        createEventWithPayment,
-        createEventWithoutPayment,
-        updatePayment
+        createEvent,
+        updatePayment,
     };
 };
 export default useAdminEvents;
