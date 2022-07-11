@@ -24,11 +24,12 @@ namespace EventProjectSWP.Controllers
     {
         
         private readonly IConfiguration _configuration;
+        private readonly IAuthentication _authentication;
 
-        public AuthenticationController( IConfiguration configuration)
-        {
-           
+        public AuthenticationController(IConfiguration configuration, IAuthentication authentication)
+        {    
             _configuration = configuration;
+            _authentication = authentication;
         }
         //login cho user bằng google
         [HttpGet("google-login")]
@@ -42,7 +43,6 @@ namespace EventProjectSWP.Controllers
         [Route("~/sigin-google")]
         public async Task<IActionResult> GoogleResponse()
         {
-            Authentication _authentication = new Authentication(_configuration);
             var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var userInfo = _authentication.GetUserInfo(result);
             if (userInfo == null)
