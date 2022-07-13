@@ -374,6 +374,7 @@ Where E.event_id = I.event_id ";
         [HttpPost("add-event")]
         public IActionResult PostAsync(AddEvent eventcs)
         {
+            System.Diagnostics.Debug.WriteLine(eventcs.eventStart);
             /*
              [FromForm] MultipleFilesUpload objectFile
             CheckEvent CheckEvent = new CheckEvent();

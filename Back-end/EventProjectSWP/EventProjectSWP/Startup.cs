@@ -8,7 +8,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Globalization;
 
 namespace EventProjectSWP
 {
@@ -24,6 +26,18 @@ namespace EventProjectSWP
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        var dateConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter
+        {
+            DateTimeFormat = "MM'/'dd'/'yyyy' 'HH':'mm"
+        };
+
+        options.SerializerSettings.Converters.Add(dateConverter);
+        options.SerializerSettings.Culture = new CultureInfo("en-IE");
+        options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+    });
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
