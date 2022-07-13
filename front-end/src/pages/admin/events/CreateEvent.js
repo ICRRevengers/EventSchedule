@@ -16,9 +16,9 @@ import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
 import { useRecoilValue } from 'recoil';
 import authAtom from '../../../recoil/auth/atom';
+import { storage } from '../../../firebase';
 
 const Create = () => {
-
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
@@ -29,13 +29,9 @@ const Create = () => {
     const [locationID, setLocationID] = useState('');
     const [paymentFee, setFee] = useState('0');
     const [paymentUrl, setPaymentUrl] = useState('');
+    const [image, setImage] = useState('');
 
-    const {
-        getCategories,
-        getLocations,
-        createEventWithPayment,
-        createEventWithoutPayment,
-    } = useAdminEvents();
+    const { getCategories, getLocations, createEvent } = useAdminEvents();
 
     const [locations, setLocation] = useState([]);
     const [categories, setCategory] = useState([]);
@@ -78,58 +74,61 @@ const Create = () => {
         setPaymentUrl(event.target.value);
     };
 
+    const imageHandle = (event) => {
+        if (event.target.files[0]) {
+            setImage(event.target.files[0]);
+        }
+    };
+
+    const handleUpload = () => {
+        const uploadTask = storage.ref(`images/${image.name}`).put(image);
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {},
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                storage
+                    .ref('images')
+                    .child(image.name)
+                    .getDownloadURL()
+                    .then((url) => {
+                        console.log(url);
+                    });
+            },
+        );
+    };
+
+    console.log('images', image);
+
     function createNew() {
-        return paymentUrl === null
-            ? (createEventWithoutPayment(
-                  name,
-                  content,
-                  eventStart,
-                  eventEnd,
-                  eventStatus,
-                  categoryID,
-                  locationID,
-                  auth.userId,
-                  paymentFee,
-              )
-                  .then((resposne) => {
-                      showSackbar({
-                          severity: 'success',
-                          children: resposne.data,
-                      });
-                  })
-                  .catch((error) => {
-                      showSackbar({
-                          severity: 'error',
-                          children:
-                              'Something went wrong, please try again later.',
-                      });
-                  }))
+        return createEvent(
+            name,
+            content,
+            eventStart,
+            eventEnd,
+            eventStatus,
+            categoryID,
+            locationID,
+            auth.userId,
+            paymentUrl,
+            paymentFee,
+        )
+            .then(() => {
                 
-            : (createEventWithPayment(
-                  name,
-                  content,
-                  eventStart,
-                  eventEnd,
-                  eventStatus,
-                  categoryID,
-                  locationID,
-                  auth.userId,
-                  paymentUrl,
-                  paymentFee,
-              )
-                  .then((resposne) => {
-                      showSackbar({
-                          severity: 'success',
-                          children: resposne.data,
-                      });
-                  })
-                  .catch((error) => {
-                      showSackbar({
-                          severity: 'error',
-                          children:
-                              'Something went wrong, please try again later.',
-                      });
-                  }))
+                showSackbar({
+                    severity: 'success',
+                    children: "Add sucessfully",
+                });
+            })
+            .catch((error) => {
+                console.log(error)
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
     }
 
     function getLocationlist() {
@@ -295,11 +294,12 @@ const Create = () => {
                         )}
 
                         <FormControl fullWidth margin="normal">
-                            <Input name="eventimage1" type="file" />
-                            <Input name="eventimage2" type="file" />
-                            <Input name="eventimage3" type="file" />
-                            <Input name="eventimage4" type="file" />
-                            <Input name="eventimage5" type="file" />
+                            <Input
+                                name="eventimage1"
+                                type="file"
+                                onChange={imageHandle}
+                            />
+                            <Button onClick={handleUpload}>Tải ảnh này</Button>
                         </FormControl>
                         <FormControl fullWidth margin="normal">
                             <Button
