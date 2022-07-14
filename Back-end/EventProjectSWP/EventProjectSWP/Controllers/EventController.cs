@@ -38,6 +38,7 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-event-list")]
         public IActionResult Get()
         {
+            
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
@@ -54,6 +55,8 @@ namespace EventProjectSWP.Controllers
        left JOIN tblVideo ON e.event_id = tblVideo.event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+
+
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
@@ -477,7 +480,7 @@ Where E.event_id = I.event_id ";
         [HttpPost("add-event")]
         public IActionResult PostAsync(AddEvent eventcs)
         {
-            System.Diagnostics.Debug.WriteLine(eventcs.eventStart);
+            //System.Diagnostics.Debug.WriteLine(eventcs.eventStart);
             /*
              [FromForm] MultipleFilesUpload objectFile
             CheckEvent CheckEvent = new CheckEvent();
@@ -506,6 +509,20 @@ Where E.event_id = I.event_id ";
                 string queryAddPayment = @"insert into dbo.tblPayment(payment_url,payment_fee,event_id)
                                          values(@payment_url,@payment_fee,@event_id)";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                CheckEvent checkevent = new CheckEvent();
+                string eventchecklocation = checkevent.checkLocation(sqlDataSource);
+                if(eventchecklocation.Equals("Location is not available"))
+                {
+                    return BadRequest(new Response<string>(eventchecklocation));
+                }else
+                    if (eventchecklocation.Equals("OK")){
+                    checkevent = new CheckEvent();
+                    string eventcheckdate = checkevent.checkOccupied(eventcs.eventStart, eventcs.eventEnd, sqlDataSource);
+                    if (!eventcheckdate.Equals("Ok"))
+                    {
+                        return BadRequest(new Response<string>(eventcheckdate));
+                    }
+                }
                 DataTable table = new DataTable();
                 DataTable table2 = new DataTable();
                 SqlDataReader myReader;
