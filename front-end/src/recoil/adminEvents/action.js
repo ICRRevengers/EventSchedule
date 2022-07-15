@@ -39,6 +39,7 @@ const useAdminEvents = () => {
         id,
         paymentUrl,
         paymentFee,
+        imageUrl
     ) =>
         post({
             endpoint: `/api/Event/add-event`,
@@ -53,8 +54,7 @@ const useAdminEvents = () => {
                 adminID: id,
                 paymentUrl: paymentUrl,
                 paymentFee: paymentFee,
-                imageUrl:
-                    'https://firebasestorage.googleapis.com/v0/b/event-schedule-system-4284a.appspot.com/o/chatlieudangian.jpg?alt=media&token=01cf7a8b-6a50-4977-98f1-dc7ffeaf5d27',
+                imageUrl: imageUrl,
             },
         });
 

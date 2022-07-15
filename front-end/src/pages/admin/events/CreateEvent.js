@@ -17,6 +17,7 @@ import { useSnackbar } from '../../../HOCs';
 import { useRecoilValue } from 'recoil';
 import authAtom from '../../../recoil/auth/atom';
 import { storage } from '../../../firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 
 const Create = () => {
     const auth = useRecoilValue(authAtom);
@@ -29,12 +30,14 @@ const Create = () => {
     const [locationID, setLocationID] = useState('');
     const [paymentFee, setFee] = useState('0');
     const [paymentUrl, setPaymentUrl] = useState('');
-    const [image, setImage] = useState('');
 
     const { getCategories, getLocations, createEvent } = useAdminEvents();
 
     const [locations, setLocation] = useState([]);
     const [categories, setCategory] = useState([]);
+
+    const [imgUrl, setImgUrl] = useState('');
+    const [progresspercent, setProgresspercent] = useState(0);
 
     const showSackbar = useSnackbar();
 
@@ -74,33 +77,34 @@ const Create = () => {
         setPaymentUrl(event.target.value);
     };
 
-    const imageHandle = (event) => {
-        if (event.target.files[0]) {
-            setImage(event.target.files[0]);
-        }
-    };
 
-    const handleUpload = () => {
-        const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    const handleUpload = (event) => {
+        event.preventDefault();
+        const file = event.target?.files[0];
+
+        if (!file) return;
+
+        const storageRef = ref(storage, `files/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
         uploadTask.on(
             'state_changed',
-            (snapshot) => {},
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+                );
+                setProgresspercent(progress);
+            },
             (error) => {
-                console.log(error);
+                alert(error);
             },
             () => {
-                storage
-                    .ref('images')
-                    .child(image.name)
-                    .getDownloadURL()
-                    .then((url) => {
-                        console.log(url);
-                    });
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImgUrl(downloadURL);
+                });
             },
-        );
+        ) 
     };
-
-    console.log('images', image);
 
     function createNew() {
         return createEvent(
@@ -114,16 +118,16 @@ const Create = () => {
             auth.userId,
             paymentUrl,
             paymentFee,
+            imgUrl
         )
             .then(() => {
-                
                 showSackbar({
                     severity: 'success',
-                    children: "Add sucessfully",
+                    children: 'Add sucessfully',
                 });
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error);
                 showSackbar({
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
@@ -297,9 +301,8 @@ const Create = () => {
                             <Input
                                 name="eventimage1"
                                 type="file"
-                                onChange={imageHandle}
+                                onChange={handleUpload}
                             />
-                            <Button onClick={handleUpload}>Tải ảnh này</Button>
                         </FormControl>
                         <FormControl fullWidth margin="normal">
                             <Button
