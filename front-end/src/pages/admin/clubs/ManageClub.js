@@ -31,7 +31,7 @@ const ManageClubs = () => {
                 setClubs(deletedArray);
                 showSackbar({
                     severity: 'success',
-                    children: resposne.data,
+                    children: 'Delete successfully',
                 });
             })
             .catch(() => {
