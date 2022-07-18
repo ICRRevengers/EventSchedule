@@ -55,7 +55,7 @@ function ParticipatedList() {
         return () => {
             isMounted = false;
             abortController.abort();
-            clearTimeout(cleanup.current)
+            clearTimeout(cleanup.current);
         };
     }, []);
     console.log(cleanup.current);
@@ -65,7 +65,7 @@ function ParticipatedList() {
             .then((resposne) => {
                 showSackbar({
                     severity: 'success',
-                    children: "Update Successfully",
+                    children: 'Update Successfully',
                 });
                 let arr = students;
                 arr[index].payment_status = paymentStatus;
@@ -144,19 +144,25 @@ function ParticipatedList() {
                                             label="Thanh toán"
                                         />
                                     </TableCell>
-                                    <TableCell align="center">
-                                        {new Intl.DateTimeFormat('en-US', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: '2-digit',
-                                        }).format(
-                                            new Date(
-                                                Date.parse(
-                                                    student.date_participated,
+                                    {student.date_participated !== null ? (
+                                        <TableCell align="center">
+                                            {new Intl.DateTimeFormat('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: '2-digit',
+                                            }).format(
+                                                new Date(
+                                                    Date.parse(
+                                                        student.date_participated,
+                                                    ),
                                                 ),
-                                            ),
-                                        )}
-                                    </TableCell>
+                                            )}
+                                        </TableCell>
+                                    ) : (
+                                        <TableCell align="center">
+                                            Không tham gia
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             ))}
                         </TableBody>

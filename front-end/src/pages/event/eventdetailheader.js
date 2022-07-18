@@ -113,7 +113,7 @@ const EventDetailHeader = (props) => {
                                         variant="h5"
                                         sx={{ fontWeight: 'normal' }}
                                     >
-                                        Host Club: {item?.admin_name}
+                                        Tổ chức bởi: {item?.admin_name}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={5}>
@@ -142,7 +142,7 @@ const EventDetailHeader = (props) => {
                                 gutterBottom
                                 variant="body1"
                             >
-                                Status:{' '}
+                                Trạng thái:{' '}
                                 {item.event_status ? 'Online' : 'Offline'}
                             </Typography>
                         </Grid>
@@ -159,7 +159,7 @@ const EventDetailHeader = (props) => {
                         }}
                         onClick={joinHandler}
                     >
-                        Join In now
+                        Tham gia ngay
                     </Button>
                 </CardActions>
 

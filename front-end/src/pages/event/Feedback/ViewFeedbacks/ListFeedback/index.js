@@ -15,7 +15,7 @@ const Loading = () => (
 )
 
 const ListFeedback = ({ feedbacks }) => {
-    const [cloneFeedbacks, setCloneFeedbacks] = useState(feedbacks)
+    const [cloneFeedbacks, setCloneFeedbacks] = useState([])
     const [hasMore, setHasMore] = useState(true)
     const [chunkArray, setChunkArray] = useState([])
     const index = useRef(1)
@@ -43,7 +43,7 @@ const ListFeedback = ({ feedbacks }) => {
 
     return (
         <React.Fragment>
-            {feedbacks.length ? (
+            {feedbacks.length > 0 ? (
                 <InfiniteScroll
                     dataLength={cloneFeedbacks.length}
                     loader={<Loading />}

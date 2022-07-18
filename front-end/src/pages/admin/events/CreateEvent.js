@@ -16,9 +16,10 @@ import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
 import { useRecoilValue } from 'recoil';
 import authAtom from '../../../recoil/auth/atom';
+import { storage } from '../../../firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 
 const Create = () => {
-
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
@@ -30,15 +31,13 @@ const Create = () => {
     const [paymentFee, setFee] = useState('0');
     const [paymentUrl, setPaymentUrl] = useState('');
 
-    const {
-        getCategories,
-        getLocations,
-        createEventWithPayment,
-        createEventWithoutPayment,
-    } = useAdminEvents();
+    const { getCategories, getLocations, createEvent } = useAdminEvents();
 
     const [locations, setLocation] = useState([]);
     const [categories, setCategory] = useState([]);
+
+    const [imgUrl, setImgUrl] = useState('');
+    const [progresspercent, setProgresspercent] = useState(0);
 
     const showSackbar = useSnackbar();
 
@@ -78,58 +77,62 @@ const Create = () => {
         setPaymentUrl(event.target.value);
     };
 
+
+    const handleUpload = (event) => {
+        event.preventDefault();
+        const file = event.target?.files[0];
+
+        if (!file) return;
+
+        const storageRef = ref(storage, `files/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+                );
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImgUrl(downloadURL);
+                });
+            },
+        ) 
+    };
+
     function createNew() {
-        return paymentUrl === null
-            ? (createEventWithoutPayment(
-                  name,
-                  content,
-                  eventStart,
-                  eventEnd,
-                  eventStatus,
-                  categoryID,
-                  locationID,
-                  auth.userId,
-                  paymentFee,
-              )
-                  .then((resposne) => {
-                      showSackbar({
-                          severity: 'success',
-                          children: resposne.data,
-                      });
-                  })
-                  .catch((error) => {
-                      showSackbar({
-                          severity: 'error',
-                          children:
-                              'Something went wrong, please try again later.',
-                      });
-                  }))
-                
-            : (createEventWithPayment(
-                  name,
-                  content,
-                  eventStart,
-                  eventEnd,
-                  eventStatus,
-                  categoryID,
-                  locationID,
-                  auth.userId,
-                  paymentUrl,
-                  paymentFee,
-              )
-                  .then((resposne) => {
-                      showSackbar({
-                          severity: 'success',
-                          children: resposne.data,
-                      });
-                  })
-                  .catch((error) => {
-                      showSackbar({
-                          severity: 'error',
-                          children:
-                              'Something went wrong, please try again later.',
-                      });
-                  }))
+        return createEvent(
+            name,
+            content,
+            eventStart,
+            eventEnd,
+            eventStatus,
+            categoryID,
+            locationID,
+            auth.userId,
+            paymentUrl,
+            paymentFee,
+            imgUrl
+        )
+            .then(() => {
+                showSackbar({
+                    severity: 'success',
+                    children: 'Add sucessfully',
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
     }
 
     function getLocationlist() {
@@ -295,11 +298,11 @@ const Create = () => {
                         )}
 
                         <FormControl fullWidth margin="normal">
-                            <Input name="eventimage1" type="file" />
-                            <Input name="eventimage2" type="file" />
-                            <Input name="eventimage3" type="file" />
-                            <Input name="eventimage4" type="file" />
-                            <Input name="eventimage5" type="file" />
+                            <Input
+                                name="eventimage1"
+                                type="file"
+                                onChange={handleUpload}
+                            />
                         </FormControl>
                         <FormControl fullWidth margin="normal">
                             <Button
