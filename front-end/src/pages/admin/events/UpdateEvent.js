@@ -44,13 +44,14 @@ const UpdateEvent = () => {
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
-    const [eventStart, setEventStart] = useState(new Date('2022-01-01T10:30'));
-    const [eventEnd, setEventEnd] = useState(new Date('2022-01-01T10:30'));
+    const [eventStart, setEventStart] = useState(new Date('2022-07-19T15:00:00.000Z'));
+    const [eventEnd, setEventEnd] = useState(new Date('2022-07-19T15:00:00.000Z'));
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
     const [paymentFee, setFee] = useState('0');
     const [paymentUrl, setPaymentUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const [image, setImage] = useState('');
     const [loading, setLoading] = useState(false);
     const { getCategories, getLocations, updateEvent, getEventDetails } = useAdminEvents();
@@ -137,7 +138,7 @@ const UpdateEvent = () => {
             auth.userId,
             paymentUrl,
             paymentFee,
-            image
+            imageUrl
         )
             .then(() => {
                 showSackbar({
@@ -178,10 +179,11 @@ const UpdateEvent = () => {
             setEventStart(data[0].event_start)
             setEventEnd(data[0].event_end)
             setEventStatus(data[0].event_status)
-            // setCategoryID(data[0].)
+            setCategoryID(data[0].category_id)
             setLocationID(data[0].location_id)
             setFee(data[0].payment_fee)
             setPaymentUrl(data[0].payment_url)
+            setImageUrl(data[0].image_url)
             setLoading(false)
         });
     }
@@ -221,9 +223,9 @@ const UpdateEvent = () => {
                             Sự kiện mới
                         </Typography>
                         <FormControl fullWidth margin="normal">
-                            {/* <InputLabel>Tên sự kiện *</InputLabel> */}
-                            <TextField
-                                label="Tên sự kiện"
+                            <InputLabel>Tên sự kiện *</InputLabel>
+                            <Input
+                                // label="Tên sự kiện"
                                 name="eventname"
                                 fullWidth
                                 required
@@ -352,14 +354,14 @@ const UpdateEvent = () => {
                              <></>
                         )}
 
-                        <FormControl fullWidth margin="normal">
+                        {/* <FormControl fullWidth margin="normal">
                             <Input
                                 name="eventimage1"
                                 type="file"
                                 onChange={imageHandle}
                             />
                             <Button onClick={handleUpload}>Tải ảnh này</Button>
-                        </FormControl>
+                        </FormControl> */}
                         <FormControl fullWidth margin="normal">
                             <Button
                                 variant="extendedFab"

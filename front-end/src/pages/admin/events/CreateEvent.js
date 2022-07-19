@@ -27,8 +27,8 @@ const Create = () => {
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
-    const [eventStart, setEventStart] = useState(new Date('2022-01-01T10:30'));
-    const [eventEnd, setEventEnd] = useState(new Date('2022-01-01T10:30'));
+    const [eventStart, setEventStart] = useState(new Date('2022-07-19T15:00:00.000Z'));
+    const [eventEnd, setEventEnd] = useState(new Date('2022-07-19T15:00:00.000Z'));
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
@@ -184,8 +184,8 @@ const Create = () => {
                             Sự kiện mới
                         </Typography>
                         <FormControl fullWidth margin="normal">
-                            {/* <InputLabel>Tên sự kiện *</InputLabel> */}
-                            <TextField
+                            <InputLabel>Tên sự kiện *</InputLabel>
+                            <Input
                                 label="Tên sự kiện"
                                 name="eventname"
                                 fullWidth
