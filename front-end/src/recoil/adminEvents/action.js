@@ -68,6 +68,43 @@ const useAdminEvents = () => {
             },
         });
 
+    const updateEvent = (     
+            eventId,
+            name,
+            content,
+            eventStart,
+            eventEnd,
+            status,
+            categoryID,
+            locationID,
+            id,
+            paymentUrl,
+            paymentFee,
+            imageUrl
+        ) =>
+        put({
+            endpoint: '/api/Event/update-event',
+            body: {
+                eventID: eventId,
+                eventName: name,
+                eventContent: content,
+                eventStart: eventStart,
+                eventEnd: eventEnd,
+                eventStatus: status,
+                categoryID: categoryID,
+                locationID: locationID,
+                adminID: id,
+                paymentUrl: paymentUrl,
+                paymentFee: paymentFee,
+                imageUrl: imageUrl,
+            },
+        });
+
+    const getEventDetails = (id) =>
+        get({
+            endpoint: `/api/Event/get-event-by-id?id=${id}`,
+        });
+
     return {
         getEvents,
         getStudentsFromEvent,
@@ -77,6 +114,8 @@ const useAdminEvents = () => {
         getCategories,
         createEvent,
         updatePayment,
+        updateEvent,
+        getEventDetails
     };
 };
 export default useAdminEvents;
