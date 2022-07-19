@@ -845,7 +845,7 @@ Where E.event_id = I.event_id ";
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name,
+       tblCategory.category_name,tblCategory.category_id,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
        left JOIN tblLocation ON E.location_id = tblLocation.location_id
