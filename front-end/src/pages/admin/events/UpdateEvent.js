@@ -11,27 +11,50 @@ import {
     Typography,
     Select,
     TextareaAutosize,
+    TextField,
+    CircularProgress,
+    Box,
 } from '@mui/material';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
 import { useRecoilValue } from 'recoil';
 import authAtom from '../../../recoil/auth/atom';
 import { storage } from '../../../firebase';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { useParams } from 'react-router-dom';
+
+const LoadingComponent = () => (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <CircularProgress color="secondary" size={50} />
+    </Box>
+);
 
 const UpdateEvent = () => {
+    const { id } = useParams();
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
-    const [eventStart, setEventStart] = useState('2022-01-01T10:30');
-    const [eventEnd, setEventEnd] = useState('2022-01-01T10:30');
+    const [eventStart, setEventStart] = useState(new Date('2022-07-19T15:00:00.000Z'));
+    const [eventEnd, setEventEnd] = useState(new Date('2022-07-19T15:00:00.000Z'));
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
     const [paymentFee, setFee] = useState('0');
     const [paymentUrl, setPaymentUrl] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const [image, setImage] = useState('');
-
-    const { getCategories, getLocations, createEvent } = useAdminEvents();
+    const [loading, setLoading] = useState(false);
+    const { getCategories, getLocations, updateEvent, getEventDetails } = useAdminEvents();
 
     const [locations, setLocation] = useState([]);
     const [categories, setCategory] = useState([]);
@@ -47,11 +70,11 @@ const UpdateEvent = () => {
     };
 
     const eventStartHandle = (event) => {
-        setEventStart(event.target.value);
+        setEventStart(event);
     };
 
     const eventEndHandle = (event) => {
-        setEventEnd(event.target.value);
+        setEventEnd(event);
     };
 
     const eventStatusHandle = (event) => {
@@ -103,7 +126,8 @@ const UpdateEvent = () => {
     console.log('images', image);
 
     function updatePost() {
-        return createEvent(
+        return updateEvent(
+            id,
             name,
             content,
             eventStart,
@@ -114,16 +138,16 @@ const UpdateEvent = () => {
             auth.userId,
             paymentUrl,
             paymentFee,
+            imageUrl
         )
             .then(() => {
-                
                 showSackbar({
                     severity: 'success',
-                    children: "Add sucessfully",
+                    children: 'Add sucessfully',
                 });
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error);
                 showSackbar({
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
@@ -145,8 +169,27 @@ const UpdateEvent = () => {
         });
     }
 
+    function getDetails() {
+        setLoading(true)
+        return getEventDetails(id).then((resposne) => {
+            const data = resposne.data.data;
+            console.log(data[0]);
+            setName(data[0].event_name)
+            setContent(data[0].event_content)
+            setEventStart(data[0].event_start)
+            setEventEnd(data[0].event_end)
+            setEventStatus(data[0].event_status)
+            setCategoryID(data[0].category_id)
+            setLocationID(data[0].location_id)
+            setFee(data[0].payment_fee)
+            setPaymentUrl(data[0].payment_url)
+            setImageUrl(data[0].image_url)
+            setLoading(false)
+        });
+    }
+
     useEffect(() => {
-        Promise.all([getLocationlist(), getCategorylist()]).catch(() => {
+        Promise.all([getLocationlist(), getCategorylist(), getDetails()]).catch(() => {
             showSackbar({
                 severity: 'error',
                 children: 'Something went wrong, please try again later.',
@@ -154,6 +197,9 @@ const UpdateEvent = () => {
         });
     }, []);
 
+    if (loading) {
+        return <LoadingComponent />;
+    }
     return (
         <div className="flex">
             <Sidebar />
@@ -179,6 +225,7 @@ const UpdateEvent = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Tên sự kiện *</InputLabel>
                             <Input
+                                // label="Tên sự kiện"
                                 name="eventname"
                                 fullWidth
                                 required
@@ -186,28 +233,40 @@ const UpdateEvent = () => {
                                 onChange={nameHandle}
                             />
                         </FormControl>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Thời gian bắt đầu *</InputLabel>
-                            <Input
-                                name="eventstart"
-                                type="datetime-local"
-                                value={eventStart}
-                                onChange={eventStartHandle}
-                                fullWidth
-                                required
-                            />
-                        </FormControl>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Thời gian kết thúc *</InputLabel>
-                            <Input
-                                name="eventstart"
-                                type="datetime-local"
-                                onChange={eventEndHandle}
-                                value={eventEnd}
-                                fullWidth
-                                required
-                            />
-                        </FormControl>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <FormControl fullWidth margin="normal">
+                                {/* <InputLabel>Thời gian bắt đầu *</InputLabel>  */}
+                                <DateTimePicker
+                                    label="Thời gian bắt đầu *"
+                                    ampm={false}
+                                    name="eventstart"
+                                    // type="datetime-local"
+                                    value={eventStart}
+                                    onChange={eventStartHandle}
+                                    fullWidth
+                                    required
+                                    renderInput={(params) => (
+                                        <TextField {...params} />
+                                    )}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                {/* <InputLabel>Thời gian kết thúc *</InputLabel> */}
+                                <DateTimePicker
+                                    label="Thời gian kết thúc *"
+                                    ampm={false}
+                                    name="eventend"
+                                    // type="datetime-local"
+                                    value={eventEnd}
+                                    onChange={eventEndHandle}
+                                    fullWidth
+                                    required
+                                    renderInput={(params) => (
+                                        <TextField {...params} />
+                                    )}
+                                />
+                            </FormControl>
+                        </LocalizationProvider>
                         <FormControl fullWidth margin="normal">
                             <Select
                                 defaultValue="false"
@@ -224,6 +283,7 @@ const UpdateEvent = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Địa điểm tổ chức</InputLabel>
                             <Select
+                                label="Địa điểm tổ chức"
                                 displayEmpty
                                 name="location"
                                 onChange={locationHandle}
@@ -241,6 +301,7 @@ const UpdateEvent = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Thể loại</InputLabel>
                             <Select
+                                label="Thể loại"
                                 displayEmpty
                                 name="category"
                                 onChange={categoryHandle}
@@ -282,25 +343,25 @@ const UpdateEvent = () => {
                                 <InputLabel>Link thanh toán (momo)</InputLabel>
                                 <Input
                                     name="paymenturl"
-                                    type="url"
-                                    defaultValue={paymentUrl}
+                                    // type="url"
+                                    value={paymentUrl}
                                     onChange={paymentUrlHandle}
                                     required
                                     fullWidth
                                 />
                             </FormControl>
                         ) : (
-                            <></>
+                             <></>
                         )}
 
-                        <FormControl fullWidth margin="normal">
+                        {/* <FormControl fullWidth margin="normal">
                             <Input
                                 name="eventimage1"
                                 type="file"
                                 onChange={imageHandle}
                             />
                             <Button onClick={handleUpload}>Tải ảnh này</Button>
-                        </FormControl>
+                        </FormControl> */}
                         <FormControl fullWidth margin="normal">
                             <Button
                                 variant="extendedFab"
