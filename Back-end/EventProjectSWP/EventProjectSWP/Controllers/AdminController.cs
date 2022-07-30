@@ -155,6 +155,38 @@ namespace EventProjectSWP.Controllers
             }
         }
 
+
+        [HttpPut("Restore-admin-by-id")]
+
+        public IActionResult ActiveAdminById(int id)
+        {
+            try
+            {
+                string query = @"update tblAdmin set admin_status = 'True' where admin_id = @admin_id";
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                return Ok(new Response<string>(null, "Active Sucessfully"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<DataTable>(ex.Message));
+            }
+        }
+
+
+
+
         [HttpGet("get-admin-by-id")]
         public IActionResult GetClubById(string id)
         {
