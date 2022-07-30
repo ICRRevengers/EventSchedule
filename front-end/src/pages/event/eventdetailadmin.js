@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import Paper from "@mui/material";
+
 import axios from "axios";
 import EventDetailHeader from "./eventdetailheader";
 import EventDetailBottom from "./eventdetailbottom";

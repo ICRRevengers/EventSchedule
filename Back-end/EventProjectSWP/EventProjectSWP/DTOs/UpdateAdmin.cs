@@ -6,5 +6,6 @@
         public string adminName { get; set; }
         public string adminPhone { get; set; }
         public string adminPassword { get; set; }
+        public string imageUrl { get; set; }
     }
 }

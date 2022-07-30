@@ -1,6 +1,5 @@
-import Error from '../pages/error/Error';
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import HeaderFooter from '../components/layout/defaultLayout/header-footer/HeaderFooter';
 import AdminLayout from '../components/layout/adminLayout';
 import PublicRoute from './PublicRoute';
@@ -49,7 +48,7 @@ const privateRoutes = [
         component: lazy(() => import('../pages/home/AdminHome')),
         layout: 'admin',
         name: 'admin home',
-        role:['admin', 'club']
+        role: ['admin', 'club'],
     },
     {
         path: '/admin/manage/events',
@@ -66,7 +65,7 @@ const privateRoutes = [
         role: ['admin', 'club'],
     },
     {
-        path: '/admin/manage/update',
+        path: '/admin/manage/update/:id',
         component: lazy(() => import('../pages/admin/events/UpdateEvent')),
         layout: 'admin',
         name: 'update event',
@@ -80,18 +79,32 @@ const privateRoutes = [
         role: ['admin', 'club'],
     },
     {
-        path: '/admin/manage/profile',
+        path: '/admin/manage/profile/:id',
         component: lazy(() => import('../pages/admin/profile/AdminProfile')),
         layout: 'admin',
         name: 'manage profile',
         role: ['admin', 'club'],
     },
     {
-        path: '/admin/eventdetail',
+        path: '/admin/eventdetail/:id',
         component: lazy(() => import('../pages/event/eventdetailadmin')),
         layout: 'admin',
         name: 'manage profile',
         role: ['admin', 'club'],
+    },
+    {
+        path: '/admin/manage/club',
+        component: lazy(() => import('../pages/admin/clubs/ManageClub')),
+        layout: 'admin',
+        name: 'admin home',
+        role: ['admin'],
+    },
+    {
+        path: '/admin/manage/add-new-admin',
+        component: lazy(() => import('../pages/admin/clubs/AddClub')),
+        layout: 'admin',
+        name: 'admin home',
+        role: ['admin'],
     },
     {
         path: '/user/profile/:id',
@@ -108,22 +121,21 @@ const privateRoutes = [
         role: ['user'],
     },
     {
-
         path: '/user/listparticipated/:id',
-        component: lazy(() => import('../pages/user/listparticipated/UserParticipatedList')),
+        component: lazy(() =>
+            import('../pages/user/listparticipated/UserParticipatedList'),
+        ),
         layout: 'user',
         name: 'event i joined',
         role: ['user'],
     },
-{
+    {
         path: '/user/paymentpage/:id',
         component: lazy(() => import('../pages/event/paymentpage')),
         layout: 'user',
         name: 'user profile',
         role: ['user'],
     },
-    
-
 ];
 
 const Routes = (
@@ -185,7 +197,7 @@ const Routes = (
                                         />
                                     ),
                             )}
-                            <Route path="/*" component={<Error />} />
+                             <Redirect to="/admin" />
                         </Switch>
                     </Suspense>
                 </AdminLayout>
@@ -224,7 +236,7 @@ const Routes = (
                                         />
                                     ),
                             )}
-                            <Route path="/*" component={<Error />} />
+                             <Redirect to="/" />
                         </Switch>
                     </Suspense>
                 </HeaderFooter>

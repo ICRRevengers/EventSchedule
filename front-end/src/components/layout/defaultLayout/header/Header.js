@@ -8,6 +8,7 @@ import { useRecoilValue } from 'recoil';
 import useAuthActions from '../../../../recoil/auth/action';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
+import { Typography } from '@mui/material';
 
 const pages = [
     {
@@ -73,27 +74,40 @@ const Header = ({ children }) => {
                             {page.title}
                         </Link>
                     ))}
-                    <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end">
+                    <div className="md:ml-[auto] md:grow flex flex-col md:flex-row md:justify-end" style={{alignItems: 'center'}}>
                         {auth.email ? (
                             <>
-                                <Link
-                                    to={`/user/profile/${auth.userId}`}
-                                    className="md:ml-[25px] my-[10px]"
-                                >
-                                    Hồ sơ của bạn
-                                </Link>
-                                <Link
-                                    to={`/user/listparticipated/${auth.userId}`}
-                                    className="md:ml-[25px] my-[10px]"
-                                >
-                                    Sự kiện tham gia
-                                </Link>
-                                <Link
+
+                                {auth.role === 'user' ? (
+                                    <>
+                                        <Link
+                                            to={`/user/profile/${auth.userId}`}
+                                            className="md:ml-[25px] my-[10px]"
+                                        >
+                                            Hồ sơ của bạn
+                                        </Link>
+                                        <Link
+                                            to={`/user/listparticipated/${auth.userId}`}
+                                            className="md:ml-[25px] my-[10px]"
+                                        >
+                                            Sự kiện tham gia
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <Link
+                                        to={`/admin/manage/events`}
+                                        className="md:ml-[25px] my-[10px]"
+                                    >
+                                        Quản lý sự kiện
+                                    </Link>
+                                )}
+                                <Typography
                                     onClick={logoutHandlder}
                                     className="md:ml-[25px] my-[10px]"
+                                    sx={{ml: 2.5}}
                                 >
                                     <LogoutIcon /> Đăng xuất
-                                </Link>
+                                </Typography>
                             </>
                         ) : (
                             <Link

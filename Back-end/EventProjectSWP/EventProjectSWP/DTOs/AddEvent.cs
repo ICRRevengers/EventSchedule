@@ -1,4 +1,4 @@
-﻿using EventProjectSWP.Models;
+using EventProjectSWP.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 
@@ -16,6 +16,7 @@ namespace EventProjectSWP.DTOs
         public int adminID { get; set; }
         public string paymentUrl { get; set; }
         public int paymentFee { get; set; }
+        public string imageUrl { get; set; }
         //public IFormFile files { get; set; }
     }
 }
