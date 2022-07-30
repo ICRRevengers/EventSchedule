@@ -34,7 +34,7 @@ const Sidebar = () => {
                     <>
                         <Link to={`/admin/manage/club`}>
                             <h1 className="border-b border-[#ffffff86] mb-[10px] p-[10px]">
-                                Quản lý câu lạc bộ
+                                Quản lý quản trị viên
                             </h1>
                         </Link>
                         <Link to={`/admin/manage/add-new-admin`}>

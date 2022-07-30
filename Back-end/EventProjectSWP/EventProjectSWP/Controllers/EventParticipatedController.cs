@@ -1,5 +1,6 @@
 ﻿using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,9 +17,11 @@ namespace EventProjectSWP.Controllers
     public class EventParticipatedController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        public EventParticipatedController(IConfiguration configuration)
+        private readonly IHostingEnvironment _env;
+        public EventParticipatedController(IConfiguration configuration, IHostingEnvironment env)
         {
             _configuration = configuration;
+            _env = env;
         }
         
         [HttpGet("get-userinfo-join-event")]
@@ -82,8 +85,10 @@ namespace EventProjectSWP.Controllers
                         myCon.Close();
                     }
                 }
+
                 if (table.Rows.Count > 0)
                 {
+                    /*
                     List<GetEventJoined> listEventJoined = new List<GetEventJoined>();
                     for (int i = 0; i < table.Rows.Count; i++)
                     {
@@ -101,8 +106,9 @@ namespace EventProjectSWP.Controllers
                             payment_status = bool.Parse(table.Rows[i]["payment_status"].ToString()),
                             users_status = bool.Parse(table.Rows[i]["users_status"].ToString()),
                         });
-                    }
-                    return Ok(new Response<List<GetEventJoined>>(listEventJoined));
+                    }*/
+                    //return Ok(new Response<List<GetEventJoined>>(listEventJoined));
+                    return Ok(new Response<DataTable>(table, "Get Successfully"));
                 }
                 return BadRequest(new Response<string>("No Data"));
             }

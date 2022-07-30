@@ -28,7 +28,7 @@ const useAdminEvents = () => {
             endpoint: `/api/Event/get-category-list`,
         });
 
-    const createEventWithPayment = (
+    const createEvent = (
         name,
         content,
         eventStart,
@@ -39,35 +39,70 @@ const useAdminEvents = () => {
         id,
         paymentUrl,
         paymentFee,
+        imageUrl
     ) =>
         post({
-            endpoint: `/api/Event/add-event?eventName=${name}&eventContent=${content}&eventStart=${eventStart}&eventEnd=${eventEnd}&eventStatus=${status}&categoryID=${categoryID}&locationID=${locationID}&adminID=${id}&paymentUrl=${paymentUrl}&paymentFee=${paymentFee}`,
-            body: {},
+            endpoint: `/api/Event/add-event`,
+            body: {
+                eventName: name,
+                eventContent: content,
+                eventStart: eventStart,
+                eventEnd: eventEnd,
+                eventStatus: status,
+                categoryID: categoryID,
+                locationID: locationID,
+                adminID: id,
+                paymentUrl: paymentUrl,
+                paymentFee: paymentFee,
+                imageUrl: imageUrl,
+            },
         });
 
-    const createEventWithoutPayment = (
-        name,
-        content,
-        eventStart,
-        eventEnd,
-        status,
-        categoryID,
-        locationID,
-        id,
-        paymentFee,
-    ) =>
-        post({
-            endpoint: `/api/Event/add-event?eventName=${name}&eventContent=${content}&eventStart=${eventStart}&eventEnd=${eventEnd}&eventStatus=${status}&categoryID=${categoryID}&locationID=${locationID}&adminID=${id}&paymentFee=${paymentFee}`,
-            body: {},
-        });
     const updatePayment = (status, userId, eventId) =>
         put({
-            endpoint: "/api/Payment/update-payment",
-            params:{
+            endpoint: '/api/Payment/update-payment',
+            params: {
                 status: status,
                 userId: userId,
-                eventId: eventId
+                eventId: eventId,
             },
+        });
+
+    const updateEvent = (     
+            eventId,
+            name,
+            content,
+            eventStart,
+            eventEnd,
+            status,
+            categoryID,
+            locationID,
+            id,
+            paymentUrl,
+            paymentFee,
+            imageUrl
+        ) =>
+        put({
+            endpoint: '/api/Event/update-event',
+            body: {
+                eventID: eventId,
+                eventName: name,
+                eventContent: content,
+                eventStart: eventStart,
+                eventEnd: eventEnd,
+                eventStatus: status,
+                categoryID: categoryID,
+                locationID: locationID,
+                adminID: id,
+                paymentUrl: paymentUrl,
+                paymentFee: paymentFee,
+                imageUrl: imageUrl,
+            },
+        });
+
+    const getEventDetails = (id) =>
+        get({
+            endpoint: `/api/Event/get-event-by-id?id=${id}`,
         });
 
     return {
@@ -77,9 +112,10 @@ const useAdminEvents = () => {
         searchEvent,
         getLocations,
         getCategories,
-        createEventWithPayment,
-        createEventWithoutPayment,
-        updatePayment
+        createEvent,
+        updatePayment,
+        updateEvent,
+        getEventDetails
     };
 };
 export default useAdminEvents;

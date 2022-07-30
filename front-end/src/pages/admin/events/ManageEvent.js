@@ -144,7 +144,7 @@ const ManageEvents = () => {
                                     </Link>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Link to={`/admin/manage/update`}>
+                                    <Link to={`/admin/manage/update/${event.event_id}`}>
                                         <Button variant="contained">
                                             Cập nhật
                                         </Button>

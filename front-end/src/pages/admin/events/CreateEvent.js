@@ -11,34 +11,37 @@ import {
     Typography,
     Select,
     TextareaAutosize,
+    TextField,
 } from '@mui/material';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
 import { useRecoilValue } from 'recoil';
 import authAtom from '../../../recoil/auth/atom';
+import { storage } from '../../../firebase';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const Create = () => {
-
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
-    const [eventStart, setEventStart] = useState('2022-01-01T10:30');
-    const [eventEnd, setEventEnd] = useState('2022-01-01T10:30');
+    const [eventStart, setEventStart] = useState(new Date('2022-07-19T15:00:00.000Z'));
+    const [eventEnd, setEventEnd] = useState(new Date('2022-07-19T15:00:00.000Z'));
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
     const [paymentFee, setFee] = useState('0');
     const [paymentUrl, setPaymentUrl] = useState('');
 
-    const {
-        getCategories,
-        getLocations,
-        createEventWithPayment,
-        createEventWithoutPayment,
-    } = useAdminEvents();
+    const { getCategories, getLocations, createEvent } = useAdminEvents();
 
     const [locations, setLocation] = useState([]);
     const [categories, setCategory] = useState([]);
+
+    const [imgUrl, setImgUrl] = useState('');
+    const [progresspercent, setProgresspercent] = useState(0);
 
     const showSackbar = useSnackbar();
 
@@ -51,11 +54,11 @@ const Create = () => {
     };
 
     const eventStartHandle = (event) => {
-        setEventStart(event.target.value);
+        setEventStart(event);
     };
 
     const eventEndHandle = (event) => {
-        setEventEnd(event.target.value);
+        setEventEnd(event);
     };
 
     const eventStatusHandle = (event) => {
@@ -78,58 +81,61 @@ const Create = () => {
         setPaymentUrl(event.target.value);
     };
 
+    const handleUpload = (event) => {
+        event.preventDefault();
+        const file = event.target?.files[0];
+
+        if (!file) return;
+
+        const storageRef = ref(storage, `files/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+                );
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImgUrl(downloadURL);
+                });
+            },
+        );
+    };
+
     function createNew() {
-        return paymentUrl === null
-            ? (createEventWithoutPayment(
-                  name,
-                  content,
-                  eventStart,
-                  eventEnd,
-                  eventStatus,
-                  categoryID,
-                  locationID,
-                  auth.userId,
-                  paymentFee,
-              )
-                  .then((resposne) => {
-                      showSackbar({
-                          severity: 'success',
-                          children: resposne.data,
-                      });
-                  })
-                  .catch((error) => {
-                      showSackbar({
-                          severity: 'error',
-                          children:
-                              'Something went wrong, please try again later.',
-                      });
-                  }))
-                
-            : (createEventWithPayment(
-                  name,
-                  content,
-                  eventStart,
-                  eventEnd,
-                  eventStatus,
-                  categoryID,
-                  locationID,
-                  auth.userId,
-                  paymentUrl,
-                  paymentFee,
-              )
-                  .then((resposne) => {
-                      showSackbar({
-                          severity: 'success',
-                          children: resposne.data,
-                      });
-                  })
-                  .catch((error) => {
-                      showSackbar({
-                          severity: 'error',
-                          children:
-                              'Something went wrong, please try again later.',
-                      });
-                  }))
+        return createEvent(
+            name,
+            content,
+            eventStart,
+            eventEnd,
+            eventStatus,
+            categoryID,
+            locationID,
+            auth.userId,
+            paymentUrl,
+            paymentFee,
+            imgUrl,
+        )
+            .then(() => {
+                showSackbar({
+                    severity: 'success',
+                    children: 'Add sucessfully',
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
     }
 
     function getLocationlist() {
@@ -180,6 +186,7 @@ const Create = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Tên sự kiện *</InputLabel>
                             <Input
+                                label="Tên sự kiện"
                                 name="eventname"
                                 fullWidth
                                 required
@@ -187,28 +194,40 @@ const Create = () => {
                                 onChange={nameHandle}
                             />
                         </FormControl>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Thời gian bắt đầu *</InputLabel>
-                            <Input
-                                name="eventstart"
-                                type="datetime-local"
-                                value={eventStart}
-                                onChange={eventStartHandle}
-                                fullWidth
-                                required
-                            />
-                        </FormControl>
-                        <FormControl fullWidth margin="normal">
-                            <InputLabel>Thời gian kết thúc *</InputLabel>
-                            <Input
-                                name="eventstart"
-                                type="datetime-local"
-                                onChange={eventEndHandle}
-                                value={eventEnd}
-                                fullWidth
-                                required
-                            />
-                        </FormControl>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <FormControl fullWidth margin="normal">
+                                {/* <InputLabel>Thời gian bắt đầu *</InputLabel>  */}
+                                <DateTimePicker
+                                    label="Thời gian bắt đầu *"
+                                    ampm={false}
+                                    name="eventstart"
+                                    // type="datetime-local"
+                                    value={eventStart}
+                                    onChange={eventStartHandle}
+                                    fullWidth
+                                    required
+                                    renderInput={(params) => (
+                                        <TextField {...params} />
+                                    )}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                {/* <InputLabel>Thời gian kết thúc *</InputLabel> */}
+                                <DateTimePicker
+                                    label="Thời gian kết thúc *"
+                                    ampm={false}
+                                    name="eventend"
+                                    // type="datetime-local"
+                                    value={eventEnd}
+                                    onChange={eventEndHandle}
+                                    fullWidth
+                                    required
+                                    renderInput={(params) => (
+                                        <TextField {...params} />
+                                    )}
+                                />
+                            </FormControl>
+                        </LocalizationProvider>
                         <FormControl fullWidth margin="normal">
                             <Select
                                 defaultValue="false"
@@ -225,6 +244,7 @@ const Create = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Địa điểm tổ chức</InputLabel>
                             <Select
+                                label="Địa điểm tổ chức"
                                 displayEmpty
                                 name="location"
                                 onChange={locationHandle}
@@ -242,6 +262,7 @@ const Create = () => {
                         <FormControl fullWidth margin="normal">
                             <InputLabel>Thể loại</InputLabel>
                             <Select
+                                label="Thể loại"
                                 displayEmpty
                                 name="category"
                                 onChange={categoryHandle}
@@ -295,11 +316,11 @@ const Create = () => {
                         )}
 
                         <FormControl fullWidth margin="normal">
-                            <Input name="eventimage1" type="file" />
-                            <Input name="eventimage2" type="file" />
-                            <Input name="eventimage3" type="file" />
-                            <Input name="eventimage4" type="file" />
-                            <Input name="eventimage5" type="file" />
+                            <Input
+                                name="eventimage1"
+                                type="file"
+                                onChange={handleUpload}
+                            />
                         </FormControl>
                         <FormControl fullWidth margin="normal">
                             <Button
