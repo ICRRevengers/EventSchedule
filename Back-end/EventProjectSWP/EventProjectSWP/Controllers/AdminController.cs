@@ -66,7 +66,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"insert into tblAdmin values(@admin_name,@admin_phone,@admin_email,@admin_password,@admin_role)";
+                string query = @"insert into tblAdmin values(@admin_name,@admin_phone,@admin_email,@admin_password,@admin_role,@image_url)";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -79,6 +79,7 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@admin_email", addAdmin.adminEmail);
                         myCommand.Parameters.AddWithValue("@admin_password", addAdmin.adminPassword);
                         myCommand.Parameters.AddWithValue("@admin_role", addAdmin.adminRole);
+                            myCommand.Parameters.AddWithValue("@image_url", addAdmin.image_url);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
