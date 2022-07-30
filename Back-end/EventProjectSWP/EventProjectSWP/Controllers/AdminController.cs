@@ -132,7 +132,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"delete from tblAdmin where admin_id = @admin_id";
+                string query = @"update dbo.tblAdmin set admin_status = @admin_status where admin_id =@admin_id";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -140,6 +140,7 @@ namespace EventProjectSWP.Controllers
                     myCon.Open();
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
+                        myCommand.Parameters.AddWithValue("@admin_status", false);
                         myCommand.Parameters.AddWithValue("@admin_id", id);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
