@@ -147,7 +147,7 @@ namespace EventProjectSWP.Controllers
                         myCon.Close();
                     }
                 }
-                 return Ok(new Response<DataTable>("Delete successfully"));
+                 return Ok(new Response<string>(null, "Delete Sucessfully"));
             }
             catch (Exception ex)
             {

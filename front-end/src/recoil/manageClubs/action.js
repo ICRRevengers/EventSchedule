@@ -21,7 +21,8 @@ const useAdminClubs = () => {
                 adminPhone: phone,
                 adminEmail: email,
                 adminPassword: password,
-                adminRole: role
+                adminRole: role,
+                image_url: ""
               }
         })
     return {

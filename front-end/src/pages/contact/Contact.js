@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { useSnackbar } from '../../HOCs';
 import '../../App.scss';
-
-const Result = () => {
-  return (
-    alert('Lời nhắn của bạn đã được gửi đi thành công. Chúng tôi sẽ liên lạc với bạn sau.')
-  )
-}
 
 const Contact = () => {
   // const form = useRef();
   const [result, showResult] = useState(false);
+  const showSackbar = useSnackbar();
 
   const sendEmail = (e) => {
     e.preventDefault();
 
     emailjs
       .sendForm('essgmail', 'template_ess', e.target, 'qgWIwkNalDiLxrVfi')
-      .then((result) => {
-        console.log(result.text);
+      .then(() => {
+        showSackbar({
+                    severity: 'success',
+                    children: 'Sent sucessfully',
+                });
       }, (error) => {
         console.log(error.text);
       });
@@ -48,8 +47,6 @@ const Contact = () => {
         <div className='form-row' >
         <button className='form-submit'>Gửi</button>
         </div>
-        
-        {result ? <Result /> : null}
       </form>
     </>
   );

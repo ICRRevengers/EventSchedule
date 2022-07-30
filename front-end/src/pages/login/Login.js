@@ -8,16 +8,17 @@ import queryString from 'query-string';
 import { useSnackbar } from '../../HOCs';
 import { useAuthActions } from '../../recoil/auth';
 import HeaderFooter from '../../components/layout/defaultLayout/header-footer/HeaderFooter';
-
+import Stack from '@mui/material/Stack';
+import { Divider } from '@mui/material';
 
 function Login() {
-    const { search } = useLocation()
-    const showSnackbar = useSnackbar()
-    const { token, error } = queryString.parse(search)
-    const { login} = useAuthActions()
+    const { search } = useLocation();
+    const showSnackbar = useSnackbar();
+    const { token, error } = queryString.parse(search);
+    const { login } = useAuthActions();
 
-    const [adminUserName, setAdminUserName] = useState('')
-    const [adminPassword, setAdminPassword] = useState('')
+    const [adminUserName, setAdminUserName] = useState('');
+    const [adminPassword, setAdminPassword] = useState('');
 
     useEffect(() => {
         if (error && error === 'fpt-invalid-email') {
@@ -36,38 +37,51 @@ function Login() {
     }, []);
 
     const loginGoogle = () => {
-        window.location.assign(`${APP_API_URL}/api/Authentication/google-login`);
+        window.location.assign(
+            `${APP_API_URL}/api/Authentication/google-login`,
+        );
     };
 
     const adminLogin = (event) => {
-        event.preventDefault()
+        event.preventDefault();
         axios({
-            url:`${APP_API_URL}/api/Admin/login-admin`,
-            method:'post',
+            url: `${APP_API_URL}/api/Admin/login-admin`,
+            method: 'post',
             data: {
                 adminMail: adminUserName,
                 adminPassword: adminPassword,
             },
-        }).then(res => {
-            login(res.data.data)
-        }).catch(error => {
-            showSnackbar({
-                severity: 'error',
-                children: error.response.data.message,
-            });
         })
-    }
+            .then((res) => {
+                login(res.data.data);
+            })
+            .catch((error) => {
+                showSnackbar({
+                    severity: 'error',
+                    children: error.response.data.message,
+                });
+            });
+    };
 
     const userNameHandle = (event) => {
-        setAdminUserName(event.target.value)
-    }
+        setAdminUserName(event.target.value);
+    };
 
     const passwordHandle = (event) => {
-        setAdminPassword(event.target.value)
-    }
+        setAdminPassword(event.target.value);
+    };
 
     return (
         <HeaderFooter>
+            {/* <Stack
+                direction="row"
+                divider={<Divider orientation="vertical" flexItem />}
+                spacing={4}
+            >
+                <Item>Item 1</Item>
+                <Item>Item 2</Item>
+                <Item>Item 3</Item>
+            </Stack> */}
             <div className="login ">
                 <form className="admin-form" onSubmit={adminLogin}>
                     <p className="">
