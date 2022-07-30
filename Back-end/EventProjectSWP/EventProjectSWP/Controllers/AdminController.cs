@@ -33,7 +33,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role from dbo.tblAdmin";
+                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role,image_url from dbo.tblAdmin";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -98,7 +98,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"update dbo.tblAdmin set admin_name =@admin_name,admin_phone=@admin_phone,admin_password=@admin_password where admin_id =@admin_id";
+                string query = @"update dbo.tblAdmin set admin_name =@admin_name,admin_phone=@admin_phone,admin_password=@admin_password,image_url=@image_url where admin_id =@admin_id";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -109,6 +109,7 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.adminName);
                         myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.adminPhone);
                         myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.adminPassword);
+                        myCommand.Parameters.AddWithValue("@image_url", updateAdmin.imageUrl);
                         myCommand.Parameters.AddWithValue("@admin_id", adminId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
