@@ -40,7 +40,6 @@ function Login() {
     };
 
     const adminLogin = (event) => {
-        console.log(adminUserName, adminPassword);
         event.preventDefault()
         axios({
             url:`${APP_API_URL}/api/Admin/login-admin`,

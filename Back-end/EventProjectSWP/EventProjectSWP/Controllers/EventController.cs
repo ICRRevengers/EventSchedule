@@ -1,5 +1,6 @@
 ﻿using EventProjectSWP.DTOs;
 using EventProjectSWP.Models;
+using EventProjectSWP.Services;
 using EventProjectSWP.Settings;
 using Firebase.Auth;
 using Firebase.Storage;
@@ -37,9 +38,11 @@ namespace EventProjectSWP.Controllers
         [HttpGet("get-event-list")]
         public IActionResult Get()
         {
+            
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+<<<<<<< HEAD
                                tblAdmin.admin_id, tblAdmin.admin_name,
                                tblPayment.payment_fee, tblPayment.payment_url,
                                tblCategory.category_name,
@@ -51,8 +54,23 @@ namespace EventProjectSWP.Controllers
                                inner JOIN tblCategory ON e.category_id = tblCategory.category_id
                                inner JOIN tblImage ON e.event_id = tblImage.event_id
                                inner JOIN tblVideo ON e.event_id = tblVideo.event_id";
+=======
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id";
+>>>>>>> main
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+
+
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
@@ -97,6 +115,59 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>(e.Message));
             }
         }
+
+
+        [HttpGet("get-event-club-admin-own")]
+        public IActionResult GêtventClubAdminOwn(int adminId)
+        {
+            try
+            {
+                
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where tblAdmin.admin_id = @admin_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+
+
+
         [HttpGet("get-event-with-image")]
         public IActionResult GetEventWithImage()
         {
@@ -228,12 +299,15 @@ Where E.event_id = I.event_id ";
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       FULL JOIN tblLocation ON E.location_id = tblLocation.location_id
-       FULL JOIN tblPayment ON E.event_id = tblPayment.event_id
-       FULL JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       FULL JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where event_start >= GETDATE()";
 
                 DataTable table = new DataTable();
@@ -263,6 +337,58 @@ Where E.event_id = I.event_id ";
             }
         }
 
+
+
+        [HttpGet("show-upcoming-event-of-a-club")]
+        public IActionResult Show_upcoming_event_of_a_club(int adminId)
+        {
+            try
+            {
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where event_start >= GETDATE()
+       and E.admin_id = @admin_id  ";
+
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+
+
+
         [HttpGet("show-past-event")]
         public IActionResult Show_past_event()
         {
@@ -271,12 +397,15 @@ Where E.event_id = I.event_id ";
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       FULL JOIN tblLocation ON E.location_id = tblLocation.location_id
-       FULL JOIN tblPayment ON E.event_id = tblPayment.event_id
-       FULL JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       FULL JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where event_start < GETDATE()";
 
                 DataTable table = new DataTable();
@@ -307,28 +436,71 @@ Where E.event_id = I.event_id ";
 
         }
 
-        [HttpPost("add-event")]
-        public async Task<IActionResult> PostAsync([FromForm] MultipleFilesUpload objectFile,string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, int adminID, string paymentUrl, int paymentFee)
+
+
+        [HttpGet("show-past-event-of-a-club")]
+        public IActionResult Show_past_event_of_a_club(int adminId)
         {
-            string imgname;
-            Boolean check;
-            FileStream ms;
             try
             {
-                string queryAddEvent = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,event_status,category_id,location_id,admin_id) 
-values(@event_name,@event_content,@event_start,@event_end,@event_status,@category_id,@location_id,@admin_id) SELECT SCOPE_IDENTITY() as [event_id]";
-                string queryAddPayment = @"insert into dbo.tblPayment(payment_url,payment_fee,event_id)
-values(@payment_url,@payment_fee,@event_id)";
-                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where event_start < GETDATE()
+       and E.admin_id = @admin_id  ";
+
                 DataTable table = new DataTable();
-                DataTable table2 = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
                 {
                     myCon.Open();
-                    using (SqlCommand myCommand = new SqlCommand(queryAddEvent, myCon))
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@event_name", eventName);
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response<string>(e.Message));
+            }
+        }
+
+
+        [HttpPost("add-event")]
+        public IActionResult PostAsync(AddEvent eventcs)
+        {
+            //System.Diagnostics.Debug.WriteLine(eventcs.eventStart);
+            /*
+             [FromForm] MultipleFilesUpload objectFile
+            CheckEvent CheckEvent = new CheckEvent();
+           List<string> errorList = CheckEvent.checkAddEventNull(eventName, eventCotent, eventStart, eventEnd, categoryID, locationID, adminID);
+           if (errorList.Count > 0)
+           {
+               return BadRequest(new Response<List<string>>(errorList));
+           }
+           string eventName, string eventCotent, DateTime eventStart, DateTime eventEnd, bool eventStatus, string categoryID, string locationID, string adminID, string paymentUrl, int paymentFee
+             myCommand.Parameters.AddWithValue("@event_name", eventName);
                         myCommand.Parameters.AddWithValue("@event_content", eventCotent);
                         myCommand.Parameters.AddWithValue("@event_start", eventStart);
                         myCommand.Parameters.AddWithValue("@event_end", eventEnd);
@@ -336,15 +508,67 @@ values(@payment_url,@payment_fee,@event_id)";
                         myCommand.Parameters.AddWithValue("@category_id", categoryID);
                         myCommand.Parameters.AddWithValue("@location_id", locationID);
                         myCommand.Parameters.AddWithValue("@admin_id ", adminID);
+           */
+            string imgname;
+            Boolean check;
+            FileStream ms;
+            try
+            {
+                string queryAddEvent = @"insert into dbo.tblEvent(event_name,event_content,event_start,event_end,event_status,category_id,location_id,admin_id) 
+                                         values(@event_name,@event_content,@event_start,@event_end,@event_status,@category_id,@location_id,@admin_id) SELECT SCOPE_IDENTITY() as [event_id]";
+                string queryAddPayment = @"insert into dbo.tblPayment(payment_url,payment_fee,event_id)
+                                         values(@payment_url,@payment_fee,@event_id)";
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                CheckEvent checkevent = new CheckEvent();
+                string eventchecklocation = checkevent.checkLocation(sqlDataSource);
+                if(eventchecklocation.Equals("Location is not available"))
+                {
+                    return BadRequest(new Response<string>(eventchecklocation));
+                }else
+                    if (eventchecklocation.Equals("OK")){
+                    checkevent = new CheckEvent();
+                    string eventcheckdate = checkevent.checkOccupied(eventcs.eventStart, eventcs.eventEnd, sqlDataSource);
+                    if (!eventcheckdate.Equals("Ok"))
+                    {
+                        return BadRequest(new Response<string>(eventcheckdate));
+                    }
+                }
+                DataTable table = new DataTable();
+                DataTable table2 = new DataTable();
+                SqlDataReader myReader;
+                TimeSpan add7 = new TimeSpan(7,0,0);
+                DateTime fixStart = eventcs.eventStart.Add(add7);
+                DateTime fixEnd = eventcs.eventEnd.Add(add7);
+                System.Diagnostics.Debug.WriteLine(fixStart.ToString());
+                System.Diagnostics.Debug.WriteLine(eventcs.eventStart);
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(queryAddEvent, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_name", eventcs.eventName);
+                        myCommand.Parameters.AddWithValue("@event_content", eventcs.eventContent);
+                        myCommand.Parameters.AddWithValue("@event_start", fixStart);
+                        myCommand.Parameters.AddWithValue("@event_end", fixEnd);
+                        myCommand.Parameters.AddWithValue("@event_status", eventcs.eventStatus);
+                        myCommand.Parameters.AddWithValue("@category_id", eventcs.categoryID);
+                        myCommand.Parameters.AddWithValue("@location_id", eventcs.locationID);
+                        myCommand.Parameters.AddWithValue("@admin_id ", eventcs.adminID);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
-
                     }
                     using (SqlCommand myCommand = new SqlCommand(queryAddPayment, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@payment_url", paymentUrl);
-                        myCommand.Parameters.AddWithValue("@payment_fee", paymentFee);
+                        if(eventcs.paymentUrl == null || eventcs.paymentFee == 0)
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", "No fee");
+                        }
+                        else
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", eventcs.paymentUrl);
+                        }
+                        myCommand.Parameters.AddWithValue("@payment_fee", eventcs.paymentFee);
                         foreach (DataRow data in table.Rows)
                         {
                             
@@ -354,7 +578,12 @@ values(@payment_url,@payment_fee,@event_id)";
                         myReader.Close();
                     }
                 }
+                /*
                 var files = objectFile.files;
+                if(files == null)
+                {
+                    return Ok(new Response<string>(null, "Add Event and Payment but no image"));
+                }
                 foreach (var file in files)
                 {
                     string path = Directory.GetCurrentDirectory() + "\\images\\";
@@ -393,7 +622,10 @@ values(@payment_url,@payment_fee,@event_id)";
                             .Child($"{imgname}")
                             .PutAsync(ms, cancellation.Token);
                         string link = await task;
-                        string queryAddImage = @"insert into tblImage values (@image_url,@event_id,@image_name)";
+                */
+                RandomRD rD = new RandomRD(_configuration);
+                imgname = rD.Random_Name();
+                string queryAddImage = @"insert into tblImage values (@image_url,@event_id,@image_name)";
                         string checkquery = @"select * from tblImage where image_name = @image_name";
                         table2 = new DataTable();
                         using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -402,7 +634,7 @@ values(@payment_url,@payment_fee,@event_id)";
                             using (SqlCommand myCommand = new SqlCommand(queryAddImage, myCon))
                             {
                                 //myCommand.Parameters.AddWithValue("@image_id", id);
-                                myCommand.Parameters.AddWithValue("@image_url", link);
+                                myCommand.Parameters.AddWithValue("@image_url", eventcs.imageUrl);
                                 myCommand.Parameters.AddWithValue("@image_name", imgname);
                                 foreach (DataRow data in table.Rows)
                                 {
@@ -422,6 +654,7 @@ values(@payment_url,@payment_fee,@event_id)";
                                 myCon.Close();
                             }
                         }
+                        /*
                         ms.Close();
                         DirectoryInfo DI = new DirectoryInfo(path);
                         foreach (FileInfo fileinfo in DI.GetFiles())
@@ -429,16 +662,15 @@ values(@payment_url,@payment_fee,@event_id)";
                             fileinfo.Delete();
                         }
                         Directory.Delete(path);
-
-                    }
-                }
+                        */
+                    //}
+                //}
                     return Ok(new Response<string>(null ,"Add Sucessfully"));
             }
             catch (Exception e)
             {
-                throw;
-                //return BadRequest(new Response<string>(e.Message));
-            }
+                return BadRequest(new Response<string>(e.Message));
+            }          
         }
 
         [HttpPut("update-event")]
@@ -447,16 +679,17 @@ values(@payment_url,@payment_fee,@event_id)";
             try
             {
                 string query = @"update dbo.tblEvent 
-                           set event_name = @event_name, event_content = @event_content, 
-                           event_start = @event_start,event_end = @event_end,  
-                            event_status = @event_status, 
-                           category_id = @category_id, 
-                           location_id = @location_id, admin_id = @admin_id 
-                           where event_id = @event_id";
+                              set event_name = @event_name, event_content = @event_content, 
+                              event_start = @event_start,event_end = @event_end,  
+                              event_status = @event_status, 
+                              category_id = @category_id, 
+                              location_id = @location_id, admin_id = @admin_id 
+                              where event_id = @event_id";
                 string query2 = @"update dbo.tblPayment
-set payment_url = @payment_url,
-payment_fee = @payment_fee
-where event_id = @event_id";
+                                set payment_url = @payment_url,
+                                payment_fee = @payment_fee
+                                where event_id = @event_id";
+                string query3 = @"update tblImage set image_url=  @image_url where event_id =@event_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -479,9 +712,24 @@ where event_id = @event_id";
                     }
                     using (SqlCommand myCommand = new SqlCommand(query2, myCon))
                     {
-                        myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        if (Event.paymentUrl == null || Event.paymentFee == 0)
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", "No fee");
+                        }
+                        else
+                        {
+                            myCommand.Parameters.AddWithValue("@payment_url", Event.paymentUrl);
+                        }
                         myCommand.Parameters.AddWithValue("@payment_fee", Event.paymentFee);
-                            myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                    }
+
+                    using (SqlCommand myCommand = new SqlCommand(query3, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@image_url", Event.imageUrl);
+                        myCommand.Parameters.AddWithValue("@event_id", Event.eventID);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -569,12 +817,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
        where event_name LIKE @event_name ";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -610,6 +858,7 @@ where event_id = @event_id";
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+<<<<<<< HEAD
                                tblAdmin.admin_id, tblAdmin.admin_name,
                                tblPayment.payment_fee, tblPayment.payment_url,
                                tblCategory.category_name,
@@ -622,6 +871,20 @@ where event_id = @event_id";
                                INNER JOIN tblImage ON e.event_id = tblImage.event_id
                                INNER JOIN tblVideo ON e.event_id = tblVideo.event_id
                                where E.event_id = @event_id";
+=======
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,tblCategory.category_id,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where E.event_id = @event_id";
+>>>>>>> main
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -662,12 +925,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
                            where event_start between 
                             @d1 AND @d2";
                 DataTable table = new DataTable();
@@ -711,12 +974,12 @@ where event_id = @event_id";
        tblCategory.category_name,
        tblImage.image_url,tblVideo.video_url    
        from tblEvent E
-       inner JOIN tblLocation ON E.location_id = tblLocation.location_id
-       inner JOIN tblPayment ON E.event_id = tblPayment.event_id
-       inner JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       inner JOIN tblCategory ON e.category_id = tblCategory.category_id
-       inner JOIN tblImage ON e.event_id = tblImage.event_id
-       inner JOIN tblVideo ON e.event_id = tblVideo.event_id 
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id 
                            where event_start = @event_start";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -774,6 +1037,125 @@ where event_id = @event_id";
                 return true;
             }
             return false;
+        }
+
+        [HttpGet("Get-Location-Open")]
+        public IActionResult GetLocationOpen()
+        {
+            try
+            {
+                string query = @"select location_id, location_detail ,location_status from tblLocation 
+                                 where location_status = 'open' or location_status = 'Open'";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+        }
+
+        [HttpGet("get-category-list")]
+        public IActionResult GetCategorylist()
+        {
+            try
+            {
+                string query = @"select category_id, category_name from tblCategory ";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+        }
+
+
+
+
+        [HttpGet("search-in-club")]
+        public IActionResult SearchInClub(string name, int adminId)
+        {
+            try
+            {
+                string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
+       tblAdmin.admin_id, tblAdmin.admin_name,
+       tblPayment.payment_fee, tblPayment.payment_url,
+       tblCategory.category_name,
+       tblImage.image_url,tblVideo.video_url    
+       from tblEvent E
+       left JOIN tblLocation ON E.location_id = tblLocation.location_id
+       left JOIN tblPayment ON E.event_id = tblPayment.event_id
+       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
+       left JOIN tblCategory ON e.category_id = tblCategory.category_id
+       left JOIN tblImage ON e.event_id = tblImage.event_id
+       left JOIN tblVideo ON e.event_id = tblVideo.event_id
+       where event_name LIKE @event_name 
+       and E.admin_id = @admin_id";
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@event_name", "%" + name + "%");
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    return Ok(new Response<DataTable>(table));
+                }
+                return BadRequest(new Response<string>("No Data"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<string>(ex.Message));
+            }
+
         }
 
     }

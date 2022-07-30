@@ -8,26 +8,24 @@ import {
     Typography,
     Box,
     Grid,
-    Paper,
     FormControl,
     Input,
     Select,
     MenuItem,
-    experimentalStyled as styled,
-} from '@mui/material/';
+    // experimentalStyled as styled,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useAdminEvents } from '../../recoil/adminEvents';
 import { useSnackbar } from '../../HOCs';
 import { Link } from 'react-router-dom';
 
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
+// const Item = styled(Paper)(({ theme }) => ({
+//     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//     ...theme.typography.body2,
+//     padding: theme.spacing(2),
+//     textAlign: 'center',
+//     color: theme.palette.text.secondary,
+// }));
 
 const AdminHome = () => {
     const [events, setEvents] = useState([]);
@@ -37,6 +35,7 @@ const AdminHome = () => {
         getEvents()
             .then((resposne) => {
                 const data = resposne.data.data;
+                console.log(data);
                 setEvents(data);
             })
             .catch(() => {
@@ -45,18 +44,19 @@ const AdminHome = () => {
                     children: 'Something went wrong, please try again later.',
                 });
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const [values, setValues] = useState();
+    // const [values, setValues] = useState();
 
     const handleChange = (event) => {
         this.setState({ value: event.target.value });
     };
 
-    const handleSubmit = (event) => {
-        alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
-    };
+    // const handleSubmit = (event) => {
+    //     alert('A name was submitted: ' + this.state.value);
+    //     event.preventDefault();
+    // };
 
     return (
         <>
@@ -64,9 +64,9 @@ const AdminHome = () => {
                 <Grid
                     container
                     padding={{ xs: 2, md: 5 }}
-                    columns={{ xs: 3, sm: 12 }}
+                    columns={{ xs: 4, sm: 12 }}
                 >
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
@@ -77,35 +77,26 @@ const AdminHome = () => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }}>
+                    <Grid xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
-                                onChange={handleChange}
+                                // onChange={eventTimeStart}
                                 name="searchEvent"
                                 id="searchEventTime"
                                 type="date"
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }} >
-                        <FormControl fullWidth variant="standard" >
+                    <Grid xs={4} padding={{ sm: 2 }}>
+                        <FormControl fullWidth variant="standard">
                             <Select
                                 id="searchStatus"
                                 onChange={handleChange}
+                                // defaultValue={EventStatus}
                             >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={1}>Sắp diễn ra</MenuItem>
-                                <MenuItem value={0}>Đã diễn ra</MenuItem>
+                                <MenuItem value={true}>Sắp diễn ra</MenuItem>
+                                <MenuItem value={false}>Đã diễn ra</MenuItem>
                             </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid xs={3} padding={{ sm: 2 }}>
-                        <FormControl fullWidth>
-                            <Button variant="contained" onChange={handleChange}>
-                                Tìm kiếm
-                            </Button>
                         </FormControl>
                     </Grid>
                 </Grid>
@@ -123,8 +114,8 @@ const AdminHome = () => {
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image="/assets/images/campus.jpg"
-                                    alt="green iguana"
+                                    image={event?.image_url}
+                                    alt={event.event_name}
                                 />
                                 <CardContent>
                                     <Typography
@@ -142,14 +133,10 @@ const AdminHome = () => {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Share</Button>
-                                    
-                                    
                                     <Link
                                         to={`/user/eventdetail/${event.event_id}`}
                                     >
-                                        <Button size="small">More detail</Button>
-                                            
+                                        <Button size="small">Chi tiết</Button>
                                     </Link>
                                 </CardActions>
                             </Card>

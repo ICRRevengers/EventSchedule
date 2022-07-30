@@ -114,4 +114,4 @@ Backup*/
 UpgradeLog*.XML
 *.dtbcache.v2
 *.futdcache.v1
-*.vs
+/EventProjectSWP/.vs

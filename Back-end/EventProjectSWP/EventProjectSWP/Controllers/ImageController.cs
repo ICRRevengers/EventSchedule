@@ -1,5 +1,5 @@
 ﻿using EventProjectSWP.Models;
-using EventProjectSWP.Settings;
+using EventProjectSWP.Services;
 using Firebase.Auth;
 using Firebase.Storage;
 using Microsoft.AspNetCore.Hosting;

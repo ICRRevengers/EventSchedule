@@ -23,6 +23,7 @@ function UserParticipatedList() {
     const { getEventIJoined } = useUserEvents();
     const [openFeedback, setOpenFeedBack] = useState(false);
     const [isClickableFeedback, setIsClickableFeedback] = useState(null);
+    const [ableToFeedback, setAbleToFeedback] = useState(true)
 
     const feedbackOpenHandler = (eventId) => {
         setOpenFeedBack(true);
@@ -31,8 +32,6 @@ function UserParticipatedList() {
     const feedbackCloseHandler = () => {
         setOpenFeedBack(false);
     };
-
-
 
     useEffect(() => {
         setLoading(true);
@@ -108,7 +107,7 @@ function UserParticipatedList() {
                                     <TableCell align="center">
                                         {(event.event_id ===
                                             isClickableFeedback &&
-                                        openFeedback) === true ? (
+                                            openFeedback) === true ? (
                                             <Button
                                                 variant="contained"
                                                 onClick={() =>
@@ -116,6 +115,7 @@ function UserParticipatedList() {
                                                         event.event_id,
                                                     )
                                                 }
+                                                disabled={event.is_feedback || (!ableToFeedback && event.event_id === isClickableFeedback)}
                                                 sx={{
                                                     opacity: 0.5,
                                                 }}
@@ -133,6 +133,7 @@ function UserParticipatedList() {
                                                 sx={{
                                                     opacity: 1,
                                                 }}
+                                                disabled={event.is_feedback || (!ableToFeedback && event.event_id === isClickableFeedback)}
                                             >
                                                 Feedback
                                             </Button>
@@ -144,10 +145,15 @@ function UserParticipatedList() {
                     </Table>
                 </TableContainer>
             )}
-            <CreateFeedBack
-                open={openFeedback}
-                onClose={feedbackCloseHandler}
-            />
+            {openFeedback && (
+                <CreateFeedBack
+                    open={openFeedback}
+                    onClose={feedbackCloseHandler}
+                    eventId={isClickableFeedback}
+                    userId={id}
+                    setAbleToFeedback={setAbleToFeedback}
+                />
+            )}
         </React.Fragment>
     );
 }
