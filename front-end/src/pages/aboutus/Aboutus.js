@@ -46,7 +46,7 @@ const Aboutus = () => {
                     <ButtonBase sx={{ width: 128, height: 128 }}>
                         <Img
                             alt="complex"
-                            src="/static/images/grid/complex.jpg"
+                            src={club.image_url}
                         />
                     </ButtonBase>
                 </Grid>
