@@ -107,7 +107,7 @@ const ManageClubs = () => {
                             <TableCell align="center">Số điện thoại</TableCell>
                             <TableCell align="center">Email</TableCell>
                             <TableCell align="center">Vai trò</TableCell>
-                            <TableCell align="center">Xóa</TableCell>
+                            <TableCell align="center">Trạng thái</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -136,13 +136,14 @@ const ManageClubs = () => {
                                     {club?.admin_role}
                                 </TableCell>
                                 <TableCell align="center">
+                                    {club?.admin_status}
                                     <Button
                                         onClick={(e) =>
                                             deleteItem(club.admin_id)
                                         }
                                         variant="contained"
                                     >
-                                        Xóa
+                                        Thay đổi
                                     </Button>
                                 </TableCell>
                             </TableRow>
