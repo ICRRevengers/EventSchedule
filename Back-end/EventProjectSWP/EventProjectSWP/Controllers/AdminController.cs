@@ -282,6 +282,11 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>("invalid-email-or-password"));
             }
 
+            if (!(bool)table.Rows[0]["admin_status"])
+            {
+                return BadRequest(new Response<string>("your account is banned, please contact to unlock"));
+            }
+
             Admin admin = new Admin()
             {
                 adminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
