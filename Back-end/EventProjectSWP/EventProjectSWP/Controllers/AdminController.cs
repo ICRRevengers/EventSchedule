@@ -33,7 +33,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role,image_url from dbo.tblAdmin";
+                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role,image_url, admin_status from dbo.tblAdmin";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -126,7 +126,7 @@ namespace EventProjectSWP.Controllers
             }
         }
 
-        [HttpDelete("Delete-admin-by-id")]
+        [HttpDelete("Deactive-admin-by-id")]
 
         public IActionResult DeleteAdminById(int id)
         {
