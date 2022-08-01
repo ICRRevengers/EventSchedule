@@ -1,58 +1,95 @@
 import React, { useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { useSnackbar } from '../../HOCs';
+import { Stack, TextField, Button } from '@mui/material';
 import '../../App.scss';
 
-const Result = () => {
-  return (
-    alert('Lời nhắn của bạn đã được gửi đi thành công. Chúng tôi sẽ liên lạc với bạn sau.')
-  )
-}
-
 const Contact = () => {
-  // const form = useRef();
-  const [result, showResult] = useState(false);
+    // const form = useRef();
+    const [result, showResult] = useState(false);
+    const showSackbar = useSnackbar();
 
-  const sendEmail = (e) => {
-    e.preventDefault();
+    const sendEmail = (e) => {
+        e.preventDefault();
 
-    emailjs
-      .sendForm('essgmail', 'template_ess', e.target, 'qgWIwkNalDiLxrVfi')
-      .then((result) => {
-        console.log(result.text);
-      }, (error) => {
-        console.log(error.text);
-      });
-    e.target.reset();
-    showResult(true);
-  };
+        emailjs
+            .sendForm('essgmail', 'template_ess', e.target, 'qgWIwkNalDiLxrVfi')
+            .then(
+                () => {
+                    showSackbar({
+                        severity: 'success',
+                        children: 'Sent sucessfully',
+                    });
+                },
+                (error) => {
+                    console.log(error.text);
+                },
+            );
+        e.target.reset();
+        showResult(true);
+    };
 
-  return (
-    <>
-      <form className='Contact max-w-[700px]' method='post' onSubmit={sendEmail}>
-        <div className='form-row' >
-        <label className="form-label">Họ và tên</label>
-        <input className='form-input' type="text" name="user_name" required />
-        </div>
-        <div className='form-row' >
-        <label className="form-label">Email</label>
-        <input className="form-input" type="email" name="user_email" required />
-        </div>
-        <div className='form-row' >
-        <label className="form-label">Số điện thoại</label>
-        <input className="form-input" type="tel" name="user_phone" required />
-        </div>
-        <div className='form-row' >
-        <label className='form-label'>Lời nhắn</label>
-        <textarea className='form-input h-[150px]' name="message" required />
-        </div>
-        <div className='form-row' >
-        <button className='form-submit'>Gửi</button>
-        </div>
-        
-        {result ? <Result /> : null}
-      </form>
-    </>
-  );
+    return (
+        <>
+            <Stack
+                component="form"
+                sx={{
+                    width: '370px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    paddingTop: '30px',
+                    paddingBottom: '30px'
+                }}
+                spacing={2}
+                onSubmit={sendEmail}
+            >
+                <TextField
+                    label="Họ và tên"
+                    variant="outlined"
+                    color="warning"
+                    name="user_name"
+                    focused
+                    required
+                    fullWidth
+                />
+                <TextField
+                    label="Email"
+                    variant="outlined"
+                    color="warning"
+                    type='email'
+                    name="user_email"
+                    focused
+                    required
+                    fullWidth
+                />
+                <TextField
+                    label="Số điện thoại"
+                    variant="outlined"
+                    color="warning"
+                    type='tel'
+                    name="user_phone"
+                    focused
+                    required
+                    fullWidth
+                />
+                <TextField
+                    label="Lời nhắn"
+                    variant="outlined"
+                    color="warning"
+                    name="message"
+                    focused
+                    required
+                    fullWidth
+                />
+                <Button
+                    variant="contained"
+                    color="warning"
+                    type='submit'
+                >Gửi</Button>
+            </Stack>
+        </>
+    );
 };
 
 export default Contact;

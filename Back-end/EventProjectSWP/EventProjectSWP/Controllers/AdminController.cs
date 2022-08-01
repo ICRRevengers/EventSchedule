@@ -33,7 +33,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role from dbo.tblAdmin";
+                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role,image_url, admin_status from dbo.tblAdmin";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -66,7 +66,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"insert into tblAdmin values(@admin_name,@admin_phone,@admin_email,@admin_password,@admin_role)";
+                string query = @"insert into tblAdmin values(@admin_name,@admin_phone,@admin_email,@admin_password,@admin_role,@admin_status,@image_url)";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -79,6 +79,8 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@admin_email", addAdmin.adminEmail);
                         myCommand.Parameters.AddWithValue("@admin_password", addAdmin.adminPassword);
                         myCommand.Parameters.AddWithValue("@admin_role", addAdmin.adminRole);
+                        myCommand.Parameters.AddWithValue("@admin_status", addAdmin.adminStatus);
+                        myCommand.Parameters.AddWithValue("@image_url", addAdmin.image_url);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
                         myCon.Close();
@@ -98,7 +100,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"update dbo.tblAdmin set admin_name =@admin_name,admin_phone=@admin_phone,admin_password=@admin_password where admin_id =@admin_id";
+                string query = @"update dbo.tblAdmin set admin_name =@admin_name,admin_phone=@admin_phone,admin_password=@admin_password,image_url=@image_url where admin_id =@admin_id";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -109,6 +111,7 @@ namespace EventProjectSWP.Controllers
                         myCommand.Parameters.AddWithValue("@admin_name", updateAdmin.adminName);
                         myCommand.Parameters.AddWithValue("@admin_phone", updateAdmin.adminPhone);
                         myCommand.Parameters.AddWithValue("@admin_password", updateAdmin.adminPassword);
+                        myCommand.Parameters.AddWithValue("@image_url", updateAdmin.imageUrl);
                         myCommand.Parameters.AddWithValue("@admin_id", adminId);
                         myReader = myCommand.ExecuteReader();
                         myReader.Close();
@@ -123,13 +126,43 @@ namespace EventProjectSWP.Controllers
             }
         }
 
-        [HttpDelete("Delete-admin-by-id")]
+        [HttpDelete("Deactive-admin-by-id")]
 
         public IActionResult DeleteAdminById(int id)
         {
             try
             {
-                string query = @"delete from tblAdmin where admin_id = @admin_id";
+                string query = @"update dbo.tblAdmin set admin_status = @admin_status where admin_id =@admin_id";
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_status", false);
+                        myCommand.Parameters.AddWithValue("@admin_id", id);
+                        myReader = myCommand.ExecuteReader();
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+                 return Ok(new Response<string>(null, "Delete Sucessfully"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response<DataTable>(ex.Message));
+            }
+        }
+
+
+        [HttpPut("Restore-admin-by-id")]
+
+        public IActionResult ActiveAdminById(int id)
+        {
+            try
+            {
+                string query = @"update tblAdmin set admin_status = 'True' where admin_id = @admin_id";
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
                 using (SqlConnection myCon = new SqlConnection(sqlDataSource))
@@ -143,13 +176,16 @@ namespace EventProjectSWP.Controllers
                         myCon.Close();
                     }
                 }
-                 return Ok(new Response<DataTable>("Delete successfully"));
+                return Ok(new Response<string>(null, "Active Sucessfully"));
             }
             catch (Exception ex)
             {
                 return BadRequest(new Response<DataTable>(ex.Message));
             }
         }
+
+
+
 
         [HttpGet("get-admin-by-id")]
         public IActionResult GetClubById(string id)
@@ -246,6 +282,11 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>("invalid-email-or-password"));
             }
 
+            if (!(bool)table.Rows[0]["admin_status"])
+            {
+                return BadRequest(new Response<string>("your account is banned, please contact to unlock"));
+            }
+
             Admin admin = new Admin()
             {
                 adminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
@@ -326,7 +367,35 @@ namespace EventProjectSWP.Controllers
 
         }
 
+        [HttpGet("change-status-admin")]
+        public IActionResult ChangeStatusAdmin(int adminId, bool status)
+        {
+            try 
+            {
+                string query = @"update dbo.tblAdmin set admin_status = @admin_status where admin_id = @admin_id";
 
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_status", status);
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+            } catch
+            {
+                return BadRequest();
+            }
+            return Ok(new Response<bool>(status));
+        }
 
     }
 }

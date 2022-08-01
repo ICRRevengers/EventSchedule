@@ -21,14 +21,18 @@ const useAdminClubs = () => {
                 adminPhone: phone,
                 adminEmail: email,
                 adminPassword: password,
-                adminRole: role
+                adminRole: role,
+                image_url: ""
               }
         })
+
+    const changeClubStatus = (userId, status) => get({endpoint:`/api/Admin/change-status-admin?adminId=${userId}&status=${status}`})
     return {
         getClubs,
         deleteClub,
         searchClubs,
-        addClub
+        addClub,
+        changeClubStatus
     };
 };
 export default useAdminClubs;

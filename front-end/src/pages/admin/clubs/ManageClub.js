@@ -19,27 +19,44 @@ import { useSnackbar } from '../../../HOCs';
 const ManageClubs = () => {
     const [clubs, setClubs] = useState([]);
     const showSackbar = useSnackbar();
-    const { getClubs, searchClubs, deleteClub } = useAdminClubs();
+    const { getClubs, searchClubs, changeClubStatus } = useAdminClubs();
     const [name, setName] = useState('');
+    const [clubsStatusClone, setClubsStatusClone] = useState([])
 
-    function deleteItem(id) {
-        deleteClub(id)
-            .then((resposne) => {
-                const deletedArray = clubs.filter(
-                    (club) => club.admin_id !== id,
-                );
-                setClubs(deletedArray);
-                showSackbar({
-                    severity: 'success',
-                    children: 'Delete successfully',
-                });
-            })
-            .catch(() => {
-                showSackbar({
-                    severity: 'error',
-                    children: 'Something went wrong, please try again later.',
-                });
+    // function deleteItem(id) {
+    //     deleteClub(id)
+    //         .then((resposne) => {
+    //             const deletedArray = clubs.filter(
+    //                 (club) => club.admin_id !== id,
+    //             );
+    //             setClubs(deletedArray);
+    //             showSackbar({
+    //                 severity: 'success',
+    //                 children: 'Delete successfully',
+    //             });
+    //         })
+    //         .catch(() => {
+    //             showSackbar({
+    //                 severity: 'error',
+    //                 children: 'Something went wrong, please try again later.',
+    //             });
+    //         });
+    // }
+
+
+    const changeClubStatusHandler = (userId, status, index) => {
+        changeClubStatus(userId, status).then(response => {
+            const data = response.data.data 
+            const clubsClone = [...clubs]
+            clubsClone[index].admin_status = data
+            const clubStatusChanged = clubsClone.map(club => club.admin_status)
+            setClubsStatusClone(clubStatusChanged)
+        }).catch(() => {
+            showSackbar({
+                severity: 'error',
+                children: 'Something went wrong, please try again later.',
             });
+        })
     }
 
     const eventNameHandler = (event) => {
@@ -65,6 +82,8 @@ const ManageClubs = () => {
             .then((resposne) => {
                 const data = resposne.data.data;
                 setClubs(data);
+                const statusArray = data.map(club => club.admin_status)
+                setClubsStatusClone(statusArray)
             })
             .catch(() => {
                 showSackbar({
@@ -102,16 +121,16 @@ const ManageClubs = () => {
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell>Mã số</TableCell>
+                            <TableCell>STT</TableCell>
                             <TableCell align="center">Tên quản trị viên</TableCell>
                             <TableCell align="center">Số điện thoại</TableCell>
                             <TableCell align="center">Email</TableCell>
                             <TableCell align="center">Vai trò</TableCell>
-                            <TableCell align="center">Xóa</TableCell>
+                            <TableCell align="center">Thay đổi trạng thái</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {clubs?.map((club) => (
+                        {clubs?.map((club, index) => (
                             <TableRow
                                 key={clubs?.admin_id}
                                 sx={{
@@ -121,7 +140,7 @@ const ManageClubs = () => {
                                 }}
                             >
                                 <TableCell component="th" scope="row">
-                                    {club?.admin_id}
+                                    {index + 1}
                                 </TableCell>
                                 <TableCell align="center">
                                     {club?.admin_name}
@@ -136,13 +155,15 @@ const ManageClubs = () => {
                                     {club?.admin_role}
                                 </TableCell>
                                 <TableCell align="center">
+                                    {club?.admin_status}
                                     <Button
                                         onClick={(e) =>
-                                            deleteItem(club.admin_id)
+                                            changeClubStatusHandler(club.admin_id, !club.admin_status, index)
                                         }
-                                        variant="contained"
+                                        variant="outlined"
+                                        color={clubsStatusClone[index] ? 'error' : 'success'}
                                     >
-                                        Xóa
+                                        {clubsStatusClone[index] ? 'Inactive' : 'Active'}
                                     </Button>
                                 </TableCell>
                             </TableRow>

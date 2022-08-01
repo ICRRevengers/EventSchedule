@@ -8,16 +8,17 @@ import queryString from 'query-string';
 import { useSnackbar } from '../../HOCs';
 import { useAuthActions } from '../../recoil/auth';
 import HeaderFooter from '../../components/layout/defaultLayout/header-footer/HeaderFooter';
-
+import { Stack, Button, TextField, FormLabel } from '@mui/material';
+import { margin } from '@mui/system';
 
 function Login() {
-    const { search } = useLocation()
-    const showSnackbar = useSnackbar()
-    const { token, error } = queryString.parse(search)
-    const { login} = useAuthActions()
+    const { search } = useLocation();
+    const showSnackbar = useSnackbar();
+    const { token, error } = queryString.parse(search);
+    const { login } = useAuthActions();
 
-    const [adminUserName, setAdminUserName] = useState('')
-    const [adminPassword, setAdminPassword] = useState('')
+    const [adminUserName, setAdminUserName] = useState('');
+    const [adminPassword, setAdminPassword] = useState('');
 
     useEffect(() => {
         if (error && error === 'fpt-invalid-email') {
@@ -36,81 +37,96 @@ function Login() {
     }, []);
 
     const loginGoogle = () => {
-        window.location.assign(`${APP_API_URL}/api/Authentication/google-login`);
+        window.location.assign(
+            `${APP_API_URL}/api/Authentication/google-login`,
+        );
     };
 
     const adminLogin = (event) => {
-        event.preventDefault()
+        event.preventDefault();
         axios({
-            url:`${APP_API_URL}/api/Admin/login-admin`,
-            method:'post',
+            url: `${APP_API_URL}/api/Admin/login-admin`,
+            method: 'post',
             data: {
                 adminMail: adminUserName,
                 adminPassword: adminPassword,
             },
-        }).then(res => {
-            login(res.data.data)
-        }).catch(error => {
-            showSnackbar({
-                severity: 'error',
-                children: error.response.data.message,
-            });
         })
-    }
+            .then((res) => {
+                login(res.data.data);
+            })
+            .catch((error) => {
+                showSnackbar({
+                    severity: 'error',
+                    children: error.response.data.message,
+                });
+            });
+    };
 
     const userNameHandle = (event) => {
-        setAdminUserName(event.target.value)
-    }
+        setAdminUserName(event.target.value);
+    };
 
     const passwordHandle = (event) => {
-        setAdminPassword(event.target.value)
-    }
+        setAdminPassword(event.target.value);
+    };
 
     return (
         <HeaderFooter>
-            <div className="login ">
-                <form className="admin-form" onSubmit={adminLogin}>
-                    <p className="">
-                        Nếu bạn là <strong>quản trị viên</strong>, đăng nhập ở
-                        đây
-                    </p>
-                    <div className="">
-                        <div className="form-row">
-                            <input
-                                // type="email"
-                                className="form-input"
-                                id="inputAccount"
-                                onChange={userNameHandle}
-                                placeholder="Tài khoản"
-                            />
-                        </div>
-                        <div className="form-row">
-                            <input
-                                type="password"
-                                className="form-input"
-                                id="inputPassword"
-                                onChange={passwordHandle}
-                                placeholder="Mật khẩu"
-                            />
-                        </div>
-                        <div className="form-row">
-                            <button className="form-submit" type="submit">
-                                Đăng nhập
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div className="student-form">
-                    <p className="">
-                        Nếu bạn là <strong>sinh viên</strong>, đăng nhập với
-                        fpt.edu.vn
-                    </p>
-                    <GoogleButton
-                        className="googleButton"
-                        onClick={loginGoogle}
-                    />
-                </div>
-            </div>
+            <Stack
+                component="form"
+                sx={{
+                    width: '370px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    paddingTop: '20px',
+                }}
+                spacing={2}
+            >
+                <p>
+                    Nếu bạn là <b>quản trị viên</b>, đăng nhập tại đây
+                </p>
+                <TextField
+                    id="outlined-email-input"
+                    label="Tài khoản"
+                    type="email"
+                    onChange={userNameHandle}
+                    required
+                    fullWidth
+                />
+                <TextField
+                    id="outlined-password-input"
+                    label="Mật khẩu"
+                    type="password"
+                    autoComplete="current-password"
+                    onChange={passwordHandle}
+                    required
+                    fullWidth
+                />
+                <Button variant="contained" onClick={adminLogin}>
+                    {' '}
+                    Đăng nhập{' '}
+                </Button>
+                
+            </Stack>
+            <Stack
+                component="form"
+                sx={{
+                    width: '400px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    padding: '35px 0',
+                }}
+                spacing={2}
+            >
+                <p>
+                    Nếu bạn là <strong>sinh viên</strong>,
+                    đăng nhập với fpt.edu.vn
+                </p>
+                <GoogleButton className="googleButton" onClick={loginGoogle} />
+            </Stack>
         </HeaderFooter>
     );
 }
