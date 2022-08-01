@@ -16,12 +16,25 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import { useAdminEvents } from '../../../recoil/adminEvents';
 import { useSnackbar } from '../../../HOCs';
+import AlertConfirm from '../../../components/ConfirmDialog';
 
 const ManageEvents = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
     const { getEvents, deleteEvent, searchEvent } = useAdminEvents();
     const [name, setName] = useState('');
+    const [openDialog, setOpenDialog] = useState(false);
+    const [eventId, setEventId] = useState(-1);
+
+    const openDiaglogHandler = (eventId) => {
+        setOpenDialog(true);
+        setEventId(eventId);
+    };
+
+    const closeDialogHanlder = () => {
+        setOpenDialog(false);
+        setEventId(-1);
+    };
 
     function deleteItem(id) {
         deleteEvent(id)
@@ -144,7 +157,9 @@ const ManageEvents = () => {
                                     </Link>
                                 </TableCell>
                                 <TableCell align="center">
-                                    <Link to={`/admin/manage/update/${event.event_id}`}>
+                                    <Link
+                                        to={`/admin/manage/update/${event.event_id}`}
+                                    >
                                         <Button variant="contained">
                                             Cập nhật
                                         </Button>
@@ -153,7 +168,7 @@ const ManageEvents = () => {
                                 <TableCell align="center">
                                     <Button
                                         onClick={(e) =>
-                                            deleteItem(event.event_id)
+                                            openDiaglogHandler(event.event_id)
                                         }
                                         variant="contained"
                                     >
@@ -165,6 +180,14 @@ const ManageEvents = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <AlertConfirm
+                title={'Xóa event'}
+                children={'Bạn có chắc chắn xóa event này không?'}
+                onClose={closeDialogHanlder}
+                onConfirm={() => deleteItem(eventId)}
+                open={openDialog}
+                btnConfirmText={'Xóa'}
+            />
         </div>
     );
 };
