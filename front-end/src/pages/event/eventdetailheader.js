@@ -19,16 +19,30 @@ import authAtom from '../../recoil/auth/atom';
 import { useRecoilValue } from 'recoil';
 
 const EventDetailHeader = (props) => {
+    
     const history = useHistory();
     const { item } = props;
     const [openPopup, setOpenPopup] = useState(false);
     const current = new Date();
-    const date = `${current.getFullYear()}/${current.getMonth()+1}/${current.getDate()}`;
+    const yyyy = current.getFullYear();
+    let mm = current.getMonth() + 1; // Months start at 0!
+    let dd = current.getDate();
+    let hh = current.getHours();
+    let mi = current.getMinutes();
+    let sec = current.getSeconds();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+    if (hh < 10) hh = '0' + hh;
+    if (mi < 10) mi = '0' + mi;
+    if (sec < 10) sec = '0' + sec;
+    
+    const formattedToday = yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + mi + ':' + sec + '.000Z';
+    // const date = `${current.getFullYear()}-${current.getMonth()+1}-${current.getDate()}T${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}.000Z`;
     const auth = useRecoilValue(authAtom);
     const { joinInEvent } = useUserEvents();
     const showSackbar = useSnackbar();
     const handleClose = () => setOpenPopup(false);
-
     const joinHandler = () => {
         if (item.payment_fee === null || item.payment_fee === 0) {
             setOpenPopup(true);
@@ -38,7 +52,8 @@ const EventDetailHeader = (props) => {
     };
 
     const joinEvent = () => {
-        joinInEvent(item.event_id, auth.userId, date, true, false)
+        // console.log(formattedToday);
+        joinInEvent(item.event_id, auth.userId, formattedToday, true, false)
         .then((resposne) => {
             showSackbar({
                 severity: 'success',

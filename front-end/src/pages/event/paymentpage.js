@@ -27,7 +27,20 @@ const AdminStudentProfile = () => {
     const showSackbar = useSnackbar();
     const auth = useRecoilValue(authAtom);
     const current = new Date();
-    const date = `${current.getFullYear()}/${current.getMonth()+1}/${current.getDate()}`;
+    const yyyy = current.getFullYear();
+    let mm = current.getMonth() + 1; // Months start at 0!
+    let dd = current.getDate();
+    let hh = current.getHours();
+    let mi = current.getMinutes();
+    let sec = current.getSeconds();
+
+    if (dd < 10) dd = '0' + dd;
+    if (mm < 10) mm = '0' + mm;
+    if (hh < 10) hh = '0' + hh;
+    if (mi < 10) mi = '0' + mi;
+    if (sec < 10) sec = '0' + sec;
+    
+    const formattedToday = yyyy + '-' + mm + '-' + dd + 'T' + hh + ':' + mi + ':' + sec + '.000Z';
     useEffect(() => {
         getPayment(id)
             .then((resposne) => {
@@ -44,7 +57,7 @@ const AdminStudentProfile = () => {
     }, []);
 
     const joinEvent = () => {
-        joinInEvent(id, auth.userId, date, false, false)
+        joinInEvent(id, auth.userId, formattedToday, false, false)
         .then((resposne) => {
             showSackbar({
                 severity: 'success',
