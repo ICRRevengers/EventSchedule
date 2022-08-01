@@ -110,10 +110,10 @@ const AdminHome = () => {
                 >
                     {events?.map((event) => (
                         <Grid item xs={2} sm={4} md={4} key={event?.event_id}>
-                            <Card>
+                            <Card sx={{height: '650px'}}>
                                 <CardMedia
                                     component="img"
-                                    height="140"
+                                    sx={{height: '450px'}}
                                     image={event?.image_url}
                                     alt={event.event_name}
                                 />

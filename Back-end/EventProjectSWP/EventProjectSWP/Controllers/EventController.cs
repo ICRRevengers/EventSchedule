@@ -16,6 +16,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace EventProjectSWP.Controllers
 {
@@ -142,7 +143,7 @@ namespace EventProjectSWP.Controllers
                 {
                     return Ok(new Response<DataTable>(table));
                 }
-                return BadRequest(new Response<string>("No Data"));
+                return Ok(new Response<string>("No Data"));
 
 
             }
@@ -826,11 +827,7 @@ Where E.event_id = I.event_id ";
 
                     }
                 }
-                if (table.Rows.Count > 0)
-                {
-                    return Ok(new Response<DataTable>(table));
-                }
-                return BadRequest(new Response<string>("No Data"));
+                return Ok(new Response<DataTable>(table));
             }catch(Exception ex)
             {
                 return BadRequest(new Response<string>(ex.Message));
@@ -939,6 +936,9 @@ Where E.event_id = I.event_id ";
         {
             try
             {
+                DateTime dt = DateTime.ParseExact(event_time, "yyyy-MM-dd",
+                                  CultureInfo.InvariantCulture);
+                var dt1 = dt.AddDays(1);
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
        tblAdmin.admin_id, tblAdmin.admin_name,
        tblPayment.payment_fee, tblPayment.payment_url,
@@ -951,7 +951,7 @@ Where E.event_id = I.event_id ";
        left JOIN tblCategory ON e.category_id = tblCategory.category_id
        left JOIN tblImage ON e.event_id = tblImage.event_id
        left JOIN tblVideo ON e.event_id = tblVideo.event_id 
-                           where event_start = @event_start";
+                           where event_start >= @event_start and event_start < @event_start1";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
@@ -961,7 +961,8 @@ Where E.event_id = I.event_id ";
                     using (SqlCommand myCommand = new SqlCommand(query, myCon))
                     {
                         //myCommand.Parameters.AddWithValue("",MySqlDbType.Date).Value = dateTimePicker1;
-                        myCommand.Parameters.AddWithValue("@event_start", event_time);
+                        myCommand.Parameters.AddWithValue("@event_start", dt);
+                        myCommand.Parameters.AddWithValue("@event_start1", dt1);
                         myReader = myCommand.ExecuteReader();
                         table.Load(myReader);
                         myReader.Close();
@@ -969,17 +970,15 @@ Where E.event_id = I.event_id ";
 
                     }
                 }
-                if (table.Rows.Count > 0)
-                {
-                    return Ok(new Response<DataTable>(table));
-                }
-                return BadRequest(new Response<string>("No Data"));
-            }catch(Exception ex)
+                return Ok(new Response<DataTable>(table));
+            }
+            catch (Exception ex)
             {
                 return BadRequest(new Response<string>(ex.Message));
             }
-            
+
         }
+
 
         private bool CheckFeedBack(int eventId, int userId)
         {

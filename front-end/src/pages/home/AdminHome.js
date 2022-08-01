@@ -14,6 +14,7 @@ import {
     Select,
     MenuItem,
     experimentalStyled as styled,
+    Stack,
 } from '@mui/material/';
 import { useEffect, useState } from 'react';
 import { useAdminEvents } from '../../recoil/adminEvents';
@@ -30,7 +31,10 @@ const Item = styled(Paper)(({ theme }) => ({
 const AdminHome = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
-    const { getEvents } = useAdminEvents();
+    const { getEvents, searchEvent, searchEventTime, getUpcomingEvent, getPastEvent } = useAdminEvents();
+    const [name, setName] = useState('');
+    const [date, setDate] = useState('20-02-2022');
+
     useEffect(() => {
         getEvents()
             .then((resposne) => {
@@ -38,7 +42,8 @@ const AdminHome = () => {
                 console.log(data);
                 setEvents(data);
             })
-            .catch(() => {
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
                 showSackbar({
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
@@ -49,13 +54,94 @@ const AdminHome = () => {
     const [values, setValues] = useState();
 
     const handleChange = (event) => {
-        this.setState({ value: event.target.value });
+        console.log(event.target.value);
+        if(event.target.value == 0){ // Tất cả
+            getEvents()
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setEvents(data);
+            })
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+        }
+        else if(event.target.value == 1){ // Upcoming Events
+            getUpcomingEvent()
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setEvents(data);
+            })
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+        }else if(event.target.value == 2){ // Past Events
+            getPastEvent()
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setEvents(data);
+            })
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+        }
+    };
+
+    const eventNameHandler = (event) => {
+        setName(event.target.value);
+    };
+
+    const eventDateHandler = (event) => {
+        console.log(event.target.value);
+        setDate(event.target.value);
     };
 
     const handleSubmit = (event) => {
         alert('A name was submitted: ' + this.state.value);
         event.preventDefault();
     };
+
+    function searchEventlist(name) {
+        searchEvent(name)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
+    function searchEventByTime(date) {
+        searchEventTime(date)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
+    
 
     return (
         <>
@@ -65,48 +151,69 @@ const AdminHome = () => {
                     padding={{ xs: 2, md: 5 }}
                     columns={{ xs: 3, sm: 12 }}
                 >
-                    <Grid item xs={3} padding={{ sm: 2 }}>
+                    <Grid item xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
-                                onChange={handleChange}
+                                onChange={eventNameHandler}
                                 name="searchEvent"
                                 id="searchEventName"
                                 type="text"
+                                onKeyPress={(event) => {
+                                    if (event.key === 'Enter') {
+                                        searchEventlist(name);
+                                    }
+                                }}
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item xs={3} padding={{ sm: 2 }}>
+                    <Grid item xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
-                                onChange={handleChange}
+                                onChange={eventDateHandler}
                                 name="searchEvent"
                                 id="searchEventTime"
                                 type="date"
+                                onKeyPress={(event) => {
+                                    if (event.key === 'Enter') {
+                                        searchEventByTime(date);
+                                    }
+                                }}
+                                min="20-02-2022" max="20-02-2032"
                             />
                         </FormControl>
                     </Grid>
-                    <Grid item xs={3} padding={{ sm: 2 }}>
+                    <Grid item xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth variant="standard">
                             <Select id="searchStatus" onChange={handleChange}>
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
+                                <MenuItem value={0}>Tất cả</MenuItem>
                                 <MenuItem value={1}>Sắp diễn ra</MenuItem>
-                                <MenuItem value={0}>Đã diễn ra</MenuItem>
+                                <MenuItem value={2}>Đã diễn ra</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={3} padding={{ sm: 2 }}>
+                    {/* <Grid item xs={3} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Button variant="contained" onClick={handleSubmit}>
                                 Tìm kiếm
                             </Button>
                         </FormControl>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Box>
             <Box sx={{ flexGrow: 1 }}>
+            {events.length === 0 ? (
+                    <Stack sx={{
+                        width: '370px',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto',
+                        paddingTop: '20px',
+                    }}
+                    spacing={2}>
+                            Không có sự kiện nào đó nha!
+                    </Stack>
+            ) : (
                 <Grid
                     container
                     padding={{ xs: 2, md: 5 }}
@@ -115,11 +222,11 @@ const AdminHome = () => {
                 >
                     {events?.map((event) => (
                         <Grid item xs={2} sm={4} md={4} key={event?.event_id}>
-                            <Card>
+                            <Card sx={{height: '650px'}}>
                                 <CardMedia
-                                    component="image"
-                                    height="140"
-                                    src={event?.image_url}
+                                    component="img"
+                                    sx={{height: '450px'}}
+                                    image={event?.image_url}
                                     alt={event.event_name}
                                 />
                                 <CardContent>
@@ -142,8 +249,9 @@ const AdminHome = () => {
                                 </CardActions>
                             </Card>
                         </Grid>
-                    ))}
+                    ))}                      
                 </Grid>
+            )}
             </Box>
         </>
     );

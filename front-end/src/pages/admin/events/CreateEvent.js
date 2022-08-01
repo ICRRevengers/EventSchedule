@@ -27,8 +27,12 @@ const Create = () => {
     const auth = useRecoilValue(authAtom);
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
-    const [eventStart, setEventStart] = useState(new Date('2022-07-19T15:00:00.000Z'));
-    const [eventEnd, setEventEnd] = useState(new Date('2022-07-19T15:00:00.000Z'));
+    const [eventStart, setEventStart] = useState(
+        new Date('2022-07-19T15:00:00.000Z'),
+    );
+    const [eventEnd, setEventEnd] = useState(
+        new Date('2022-07-19T15:00:00.000Z'),
+    );
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
@@ -130,7 +134,7 @@ const Create = () => {
                 });
             })
             .catch((error) => {
-                console.log(error);
+                console.log(error.resposne);
                 showSackbar({
                     severity: 'error',
                     children: 'Something went wrong, please try again later.',
@@ -192,6 +196,7 @@ const Create = () => {
                                 required
                                 value={name}
                                 onChange={nameHandle}
+                                inputProps={{ maxLength: 100 }}
                             />
                         </FormControl>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>

@@ -33,7 +33,7 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role,image_url from dbo.tblAdmin";
+                string query = @"select admin_id , admin_name, admin_phone , admin_email, admin_role,image_url, admin_status from dbo.tblAdmin";
 
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
@@ -126,7 +126,7 @@ namespace EventProjectSWP.Controllers
             }
         }
 
-        [HttpDelete("Delete-admin-by-id")]
+        [HttpDelete("Deactive-admin-by-id")]
 
         public IActionResult DeleteAdminById(int id)
         {
@@ -282,6 +282,11 @@ namespace EventProjectSWP.Controllers
                 return BadRequest(new Response<string>("invalid-email-or-password"));
             }
 
+            if (!(bool)table.Rows[0]["admin_status"])
+            {
+                return BadRequest(new Response<string>("your account is banned, please contact to unlock"));
+            }
+
             Admin admin = new Admin()
             {
                 adminID = Convert.ToInt32(table.Rows[0]["admin_id"]),
@@ -362,7 +367,35 @@ namespace EventProjectSWP.Controllers
 
         }
 
+        [HttpGet("change-status-admin")]
+        public IActionResult ChangeStatusAdmin(int adminId, bool status)
+        {
+            try 
+            {
+                string query = @"update dbo.tblAdmin set admin_status = @admin_status where admin_id = @admin_id";
 
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_status", status);
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+            } catch
+            {
+                return BadRequest();
+            }
+            return Ok(new Response<bool>(status));
+        }
 
     }
 }
