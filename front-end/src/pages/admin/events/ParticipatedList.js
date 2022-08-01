@@ -98,7 +98,7 @@ function ParticipatedList() {
                     <Table sx={{ minWidth: 650 }} aria-label="user list">
                         <TableHead>
                             <TableRow>
-                                <TableCell>MSSV</TableCell>
+                                <TableCell>STT</TableCell>
                                 <TableCell align="center">Họ tên</TableCell>
                                 <TableCell align="center">Email</TableCell>
                                 <TableCell align="center">Thanh toán</TableCell>
@@ -118,7 +118,7 @@ function ParticipatedList() {
                                     }}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {student?.users_id}
+                                        {i +1}
                                     </TableCell>
                                     <TableCell align="center">
                                         {student?.users_name}

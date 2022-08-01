@@ -105,6 +105,8 @@ const useAdminEvents = () => {
             endpoint: `/api/Event/get-event-by-id?id=${id}`,
         });
 
+    const getHostEvents = (adminId) => get({endpoint: `/api/Event/get-event-club-admin-own?adminId=${adminId}`})
+
     return {
         getEvents,
         getStudentsFromEvent,
@@ -115,7 +117,8 @@ const useAdminEvents = () => {
         createEvent,
         updatePayment,
         updateEvent,
-        getEventDetails
+        getEventDetails,
+        getHostEvents
     };
 };
 export default useAdminEvents;

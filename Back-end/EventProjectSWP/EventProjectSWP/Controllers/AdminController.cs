@@ -367,7 +367,35 @@ namespace EventProjectSWP.Controllers
 
         }
 
+        [HttpGet("change-status-admin")]
+        public IActionResult ChangeStatusAdmin(int adminId, bool status)
+        {
+            try 
+            {
+                string query = @"update dbo.tblAdmin set admin_status = @admin_status where admin_id = @admin_id";
 
+                DataTable table = new DataTable();
+                string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
+                SqlDataReader myReader;
+                using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+                {
+                    myCon.Open();
+                    using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                    {
+                        myCommand.Parameters.AddWithValue("@admin_status", status);
+                        myCommand.Parameters.AddWithValue("@admin_id", adminId);
+                        myReader = myCommand.ExecuteReader();
+                        table.Load(myReader);
+                        myReader.Close();
+                        myCon.Close();
+                    }
+                }
+            } catch
+            {
+                return BadRequest();
+            }
+            return Ok(new Response<bool>(status));
+        }
 
     }
 }
