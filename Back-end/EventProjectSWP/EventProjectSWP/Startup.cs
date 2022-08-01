@@ -33,7 +33,7 @@ namespace EventProjectSWP
     {
         var dateConverter = new Newtonsoft.Json.Converters.IsoDateTimeConverter
         {
-            DateTimeFormat = "MM'/'dd'/'yyyy' 'HH':'mm"
+            DateTimeFormat = "dd'/'MM'/'yyyy' 'HH':'mm"
         };
 
         options.SerializerSettings.Converters.Add(dateConverter);

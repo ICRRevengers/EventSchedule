@@ -105,7 +105,22 @@ const useAdminEvents = () => {
             endpoint: `/api/Event/get-event-by-id?id=${id}`,
         });
 
-    const getHostEvents = (adminId) => get({endpoint: `/api/Event/get-event-club-admin-own?adminId=${adminId}`})
+    const getHostEvents = (adminId) => get({endpoint: `/api/Event/get-event-club-admin-own?adminId=${adminId}`});
+
+    const getUpcomingEvent = () =>
+        get({
+            endpoint: `/api/Event/show-upcoming-event`,
+        });
+
+    const getPastEvent = () =>
+        get({
+            endpoint: `/api/Event/show-past-event`,
+        });
+    
+    const searchEventTime = (date) =>
+        get({
+            endpoint: `/api/Event/get-event-by-timne-specific?event_time=${date}`,
+        });
 
     return {
         getEvents,
@@ -118,7 +133,10 @@ const useAdminEvents = () => {
         updatePayment,
         updateEvent,
         getEventDetails,
-        getHostEvents
+        getHostEvents,
+        getUpcomingEvent,
+        getPastEvent,
+        searchEventTime
     };
 };
 export default useAdminEvents;
