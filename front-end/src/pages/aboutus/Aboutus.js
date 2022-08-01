@@ -69,11 +69,6 @@ const Aboutus = () => {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item>
-                        <Typography variant="subtitle1" component="div">
-                            {club?.admin_id}
-                        </Typography>
-                    </Grid>
                 </Grid>
             </Grid>
             ))}

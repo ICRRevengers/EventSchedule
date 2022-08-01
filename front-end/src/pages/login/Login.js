@@ -8,8 +8,8 @@ import queryString from 'query-string';
 import { useSnackbar } from '../../HOCs';
 import { useAuthActions } from '../../recoil/auth';
 import HeaderFooter from '../../components/layout/defaultLayout/header-footer/HeaderFooter';
-import Stack from '@mui/material/Stack';
-import { Divider } from '@mui/material';
+import { Stack, Button, TextField, FormLabel } from '@mui/material';
+import { margin } from '@mui/system';
 
 function Login() {
     const { search } = useLocation();
@@ -73,58 +73,60 @@ function Login() {
 
     return (
         <HeaderFooter>
-            {/* <Stack
-                direction="row"
-                divider={<Divider orientation="vertical" flexItem />}
-                spacing={4}
+            <Stack
+                component="form"
+                sx={{
+                    width: '370px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    paddingTop: '20px',
+                }}
+                spacing={2}
             >
-                <Item>Item 1</Item>
-                <Item>Item 2</Item>
-                <Item>Item 3</Item>
-            </Stack> */}
-            <div className="login ">
-                <form className="admin-form" onSubmit={adminLogin}>
-                    <p className="">
-                        Nếu bạn là <strong>quản trị viên</strong>, đăng nhập ở
-                        đây
-                    </p>
-                    <div className="">
-                        <div className="form-row">
-                            <input
-                                // type="email"
-                                className="form-input"
-                                id="inputAccount"
-                                onChange={userNameHandle}
-                                placeholder="Tài khoản"
-                            />
-                        </div>
-                        <div className="form-row">
-                            <input
-                                type="password"
-                                className="form-input"
-                                id="inputPassword"
-                                onChange={passwordHandle}
-                                placeholder="Mật khẩu"
-                            />
-                        </div>
-                        <div className="form-row">
-                            <button className="form-submit" type="submit">
-                                Đăng nhập
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div className="student-form">
-                    <p className="">
-                        Nếu bạn là <strong>sinh viên</strong>, đăng nhập với
-                        fpt.edu.vn
-                    </p>
-                    <GoogleButton
-                        className="googleButton"
-                        onClick={loginGoogle}
-                    />
-                </div>
-            </div>
+                <p>
+                    Nếu bạn là <b>quản trị viên</b>, đăng nhập tại đây
+                </p>
+                <TextField
+                    id="outlined-email-input"
+                    label="Tài khoản"
+                    type="email"
+                    onChange={userNameHandle}
+                    required
+                    fullWidth
+                />
+                <TextField
+                    id="outlined-password-input"
+                    label="Mật khẩu"
+                    type="password"
+                    autoComplete="current-password"
+                    onChange={passwordHandle}
+                    required
+                    fullWidth
+                />
+                <Button variant="contained" onClick={adminLogin}>
+                    {' '}
+                    Đăng nhập{' '}
+                </Button>
+                
+            </Stack>
+            <Stack
+                component="form"
+                sx={{
+                    width: '400px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    padding: '35px 0',
+                }}
+                spacing={2}
+            >
+                <p>
+                    Nếu bạn là <strong>sinh viên</strong>,
+                    đăng nhập với fpt.edu.vn
+                </p>
+                <GoogleButton className="googleButton" onClick={loginGoogle} />
+            </Stack>
         </HeaderFooter>
     );
 }
