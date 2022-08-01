@@ -48,6 +48,7 @@ const Contact = () => {
                     label="Họ và tên"
                     variant="outlined"
                     color="warning"
+                    name="user_name"
                     focused
                     required
                     fullWidth
@@ -57,6 +58,7 @@ const Contact = () => {
                     variant="outlined"
                     color="warning"
                     type='email'
+                    name="user_email"
                     focused
                     required
                     fullWidth
@@ -65,7 +67,8 @@ const Contact = () => {
                     label="Số điện thoại"
                     variant="outlined"
                     color="warning"
-                    type='number'
+                    type='tel'
+                    name="user_phone"
                     focused
                     required
                     fullWidth
@@ -74,6 +77,7 @@ const Contact = () => {
                     label="Lời nhắn"
                     variant="outlined"
                     color="warning"
+                    name="message"
                     focused
                     required
                     fullWidth
