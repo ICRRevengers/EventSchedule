@@ -90,7 +90,7 @@ function UserParticipatedList() {
                                     <TableCell align="center">
                                         {event?.event_name}
                                     </TableCell>
-                                    <TableCell align="center">Hehe</TableCell>
+                                    <TableCell align="center">{event?.admin_name}</TableCell>
                                     <TableCell align="center">
                                         {new Intl.DateTimeFormat('en-US', {
                                             year: 'numeric',
