@@ -42,7 +42,6 @@ namespace EventProjectSWP.Controllers
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
-<<<<<<< HEAD
                                tblAdmin.admin_id, tblAdmin.admin_name,
                                tblPayment.payment_fee, tblPayment.payment_url,
                                tblCategory.category_name,
@@ -54,19 +53,6 @@ namespace EventProjectSWP.Controllers
                                inner JOIN tblCategory ON e.category_id = tblCategory.category_id
                                inner JOIN tblImage ON e.event_id = tblImage.event_id
                                inner JOIN tblVideo ON e.event_id = tblVideo.event_id";
-=======
-       tblAdmin.admin_id, tblAdmin.admin_name,
-       tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name,
-       tblImage.image_url,tblVideo.video_url    
-       from tblEvent E
-       left JOIN tblLocation ON E.location_id = tblLocation.location_id
-       left JOIN tblPayment ON E.event_id = tblPayment.event_id
-       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       left JOIN tblCategory ON e.category_id = tblCategory.category_id
-       left JOIN tblImage ON e.event_id = tblImage.event_id
-       left JOIN tblVideo ON e.event_id = tblVideo.event_id";
->>>>>>> main
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
 
@@ -858,7 +844,6 @@ Where E.event_id = I.event_id ";
             try
             {
                 string query = @"Select E.event_id, E.admin_id, E.location_id, event_name, event_content, event_status, event_start, event_end, tblLocation.location_detail, 
-<<<<<<< HEAD
                                tblAdmin.admin_id, tblAdmin.admin_name,
                                tblPayment.payment_fee, tblPayment.payment_url,
                                tblCategory.category_name,
@@ -871,20 +856,6 @@ Where E.event_id = I.event_id ";
                                INNER JOIN tblImage ON e.event_id = tblImage.event_id
                                INNER JOIN tblVideo ON e.event_id = tblVideo.event_id
                                where E.event_id = @event_id";
-=======
-       tblAdmin.admin_id, tblAdmin.admin_name,
-       tblPayment.payment_fee, tblPayment.payment_url,
-       tblCategory.category_name,tblCategory.category_id,
-       tblImage.image_url,tblVideo.video_url    
-       from tblEvent E
-       left JOIN tblLocation ON E.location_id = tblLocation.location_id
-       left JOIN tblPayment ON E.event_id = tblPayment.event_id
-       left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
-       left JOIN tblCategory ON e.category_id = tblCategory.category_id
-       left JOIN tblImage ON e.event_id = tblImage.event_id
-       left JOIN tblVideo ON e.event_id = tblVideo.event_id
-       where E.event_id = @event_id";
->>>>>>> main
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
                 SqlDataReader myReader;
