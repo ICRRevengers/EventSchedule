@@ -67,8 +67,9 @@ namespace EventProjectSWP.Controllers
         {
             try
             {
-                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id,EP.payment_status,EP.users_status
+                string query = @"select U.users_id,users_name, users_phone,users_address,users_email,date_participated, E.event_name, E.event_id,EP.payment_status,EP.users_status, tblAdmin.admin_name
                              from tblEventParticipated EP, tblUser U, tblEvent E
+left JOIN tblAdmin ON E.admin_id = tblAdmin.admin_id
                              where Ep.users_id = U.users_id and E.event_id = EP.event_id and U.users_id =  @users_id";
                 DataTable table = new DataTable();
                 string sqlDataSource = _configuration.GetConnectionString("EventAppConn");
