@@ -6,7 +6,8 @@ import {
     Divider,
     Grid,
     Typography,
-    CardMedia
+    CardMedia,
+    Box,
 } from '@mui/material';
 
 const EventDetailBottom = (props) => {
@@ -28,30 +29,40 @@ const EventDetailBottom = (props) => {
                             >
                                 Tại sao nên tham gia sự kiện này?
                             </Typography>
-                            <Typography
-                                color="textPrimary"
-                                gutterBottom
-                                variant="h6"
-                                sx={{ fontWeight: 'normal' }}
-                            >
-                                {item?.event_content}
-                            </Typography>
-                            <br />
-                            <Typography
-                                color="textPrimary"
-                                gutterBottom
-                                variant="h4"
-                            >
-                                Video
-                            </Typography>
-                            <Typography
-                                color="textPrimary"
-                                gutterBottom
-                                variant="h6"
-                                sx={{ fontWeight: 'normal' }}
-                            >
-                                {item?.video_url} 
-                            </Typography>
+                            <Box sx={{ display: 'flex' }}>
+                                <Typography
+                                    color="textPrimary"
+                                    gutterBottom
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 'normal',
+                                        flexBasis: '66%',
+                                    }}
+                                >
+                                    {item?.event_content}
+                                </Typography>
+                                <Box sx={{ flexBasis: '50%' }}>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <Box sx={{ flexBasis: '50%' }}>
+                                            <Box
+                                                component="img"
+                                                alt="school-image"
+                                                src={item?.image_url}
+                                                sx={{
+                                                    width: '100%',
+                                                    // aspectRatio: '1 / 1',bbbbbb
+                                                    objectFit: 'contain',
+                                                }}
+                                            />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Box>
                         </Grid>
                     </Grid>
                 </CardContent>
