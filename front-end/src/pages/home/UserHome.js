@@ -12,6 +12,7 @@ import {
     Input,
     Select,
     MenuItem,
+    Stack
     // experimentalStyled as styled,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -30,7 +31,10 @@ import { Link } from 'react-router-dom';
 const AdminHome = () => {
     const [events, setEvents] = useState([]);
     const showSackbar = useSnackbar();
-    const { getEvents } = useAdminEvents();
+    const { getEvents, searchEvent, searchEventTime, getUpcomingEvent, getPastEvent } = useAdminEvents();
+    const [name, setName] = useState('');
+    const [date, setDate] = useState('20-02-2022');
+
     useEffect(() => {
         getEvents()
             .then((resposne) => {
@@ -47,16 +51,96 @@ const AdminHome = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // const [values, setValues] = useState();
-
-    const handleChange = (event) => {
-        this.setState({ value: event.target.value });
+    const eventNameHandler = (event) => {
+        setName(event.target.value);
     };
+
+    const eventDateHandler = (event) => {
+        console.log(event.target.value);
+        setDate(event.target.value);
+    };
+    
+    // const [values, setValues] = useState();
 
     // const handleSubmit = (event) => {
     //     alert('A name was submitted: ' + this.state.value);
     //     event.preventDefault();
     // };
+
+    const handleChange = (event) => {
+        console.log(event.target.value);
+        if(event.target.value == 0){ // Tất cả
+            getEvents()
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setEvents(data);
+            })
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+        }
+        else if(event.target.value == 1){ // Upcoming Events
+            getUpcomingEvent()
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setEvents(data);
+            })
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+        }else if(event.target.value == 2){ // Past Events
+            getPastEvent()
+            .then((resposne) => {
+                const data = resposne.data.data;
+                console.log(data);
+                setEvents(data);
+            })
+            .catch((ERROR) => {
+                console.log(ERROR.resposne);
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+        }
+    };
+
+    function searchEventlist(name) {
+        searchEvent(name)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
+    function searchEventByTime(date) {
+        searchEventTime(date)
+            .then((resposne) => {
+                const data = resposne.data.data;
+                setEvents(data);
+            })
+            .catch((error) => {
+                showSackbar({
+                    severity: 'error',
+                    children: 'Something went wrong, please try again later.',
+                });
+            });
+    }
 
     return (
         <>
@@ -64,44 +148,64 @@ const AdminHome = () => {
                 <Grid
                     container
                     padding={{ xs: 2, md: 5 }}
-                    columns={{ xs: 4, sm: 12 }}
+                    columns={{ xs: 3, sm: 12 }}
                 >
                     <Grid xs={4} padding={{ sm: 2 }}>
-                        <FormControl fullWidth>
+                       <FormControl fullWidth>
                             <Input
                                 placeholder="Tên sự kiện..."
-                                onChange={handleChange}
+                                onChange={eventNameHandler}
                                 name="searchEvent"
                                 id="searchEventName"
                                 type="text"
+                                onKeyPress={(event) => {
+                                    if (event.key === 'Enter') {
+                                        searchEventlist(name);
+                                    }
+                                }}
                             />
                         </FormControl>
                     </Grid>
                     <Grid xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth>
                             <Input
-                                // onChange={eventTimeStart}
+                                onChange={eventDateHandler}
                                 name="searchEvent"
                                 id="searchEventTime"
                                 type="date"
+                                onKeyPress={(event) => {
+                                    if (event.key === 'Enter') {
+                                        searchEventByTime(date);
+                                    }
+                                }}
+                                min="20-02-2022" max="20-02-2032"
                             />
                         </FormControl>
                     </Grid>
                     <Grid xs={4} padding={{ sm: 2 }}>
                         <FormControl fullWidth variant="standard">
-                            <Select
-                                id="searchStatus"
-                                onChange={handleChange}
-                                // defaultValue={EventStatus}
-                            >
-                                <MenuItem value={true}>Sắp diễn ra</MenuItem>
-                                <MenuItem value={false}>Đã diễn ra</MenuItem>
+                            <Select id="searchStatus" onChange={handleChange}>
+                                <MenuItem value={0}>Tất cả</MenuItem>
+                                <MenuItem value={1}>Sắp diễn ra</MenuItem>
+                                <MenuItem value={2}>Đã diễn ra</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
                 </Grid>
             </Box>
             <Box sx={{ flexGrow: 1 }}>
+            {events.length === 0 ? (
+                    <Stack sx={{
+                        width: '370px',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0 auto',
+                        paddingTop: '20px',
+                    }}
+                    spacing={2}>
+                            Không có sự kiện nào đó nha!
+                    </Stack>
+            ) : (
                 <Grid
                     container
                     padding={{ xs: 2, md: 5 }}
@@ -143,6 +247,7 @@ const AdminHome = () => {
                         </Grid>
                     ))}
                 </Grid>
+            )}
             </Box>
         </>
     );

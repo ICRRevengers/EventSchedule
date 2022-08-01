@@ -134,10 +134,11 @@ const Create = () => {
                 });
             })
             .catch((error) => {
-                console.log(error.resposne);
+                // console.log(error.resposne.data.message);
+                // console.log(error?.response);
                 showSackbar({
                     severity: 'error',
-                    children: 'Something went wrong, please try again later.',
+                    children: error?.response?.data?.message,
                 });
             });
     }
