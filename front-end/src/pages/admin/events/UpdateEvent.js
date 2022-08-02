@@ -49,7 +49,7 @@ const UpdateEvent = () => {
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
-    const [paymentFee, setFee] = useState('0');
+    const [paymentFee, setFee] = useState('');
     const [paymentUrl, setPaymentUrl] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [image, setImage] = useState('');

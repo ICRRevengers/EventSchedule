@@ -36,7 +36,7 @@ const Create = () => {
     const [eventStatus, setEventStatus] = useState(false);
     const [categoryID, setCategoryID] = useState('');
     const [locationID, setLocationID] = useState('');
-    const [paymentFee, setFee] = useState('0');
+    const [paymentFee, setFee] = useState(0);
     const [paymentUrl, setPaymentUrl] = useState('');
 
     const { getCategories, getLocations, createEvent } = useAdminEvents();

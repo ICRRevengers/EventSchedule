@@ -211,7 +211,7 @@ const AdminHome = () => {
                         paddingTop: '20px',
                     }}
                     spacing={2}>
-                            Không có sự kiện nào đó nha!
+                            Sự kiện bạn tìm kiếm hiện không có.
                     </Stack>
             ) : (
                 <Grid

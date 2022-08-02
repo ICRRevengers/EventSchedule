@@ -69,7 +69,7 @@ const AdminHome = () => {
 
     const handleChange = (event) => {
         console.log(event.target.value);
-        if(event.target.value == 0){ // Tất cả
+        if(event.target.value === 0){ // Tất cả
             getEvents()
             .then((resposne) => {
                 const data = resposne.data.data;
@@ -84,7 +84,7 @@ const AdminHome = () => {
                 });
             });
         }
-        else if(event.target.value == 1){ // Upcoming Events
+        else if(event.target.value === 1){ // Upcoming Events
             getUpcomingEvent()
             .then((resposne) => {
                 const data = resposne.data.data;
@@ -98,7 +98,7 @@ const AdminHome = () => {
                     children: 'Something went wrong, please try again later.',
                 });
             });
-        }else if(event.target.value == 2){ // Past Events
+        }else if(event.target.value === 2){ // Past Events
             getPastEvent()
             .then((resposne) => {
                 const data = resposne.data.data;
@@ -203,7 +203,7 @@ const AdminHome = () => {
                         paddingTop: '20px',
                     }}
                     spacing={2}>
-                            Không có sự kiện nào đó nha!
+                            Sự kiện bạn tìm kiếm hiện không có.
                     </Stack>
             ) : (
                 <Grid
