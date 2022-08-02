@@ -146,7 +146,7 @@ function ParticipatedList() {
                                     </TableCell>
                                     {student.date_participated !== null ? (
                                         <TableCell align="center">
-                                            {new Intl.DateTimeFormat('en-US', {
+                                            {/* {new Intl.DateTimeFormat('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: '2-digit',
@@ -156,7 +156,8 @@ function ParticipatedList() {
                                                         student.date_participated,
                                                     ),
                                                 ),
-                                            )}
+                                            )} */}
+                                            {student.date_participated}
                                         </TableCell>
                                     ) : (
                                         <TableCell align="center">

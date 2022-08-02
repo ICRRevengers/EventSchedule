@@ -196,10 +196,7 @@ const ManageEvents = () => {
                                     },
                                 }}
                             >
-                                <TableCell component="th" scope="row">
-                                    {event?.event_id}
-                                </TableCell>
-                                <TableCell align="center">
+                                <TableCell component="th" scope="row">     
                                     {event?.event_name}
                                 </TableCell>
                                 <TableCell align="center">
