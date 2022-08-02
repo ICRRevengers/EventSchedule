@@ -92,7 +92,7 @@ function UserParticipatedList() {
                                     </TableCell>
                                     <TableCell align="center">{event?.admin_name}</TableCell>
                                     <TableCell align="center">
-                                        {new Intl.DateTimeFormat('en-US', {
+                                        {/* {new Intl.DateTimeFormat('en-US', {
                                             year: 'numeric',
                                             month: 'short',
                                             day: '2-digit',
@@ -102,7 +102,8 @@ function UserParticipatedList() {
                                                     event.date_participated,
                                                 ),
                                             ),
-                                        )}
+                                        )} */}
+                                        {event.date_participated}
                                     </TableCell>
                                     <TableCell align="center">
                                         {(event.event_id ===

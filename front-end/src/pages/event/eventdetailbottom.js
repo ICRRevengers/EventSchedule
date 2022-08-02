@@ -15,12 +15,8 @@ const EventDetailBottom = (props) => {
     return (
         <>
             <Card>
-                <CardHeader title="Detail" />
                 <CardContent sx={{ mb: 10 }}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Divider>Event</Divider>
-                        </Grid>
                         <Grid item lg={12} md={12} xs={12}>
                             <Typography
                                 color="textPrimary"
@@ -46,9 +42,10 @@ const EventDetailBottom = (props) => {
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
+                                            textAlign: 'justify'
                                         }}
                                     >
-                                        <Box sx={{ flexBasis: '50%' }}>
+                                        <Box sx={{ flexBasis: '80%' }}>
                                             <Box
                                                 component="img"
                                                 alt="school-image"
@@ -56,7 +53,8 @@ const EventDetailBottom = (props) => {
                                                 sx={{
                                                     width: '100%',
                                                     // aspectRatio: '1 / 1',bbbbbb
-                                                    objectFit: 'contain',
+                                                    objectFit: 'container',
+                                                    margin: '0 5%'
                                                 }}
                                             />
                                         </Box>
